@@ -24,6 +24,14 @@ public class SlideExamples {
 
         assertEquals(99, age);
     }
+
+    @Test
+    public void ohBoyOhBoy() {
+        int someVal = 0;
+        var obob = STR."some val is \{someVal}";
+
+        System.out.println(STR."obob: \{obob}");
+    }
 }
 
 
