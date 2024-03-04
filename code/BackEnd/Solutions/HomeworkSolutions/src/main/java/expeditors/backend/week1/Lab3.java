@@ -10,8 +10,8 @@ public class Lab3 {
     by either 3 or 7.
      */
     public static void main(String[] args) {
-        withForLoop();
-//        withWhileLoop();
+//        withForLoop();
+        withWhileLoop();
     }
 
     public static int withForLoop() {
@@ -33,12 +33,12 @@ public class Lab3 {
         int count = 0;
         int i = -500;
         while (i <= 500) {
-            if (i % 3 == 0) {
+            if (i % 3 == 0 && i % 7 == 0) {
                 count++;
             }
-            if (i % 7 == 0) {
-                count++;
-            }
+//            if (i % 7 == 0) {
+//                count++;
+//            }
 
             //IMPORTANT to make sure you remember to change
             // the condition in a while loop
