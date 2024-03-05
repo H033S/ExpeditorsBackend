@@ -17,7 +17,7 @@ public class TestCustomerDAO {
     private InMemoryCustomerDAO customerDAO;
 
     @BeforeEach
-    private void init() {
+    public void init() {
         customerDAO = new InMemoryCustomerDAO();
     }
 

@@ -1,31 +1,97 @@
 package expeditors.backend.week2;
 
-import java.util.Arrays;
 import java.util.concurrent.ThreadLocalRandom;
 
-/**
- * @author whynot
- */
+import static java.lang.System.out;
+
 public class Lab2 {
-    /*
-        2. Arrays and Methods
-    a. Write a method called createArray that takes two arguments,
-    called size and limit. It should create and return an int array of
-    length size, initialized with random integers between zero and limit.
-    Remember to make your method static for now.
-    b. Use ThreadLocalRandom.current().nextInt(limit) to create a random number. e.g.
-    int rand = ThreadLocalRandom.current().nextInt(10) will create a
-    random number between 0 and 10 exclusive.
-    c. Check out the API documentation for other ways to create random numbers.
-    d. Create an appropriate JUnit test to make sure your code works.
+
+    /**
+     * Write a method called createArray that returns an array with
+     * the first names of all the students in the class.  If two
+     * students have the same name, use the first letter of
+     * their other names to differentiate them.
      */
 
-    public static int [] createArray(int size, int limit) {
-        int [] result = new int[size];
-        for(int i = 0; i < result.length; i++) {
-            result[i] = ThreadLocalRandom.current().nextInt(limit + 1); //+ 1 to include limit
-        }
+    private static String[] cohort1Names = {
+            "Alan Aguillon Juarez",
+            "Antonio Nazco",
+            "Antony Alfaro",
+            "Arjun Panikar",
+            "Carla Cairns",
+            "Edwin Soto",
+            "Jesus Cortez Valdez",
+            "Juan De Dios Hernandez",
+            "Julio Cesar Rodriguez",
+            "Komal Patel",
+            "Lokesh Gopi",
+            "Lucas Maesaka",
+            "Mainor Lobo",
+            "Marcus Silva",
+            "Raul Gomez",
+            "Rohit Aherwadkar",
+            "Tetyana Alvarado"
+    };
 
-        return result;
+    private static String[] cohort2Names = {
+            "Alan Morales Rueda",
+            "Andre Uys",
+            "Audomaro Gonzalez",
+            "Caio Henrique",
+            "Chris Valencia",
+            "Daniel Lee",
+            "Humberto Rojas",
+            "Javier Mendoza",
+            "Joao Alonso",
+            "Luis Barraza Hernandez",
+            "Mariana Duarte",
+            "Miguel Angel Rodriguez",
+            "Rosendo Galindo",
+            "Sean Jaw",
+            "Tiffany Yee",
+            "Vincent Vu",
+            "Nathaniel Schieber",
+            "Dylan McClain",
+            "Grant Stampfli"
+    };
+
+    public static String getRandomStudent() {
+        String[] arr = cohort1Names;
+        int random = ThreadLocalRandom.current().nextInt(arr.length);
+
+        return arr[random];
+    }
+
+
+    private final static int TICK_SLEEP_TIME = 500;
+
+    public static void main(String[] args) {
+//        app1();
+        appWithSuspense();
+    }
+
+    public static void appWithSuspense() {
+        out.print("The student is: ");
+        for (int t = 0; t < 10; t++) {
+            out.print(".");
+            sleep(TICK_SLEEP_TIME);
+        }
+        String name = getRandomStudent();
+        out.println(name);
+    }
+
+    public static void app1() {
+        for (int i = 0; i < 10; i++) {
+            String name = getRandomStudent();
+            out.print("The student is: " + name);
+        }
+    }
+
+    private static void sleep(long millis) {
+        try {
+            Thread.sleep(millis);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }
