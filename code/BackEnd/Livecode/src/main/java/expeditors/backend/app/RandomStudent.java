@@ -26,15 +26,14 @@ public class RandomStudent {
             "Tetyana Alvarado",
       };
 
-
-      System.out.print("And the student is ");
-      for(int i = 0; i < 3; i++) {
+      System.out.print("And the Winner is ");
+      for(int i = 0; i < 4; i++) {
          System.out.print(".");
          sleep(500);
       }
 
       String randomStudent = getRandomStudent(cohort1Names);
-      System.out.println(" " + randomStudent + "!!");
+      System.out.println(STR." \{randomStudent}!!");
    }
 
    private void sleep(int millis) {
