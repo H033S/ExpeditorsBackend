@@ -25,7 +25,7 @@ public class Lab1 {
         //Could use a String.
         String color = "RED";
 
-        //In some circumstances, could also use the
+        //In some circumstances, could also use a special class, e.g. the
         //java.awt.Color class
         Color red = Color.RED;
         /*********************************************************************/
@@ -41,7 +41,7 @@ public class Lab1 {
         double price = 33.5;
         //But generally you do NOT want to use a double for
         //anything where you need to be precise.  Money is
-        //definately one of those things.  Instead, you would
+        //definitely one of those things.  Instead, you would
         //use the library class BigInteger which is meant for
         //arbitrary precision arithmetic.
         BigInteger betterPrice = new BigInteger("33.5");
