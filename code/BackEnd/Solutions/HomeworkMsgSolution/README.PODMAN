@@ -1,0 +1,4 @@
+Everything below assumes you have podman installed on your machine and can access
+it from the command line.
+
+To run Postgres with podman:
