@@ -1,6 +1,6 @@
-package mypack;
+package expeditors.backend.app;
 
-public class MyClass
+public class VariablesControlFlow
 {
 	public static void main(String [] args) {
 //		String name = "Joey";
@@ -14,7 +14,6 @@ public class MyClass
 
 	// n bits = 2**n-1 - 1;
 	public static void types() {
-
 
 		boolean bool = true; // false
 
