@@ -1,7 +1,5 @@
 package expeditors.backend.adoptapp.week2and3.domain;
 
-import expeditors.backend.adoptapp.week4and5.domain.Adopter;
-import expeditors.backend.adoptapp.week4and5.domain.Pet;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;

@@ -1,26 +1,24 @@
-package mypack;
+package expeditors.backend.app;
 
-public class MyClass
+public class VariablesControlFlow
 {
 	public static void main(String [] args) {
 //		String name = "Joey";
 //		System.out.println(STR."Hello \{name}");
 
-		//types();
+		types();
 
-		int result = product(10, 2);
-		System.out.println(STR."result: \{result}");
+//		int result = product(10, 2);
+//		System.out.println(STR."result: \{result}");
 	}
 
 	// n bits = 2**n-1 - 1;
 	public static void types() {
 
-
 		boolean bool = true; // false
 
 		//Integral types
 		byte aByte = 127;          //1 byte
-		short aShort = 99;      //2 bytes
 		int anInt =    127;            //4 bytes
 		long aLong =    400000000;            //8 bytes
 
@@ -30,7 +28,10 @@ public class MyClass
 		double aDouble = 22.4;                //8 bytes
 
 		//char
+		short aShort = 99;      //2 bytes
 		char aChar = 'c';                    //2 bytes
+
+		String str = "cabcde";
 
 		System.out.println(STR."aShort: \{aShort}, aChar: \{aChar}, charAsNum: \{(short)aChar}");
 	}
