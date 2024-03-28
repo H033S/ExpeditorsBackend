@@ -12,6 +12,10 @@ import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerRecord;
 
+/**
+ * Simple Client to send Json to a topic.  E.g. for Adoptapp you could send
+ * {"name" : "Marlin", "phoneNumber" : "389 0002 2 22892", "pets": [{"type": "CAT", "name" : "Ginko", "breed": "LongHair" }]}
+ */
 public class SimpleJavaKafkaClient {
 
    public static void main(String[] args) throws IOException {

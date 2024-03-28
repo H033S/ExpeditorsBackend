@@ -27,7 +27,7 @@ import static org.springframework.data.domain.ExampleMatcher.GenericPropertyMatc
  */
 
 @Service
-@Transactional
+@Transactional("transactionManager")
 public class CustomerRepoService {
 
     private final int MIN_AGE = 18;
