@@ -12,7 +12,11 @@ import org.springframework.stereotype.Component;
 @Component
 @Profile("kkjsonevents")
 public class SBFKafkaJsonListenerHolder {
-    @KafkaListener(id = "adoptapp-json-consumer-group", topics = "${ttl.kafka.adopter.topic}")
+//    ttl.kafka.adopter.topic = adoptapp-jsontopic
+//    ttl.kafka.customer.topic = custapp-jsontopic
+    @KafkaListener(clientIdPrefix = "adoptapp-json-consumer-group",
+          topics = {"${ttl.kafka.adopter.topic}", "${ttl.kafka.customer.topic}"})
+//    topics = {"adoptapp-jsontopic", "custapp-jsontopic"})
     public void listen(ConsumerRecord<String, Object> message,
                        @Payload Object payload) {
         System.err.println("Kafka Json Listener:" + payload);
