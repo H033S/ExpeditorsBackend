@@ -1,5 +1,6 @@
 package expeditors.backend.app;
 
+import expeditors.backend.dao.DAOFactory;
 import expeditors.backend.domain.Student;
 import expeditors.backend.service.StudentService;
 import java.time.LocalDate;
@@ -7,7 +8,7 @@ import java.util.List;
 
 public class StudentApp {
 
-   StudentService service = new StudentService();
+   StudentService service = DAOFactory.studentService();
    public static void main(String[] args) {
       StudentApp sa = new StudentApp();
       sa.go();
