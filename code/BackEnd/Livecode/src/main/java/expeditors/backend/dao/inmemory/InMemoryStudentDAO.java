@@ -15,6 +15,10 @@ public class InMemoryStudentDAO implements StudentDAO {
    private Map<Integer, Student> students = new HashMap<>();
    private int nextId = 1;
 
+   public InMemoryStudentDAO() {
+      int stop = 0;
+   }
+
    @Override
    public Student insert(Student student) {
       int id = nextId++;

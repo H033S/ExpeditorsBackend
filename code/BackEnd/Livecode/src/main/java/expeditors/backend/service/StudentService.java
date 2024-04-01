@@ -30,6 +30,8 @@ public class StudentService {
 //      studentDAO = new JPAStudentDAO();
 //      studentDAO = new InMemoryStudentDAO();
 //      studentDAO = DAOFactory.studentDAO();
+
+      int stop = 0;
    }
 
    public Student createStudent(Student student) {
