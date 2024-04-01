@@ -6,10 +6,11 @@ Week 4 - Java SE Fundamentals - https://app.pluralsight.com/library/courses/java
 Week 5 - Object Oriented programming in Java - https://app.pluralsight.com/library/courses/java-se-17-object-oriented-programming
          Streams and Lambda Expressions  - https://app.pluralsight.com/library/courses/streams-lambda-expressions-java-se-11-developer-certification-1z0-819
 
-Week 6 - Spring Framework Fundamentals - https://app.pluralsight.com/library/courses/spring-framework-6-fundamentals
-         Spring Boot 3: The Big Picture - https://app.pluralsight.com/library/courses/spring-boot-3-big-picture
+Week 6 - Spring Framework 6 Fundamentals - https://app.pluralsight.com/library/courses/spring-framework-6-fundamentals
 
-Week 7 - Spring Boot 3 Fundamentals - https://app.pluralsight.com/library/courses/spring-boot-3-fundamentals
+
+Week 7 - Spring Boot 3: The Big Picture - https://app.pluralsight.com/library/courses/spring-boot-3-big-picture
+         Spring Boot 3 Fundamentals - https://app.pluralsight.com/library/courses/spring-boot-3-fundamentals
 
 Week 8 - Unit testing in Spring Framework 6 with JUnit - https://app.pluralsight.com/library/courses/spring-framework-6-unit-testing-junit
 	     Validating Data Input in Spring 6 Web Applicaiton - https://app.pluralsight.com/library/courses/spring-6-validating-data-input-web-applications

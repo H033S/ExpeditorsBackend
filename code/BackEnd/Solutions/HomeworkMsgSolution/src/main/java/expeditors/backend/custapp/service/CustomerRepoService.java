@@ -27,7 +27,7 @@ import static org.springframework.data.domain.ExampleMatcher.GenericPropertyMatc
  */
 
 @Service
-@Transactional
+@Transactional("transactionManager")
 public class CustomerRepoService {
 
     private final int MIN_AGE = 18;
@@ -50,7 +50,7 @@ public class CustomerRepoService {
 
         Customer newCustomer = customerDAO.save(c);
         if(messageSender != null) {
-            messageSender.sendMessage(newCustomer);
+            messageSender.sendMessage(newCustomer, "custapp-jsontopic");
         }
 
         return newCustomer;

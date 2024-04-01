@@ -2,6 +2,7 @@ package ttl.larku.shape.app;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 import ttl.larku.shape.domain.Circle;
 import ttl.larku.shape.domain.Rectangle;
 import ttl.larku.shape.domain.AbstractShape;
@@ -29,11 +30,53 @@ public class DrawingAppInheritance {
       shapes.add(c);
       shapes.add(rect);
 
-      for(Shape s : shapes) {
-//         s.draw();
-         System.out.println("s: " + s.toString());
-//         s.setLineThickness(20);
-      }
+      MyConsumer mc = new MyConsumer();
+
+      Consumer<Shape> anonymousClass = new Consumer<>() {
+         @Override
+         public void accept(Shape shape) {
+            System.out.println(shape);
+         }
+      };
+
+      Consumer<Shape> lambda1 = (Shape s) -> {
+            System.out.println(s);
+         };
+
+      Consumer<Shape> lambda2 = (s) -> {
+         System.out.println(s);
+      };
+
+      Consumer<Shape> lambda3 = (s) -> System.out.println(s);
+
+      Consumer<Shape> lambda4 = s -> System.out.println(s);
+
+//      shapes.forEach(lambda4);
+
+      //shapes.forEach(s -> System.out.println(s));
+      //shapes.forEach(s -> System.out.println(s));
+      shapes.forEach(DrawingAppInheritance::myprinter);
+      shapes.forEach(s -> myprinter(s));
+
+//      for(Shape s : shapes) {
+////         s.draw();
+//         System.out.println("s: " + s.toString());
+////         s.setLineThickness(20);
+//      }
    }
 
+   public static void myprinter(Shape s) {
+      //Lots of code
+      System.out.println("[[ " + s + " ]]");
+      //Lots of other code1
+   }
+
+
+}
+class MyConsumer implements Consumer<Shape>
+{
+   @Override
+   public void accept(Shape shape) {
+      System.out.println(shape);
+   }
 }

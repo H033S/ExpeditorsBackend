@@ -23,7 +23,7 @@ public class KafkaAdopterAdderListenerHolder {
     @Autowired
     private ObjectMapper mapper;
 
-    @KafkaListener(id = "adoptapp-adopter-adder", topics = "adopter-adder-topic")
+    @KafkaListener(clientIdPrefix = "adoptapp-adopter-adder", topics = "adopter-adder-topic")
     public void listen(ConsumerRecord<String, Object> message,
                        @Payload Object payload) throws JsonProcessingException {
         var obj = message.value();

@@ -1,6 +1,6 @@
 package ttl.larku.shape.domain;
 
-public class Rectangle extends AbstractShape implements Shape{
+public class Rectangle extends AbstractShape {
 
    private int width;
    private int height;

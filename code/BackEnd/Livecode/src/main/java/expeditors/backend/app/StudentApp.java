@@ -1,29 +1,42 @@
 package expeditors.backend.app;
 
 import expeditors.backend.domain.Student;
+import expeditors.backend.service.StudentService;
 import java.time.LocalDate;
+import java.util.List;
 
 public class StudentApp {
 
+   StudentService service = new StudentService();
    public static void main(String[] args) {
+      StudentApp sa = new StudentApp();
+      sa.go();
+   }
 
-      String name = "Joey";
-      String email = "a@B.com";
+   public void go() {
+      postAStudent();
+      getAllStudents();
+   }
 
-      String name2 = "Joey";
+   public void postAStudent() {
+      Student student = new Student("Franky", LocalDate.of(2000, 10, 10));
 
-      Student student = new Student(10, "Joey",
-            LocalDate.of(2000, 10, 7), "blah@b.com");
+      Student insertedStudent = service.createStudent(student);
 
-      student.setName("OtherName");
+      List<Student> students = service.getStudents();
+      System.out.println("student: " + students.size());
 
-      Student student2 = new Student(11, "Frank", LocalDate.of(2000, 10, 7), "blah@b.com");
+      students.forEach(System.out::println);
+   }
 
+   public void getAllStudents() {
+//      StudentService service = new StudentService();
 
-      System.out.println("id: " + student.getId());
-      System.out.println("name: " + student.getName().length());
-      System.out.println("dob: " + student.getDob());
-      System.out.println("email: " + student.getEmail());
+      List<Student> students = service.getStudents();
+      System.out.println("Get students: " + students.size());
+
+      students.forEach(System.out::println);
 
    }
 }
+

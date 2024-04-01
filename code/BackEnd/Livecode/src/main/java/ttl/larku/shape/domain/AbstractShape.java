@@ -4,14 +4,20 @@ public abstract class AbstractShape implements Shape{
    private int x1, y1;
    private String color = "Black";
    private int lineThickness = 10;
+   private static int count = 0;
 
    public AbstractShape(int x1, int y1, String color, int lineThickness) {
       this.x1 = x1;
       this.y1 = y1;
       this.color = color;
       this.lineThickness = lineThickness;
+
+      count++;
    }
 
+   public static int getCount() {
+     return count;
+   }
 
    public String getColor() {
       return color;
