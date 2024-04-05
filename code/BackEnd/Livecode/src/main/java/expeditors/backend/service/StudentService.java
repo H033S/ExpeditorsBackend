@@ -1,9 +1,6 @@
 package expeditors.backend.service;
 
-import expeditors.backend.dao.DAOFactory;
 import expeditors.backend.dao.StudentDAO;
-import expeditors.backend.dao.inmemory.InMemoryStudentDAO;
-import expeditors.backend.dao.jpa.JPAStudentDAO;
 import expeditors.backend.domain.Student;
 import java.util.ArrayList;
 import java.util.List;

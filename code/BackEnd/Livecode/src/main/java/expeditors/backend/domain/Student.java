@@ -1,6 +1,8 @@
 package expeditors.backend.domain;
 
 import java.time.LocalDate;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class Student {
 
@@ -14,28 +16,38 @@ public class Student {
    private String name;
    private LocalDate dob;
    private String email;
+   private Set<ScheduledClass> classes = ConcurrentHashMap.newKeySet();
    
    private Status status = Status.FULL_TIME;
 
-   public Student(int id, String name, LocalDate dob, String email, Status status) {
-//      init(id, name, dob, email, status);
+   public Student(int id, String name, LocalDate dob,
+                  String email, Status status, Set<ScheduledClass> classes) {
       this.id = id;
       this.name = name;
       this.dob = dob;
       this.email = email;
       this.status = status;
+      if(classes != null) {
+         classes.forEach(this::addClass);
+      }
    }
 
-   public Student(int id, String name, LocalDate dob, String email) {
-      this(id, name, dob, email, Status.FULL_TIME);
+   public Student(String name, LocalDate dob, String email, Status status) {
+      this(0, name, dob, email, status, Set.of());
    }
+
+   public Student(String name, LocalDate dob, String email) {
+      this(0, name, dob, email, Status.FULL_TIME, Set.of());
+   }
+
+
 
    public Student(int id, String name, LocalDate dob) {
-      this(id, name, dob, null, Status.FULL_TIME);
+      this(0, name, dob, null, Status.FULL_TIME, Set.of());
    }
 
    public Student(String name, LocalDate dob) {
-      this(0, name, dob, null, Status.FULL_TIME);
+      this(0, name, dob, null, Status.FULL_TIME, Set.of());
    }
 
    private void init(int id, String name, LocalDate dob, String email, Status status) {
@@ -83,6 +95,30 @@ public class Student {
          throw new RuntimeException("Bad email value: " + email);
       }
       this.email = email;
+   }
+
+   public Set<ScheduledClass> getClasses() {
+      return Set.copyOf(classes);
+   }
+
+   public void setPhoneNumbers(Set<ScheduledClass> classes) {
+      this.classes.addAll(classes);
+   }
+
+   public void addClass(ScheduledClass scheduledClass) {
+      this.classes.add(scheduledClass);
+   }
+
+   public void removeClass(ScheduledClass scheduledClass) {
+      this.classes.remove(scheduledClass);
+   }
+
+   public Status getStatus() {
+      return status;
+   }
+
+   public void setStatus(Status status) {
+      this.status = status;
    }
 
    @Override
