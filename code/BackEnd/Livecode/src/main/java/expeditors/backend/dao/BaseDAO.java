@@ -4,14 +4,14 @@ import java.util.List;
 
 public interface BaseDAO<T> {
 
-    void update(T updateObject);
+    boolean update(T updateObject);
 
-    void delete(T student);
+    boolean delete(T student);
 
-    T create(T newObject);
+    T insert(T newObject);
 
-    T get(int id);
+    T findById(int id);
 
-    List<T> getAll();
+    List<T> findAll();
 
 }

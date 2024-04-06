@@ -11,24 +11,24 @@
     <context:component-scan base-package="ttl.larku.service, ttl.larku.dao.*"/>
 
     <!--
-    <bean artistId="studentService" class="ttl.StudentService">
+    <bean id="studentService" class="ttl.StudentService">
         <property name="studentDAO" ref="studentDAO" />
     </bean>
     -->
 
 
-    <bean artistId="studentDAO1" class="ttl.larku.dao.inmemory.InMemoryStudentDAO"/>
+    <bean id="studentDAO1" class="ttl.larku.dao.inmemory.InMemoryStudentDAO"/>
 
-    <bean artistId="studentDAO2" class="ttl.larku.dao.jpahibernate.JpaStudentDAO"/>
+    <bean id="studentDAO2" class="ttl.larku.dao.jpahibernate.JpaStudentDAO"/>
 
 
-    <bean artistId="courseService" class="ttl.larku.service.CourseService" autowire="byType">
+    <bean id="courseService" class="ttl.larku.service.CourseService" autowire="byType">
     </bean>
 
-    <bean artistId="courseDAO" class="ttl.larku.dao.inmemory.InMemoryCourseDAO"/>
+    <bean id="courseDAO" class="ttl.larku.dao.inmemory.InMemoryCourseDAO"/>
 
     <!-- Post Processing Example -->
-    <bean artistId="postProcBean" class="ttl.larku.postproc.TestService"/>
+    <bean id="postProcBean" class="ttl.larku.postproc.TestService"/>
     <bean class="ttl.larku.postproc.OurPostProc"/>
 
 </beans>

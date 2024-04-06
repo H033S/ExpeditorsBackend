@@ -60,6 +60,10 @@ public class StudentService {
       return studentDAO.findAll();
    }
 
+   public List<Student> getStudentsByName(String name) {
+      return studentDAO.findByName(name);
+   }
+
    //   public JPAStudentDAO getStudentDAO() {
 //   public InMemoryStudentDAO getStudentDAO() {
    public StudentDAO getStudentDAO() {

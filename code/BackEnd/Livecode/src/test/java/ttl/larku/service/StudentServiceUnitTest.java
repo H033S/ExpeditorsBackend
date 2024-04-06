@@ -1,6 +1,9 @@
 package ttl.larku.service;
 
 
+import expeditors.backend.dao.jpa.JPAStudentDAO;
+import expeditors.backend.domain.Student;
+import expeditors.backend.service.StudentService;
 import java.time.LocalDate;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
@@ -10,9 +13,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import ttl.larku.dao.jpahibernate.JPAStudentDAO;
-import ttl.larku.domain.Student;
-import ttl.larku.domain.Student.Status;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -49,12 +49,11 @@ public class StudentServiceUnitTest {
 
     @BeforeEach
     public void setup() {
-        studentService.clear();
     }
 
     @Test
     public void testCreateStudent() {
-        Student s = new Student(name1, phoneNumber1, dob1, Status.FULL_TIME);
+        Student s = new Student(name1, dob1, Student.Status.FULL_TIME);
 
         Mockito.when(studentDAO.insert(s)).thenReturn(s);
 
@@ -65,41 +64,38 @@ public class StudentServiceUnitTest {
 
     @Test
     public void testDeleteStudent() {
-        Student student1 = new Student(name1, phoneNumber1, dob1, Status.FULL_TIME);
+        Student student1 = new Student(name1, dob1, Student.Status.FULL_TIME);
         student1.setId(1);
 
         //Set up Mocks
-        Mockito.when(studentDAO.findById(1)).thenReturn(student1);
-        Mockito.when(studentDAO.delete(student1)).thenReturn(true);
+        Mockito.when(studentDAO.delete(student1.getId())).thenReturn(true);
 
         //Call and JUnit asserts
         boolean result = studentService.deleteStudent(student1.getId());
         assertTrue(result);
 
         //Mockito verification
-        Mockito.verify(studentDAO).findById(1);
-        Mockito.verify(studentDAO).delete(student1);
+        Mockito.verify(studentDAO).delete(1);
     }
 
     @Test
     public void testDeleteNonExistentStudent() {
 
-        Mockito.when(studentDAO.findById(9999)).thenReturn(null);
+        Mockito.doReturn(false).when(studentDAO).delete(9999);
+//        Mockito.when(studentDAO.delete(any())).thenReturn(false);
         //Non existent Id
         boolean result = studentService.deleteStudent(9999);
         assertFalse(result);
 
-        Mockito.verify(studentDAO).findById(9999);
-        Mockito.verify(studentDAO, never()).delete(any());
+        Mockito.verify(studentDAO).delete(9999);
     }
 
     @Test
     public void testUpdateStudent() {
-        Student student1 = new Student(name1, phoneNumber1, dob1, Status.FULL_TIME);
+        Student student1 = new Student(name1, dob1, Student.Status.FULL_TIME);
         student1.setId(1);
 
         //Set up Mocks
-        Mockito.when(studentDAO.findById(1)).thenReturn(student1);
         Mockito.when(studentDAO.update(student1)).thenReturn(true);
 
         //Call and Junit assertions
@@ -107,21 +103,19 @@ public class StudentServiceUnitTest {
         assertTrue(result);
 
         //Mockito Verification
-        Mockito.verify(studentDAO).findById(1);
         Mockito.verify(studentDAO).update(student1);
     }
 
     @Test
     public void testUpdateNonExistentStudent() {
-        Student student1 = new Student(name1, phoneNumber1, dob1, Status.FULL_TIME);
+        Student student1 = new Student(name1, dob1, Student.Status.FULL_TIME);
         student1.setId(9999);
 
-        Mockito.when(studentDAO.findById(student1.getId())).thenReturn(null);
+        Mockito.when(studentDAO.update(student1)).thenReturn(false);
 
         boolean result = studentService.updateStudent(student1);
         assertFalse(result);
 
-        Mockito.verify(studentDAO).findById(9999);
-        Mockito.verify(studentDAO, never()).update(student1);
+        Mockito.verify(studentDAO).update(student1);
     }
 }

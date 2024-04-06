@@ -1,5 +1,8 @@
 package ttl.larku.service;
 
+import expeditors.backend.domain.Student;
+import expeditors.backend.jconfig.LarkUConfig;
+import expeditors.backend.service.StudentService;
 import java.time.LocalDate;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -10,9 +13,6 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import ttl.larku.domain.ScheduledClass;
-import ttl.larku.domain.Student;
-import ttl.larku.jconfig.LarkUConfig;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -38,18 +38,18 @@ public class StudentServiceTest {
 
    @Test
    public void testStudentServiceInsert() {
-      Student student = new Student("Franky", "383 939 93393", LocalDate.of(2000, 10, 10));
+      Student student = new Student("Franky", LocalDate.of(2000, 10, 10));
 
       Student insertedStudent = studentService.createStudent(student);
 
       System.out.println("student: " + insertedStudent.toString());
       assertNotNull(insertedStudent);
-      assertEquals(5, student.getId());
+      assertEquals(3, student.getId());
    }
 
    @Test
    public void testDeleteExistingStudent() {
-      Student student = new Student("Franky", "383 939 93393", LocalDate.of(2000, 10, 10));
+      Student student = new Student("Franky", LocalDate.of(2000, 10, 10));
 
 
       Student insertedStudent = studentService.createStudent(student);

@@ -40,8 +40,5 @@ public class SpringDemo {
       List<Course> courses = ss.getAllCourses();
       System.out.println("course: " + courses.size());
       System.out.println(courses);
-
-      CourseService cs2 = new CourseService();
-      cs2.getAllCourses();
    }
 }

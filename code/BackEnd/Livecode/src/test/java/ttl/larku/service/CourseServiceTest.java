@@ -1,15 +1,17 @@
 package ttl.larku.service;
 
+import expeditors.backend.domain.Course;
+import expeditors.backend.jconfig.LarkUConfig;
+import expeditors.backend.service.CourseService;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import ttl.larku.domain.Course;
-import ttl.larku.jconfig.LarkUConfig;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -17,6 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = LarkUConfig.class)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 @ActiveProfiles({"development"})
 public class CourseServiceTest {
 
@@ -25,7 +28,6 @@ public class CourseServiceTest {
 
     @BeforeEach
     public void setup() {
-        courseService.clear();
     }
 
     @Test

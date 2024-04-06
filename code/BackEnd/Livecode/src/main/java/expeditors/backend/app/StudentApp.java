@@ -20,7 +20,7 @@ public class StudentApp {
    }
 
    public void postAStudent() {
-      Student student = new Student("Franky", LocalDate.of(2000, 10, 10));
+      Student student = new Student("Franky", LocalDate.of(2000, 10, 10), "a@b.com");
 
       Student insertedStudent = service.createStudent(student);
 
