@@ -1,5 +1,7 @@
 package expeditors.backend.service;
 
+import expeditors.backend.domain.Student;
+import expeditors.backend.jconfig.LarkUConfig;
 import java.time.LocalDate;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -8,10 +10,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import expeditors.backend.domain.Student;
-import expeditors.backend.jconfig.LarkUConfig;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -21,6 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {LarkUConfig.class})
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
+@ActiveProfiles({"development"})
 public class StudentServiceTest {
 
    @Autowired
@@ -31,29 +33,32 @@ public class StudentServiceTest {
 
    @BeforeEach
    public void beforeEach() {
-//      ss = new StudentService();
+//     studentService = new StudentService();
    }
-   @Test
-   public void testInsertStudent() {
-      Student student = new Student("Bulbul", LocalDate.of(1934, 10, 10), "38 0303 83393");
 
+   @Test
+   public void testStudentServiceInsert() {
+      Student student = new Student("Franky", LocalDate.of(2000, 10, 10));
 
       Student insertedStudent = studentService.createStudent(student);
 
-      System.out.println("s: " + insertedStudent.toString());
+      System.out.println("student: " + insertedStudent.toString());
       assertNotNull(insertedStudent);
-      assertEquals(3, insertedStudent.getId());
+      assertEquals(3, student.getId());
    }
 
    @Test
    public void testDeleteExistingStudent() {
-      Student student = new Student("Bulbul", LocalDate.of(1934, 10, 10), "38 0303 83393");
+      Student student = new Student("Franky", LocalDate.of(2000, 10, 10));
+
 
       Student insertedStudent = studentService.createStudent(student);
+
+      System.out.println("student: " + insertedStudent);
       assertNotNull(insertedStudent);
 
-      boolean result = studentService.deleteStudent(insertedStudent.getId());
-      assertTrue(result);
+      boolean deleted = studentService.deleteStudent(insertedStudent.getId());
+      assertTrue(deleted);
    }
 
    @Test

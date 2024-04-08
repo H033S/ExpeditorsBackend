@@ -1,33 +1,42 @@
-package ttl.larku.service;
+package ttl.larku.service.reg.integcustomcontext.integration;
 
-import expeditors.backend.domain.Course;
-import expeditors.backend.jconfig.LarkUConfig;
-import expeditors.backend.service.CourseService;
-import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.ListableBeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.boot.test.context.SpringBootTest;
+import ttl.larku.domain.Course;
+import ttl.larku.service.CourseService;
+
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = LarkUConfig.class)
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-@ActiveProfiles({"development"})
+
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
+//@AutoConfigureMockMvc
+//@SpringBootTest(classes = {LarkUConfig.class, LarkUTestDataConfig.class, StudentService.class, ConnectionService.class, ConnectionServiceProperties.class})
+//@SpringBootTest(classes = {MyTestConfig.class})
+@Tag("integration")
 public class CourseServiceTest {
 
     @Autowired
     private CourseService courseService;
 
+    @Autowired
+    private ListableBeanFactory context;
+
     @BeforeEach
     public void setup() {
+        courseService.clear();
+//        for(String name: context.getBeanDefinitionNames()) {
+//            System.out.println(name);
+//        }
+//        System.out.println(getClass().getName() + ":" + context.getBeanDefinitionCount() + " beans");
     }
 
     @Test
@@ -47,8 +56,7 @@ public class CourseServiceTest {
 
         assertEquals(2, courseService.getAllCourses().size());
 
-        boolean result = courseService.deleteCourse(course1.getId());
-        assertTrue(result);
+        courseService.deleteCourse(course1.getId());
 
         assertEquals(1, courseService.getAllCourses().size());
         assertTrue(courseService.getAllCourses().get(0).getCode().contains("Phys-101"));
@@ -62,8 +70,7 @@ public class CourseServiceTest {
         assertEquals(2, courseService.getAllCourses().size());
 
         //Non existent Id
-        boolean result = courseService.deleteCourse(9999);
-        assertFalse(result);
+        courseService.deleteCourse(9999);
 
         assertEquals(2, courseService.getAllCourses().size());
     }
@@ -75,8 +82,7 @@ public class CourseServiceTest {
         assertEquals(1, courseService.getAllCourses().size());
 
         course1.setCode("Math-202");
-        boolean result = courseService.updateCourse(course1);
-        assertTrue(result);
+        courseService.updateCourse(course1);
 
         List<Course> courses = courseService.getAllCourses();
 
@@ -85,17 +91,24 @@ public class CourseServiceTest {
     }
 
     @Test
-    public void testUpdateNonExistentCourse() {
+    public void testGetByCode() {
         Course course1 = courseService.createCourse("Math-101", "Intro to Math");
+
         assertEquals(1, courseService.getAllCourses().size());
 
-        course1.setCode("Math-202");
-        course1.setId(9999);
-        boolean result = courseService.updateCourse(course1);
-        assertFalse(result);
+        Course math101 = courseService.getCourseByCode("Math-101");
 
-        List<Course> courses = courseService.getAllCourses();
+        assertNotNull(math101);
+    }
 
-        assertEquals(1, courses.size());
+    @Test
+    public void testGetByNonExistentCode() {
+        Course course1 = courseService.createCourse("Math-101", "Intro to Math");
+
+        assertEquals(1, courseService.getAllCourses().size());
+
+        Course math101 = courseService.getCourseByCode("Not There");
+
+        assertNull(math101);
     }
 }

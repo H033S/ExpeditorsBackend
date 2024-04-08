@@ -1,4 +1,4 @@
-package ttl.larku.service;
+package expeditors.backend.service;
 
 
 import expeditors.backend.dao.jpa.JPAStudentDAO;
