@@ -6,17 +6,20 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
+import org.springframework.stereotype.Repository;
 
 public class JPAStudentDAO implements StudentDAO {
 
    //private static List<Student> students = new ArrayList<>();
 //   private List<Student> students = new ArrayList<>();
 //   private Set<Student> students = new HashSet<>();
-   private Map<Integer, Student> students = new HashMap<>();
-   private int nextId = 1;
+   private Map<Integer, Student> students = new ConcurrentHashMap<>();
+   private AtomicInteger nextId = new AtomicInteger(1);
 
    public Student insert(Student student) {
-      int id = nextId++;
+      int id = nextId.getAndIncrement();
       student.setId(id);
 
       student.setName("Jpa:" + student.getName());

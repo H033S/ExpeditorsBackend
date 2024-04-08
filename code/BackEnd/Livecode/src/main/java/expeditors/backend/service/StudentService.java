@@ -1,11 +1,10 @@
 package expeditors.backend.service;
 
 import expeditors.backend.dao.StudentDAO;
-import expeditors.backend.dao.inmemory.InMemoryStudentDAO;
-import expeditors.backend.dao.jpa.JPAStudentDAO;
 import expeditors.backend.domain.Student;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /*
 StudentService should allow users to perform basic create, update, delete operations on Students to a store.
@@ -16,12 +15,25 @@ public class StudentService {
 
    List<String> lstr = new ArrayList<>();
 
-   //private StudentDAO studentDAO = new InMemoryStudentDAO();
-   private StudentDAO studentDAO = new JPAStudentDAO();
+   private StudentDAO studentDAO;
+//   private StudentDAO studentDAO = new JPAStudentDAO();
 //   private InMemoryStudentDAO studentDAO = new InMemoryStudentDAO();
 //   private JPAStudentDAO studentDAO = new JPAStudentDAO();
 
+   private int numCalls;
+   private AtomicInteger betterCounter = new AtomicInteger(1);
+
+   public StudentService() {
+//      studentDAO = new JPAStudentDAO();
+//      studentDAO = new InMemoryStudentDAO();
+//      studentDAO = DAOFactory.studentDAO();
+
+      int stop = 0;
+   }
+
    public Student createStudent(Student student) {
+//      int y = numCalls++;
+      int x = betterCounter.getAndIncrement();
       //Validate DOB
       //Other business logic
 
@@ -48,9 +60,17 @@ public class StudentService {
       return studentDAO.findAll();
    }
 
+   public List<Student> getStudentsByName(String name) {
+      return studentDAO.findByName(name);
+   }
+
    //   public JPAStudentDAO getStudentDAO() {
 //   public InMemoryStudentDAO getStudentDAO() {
    public StudentDAO getStudentDAO() {
       return studentDAO;
+   }
+
+   public void setStudentDAO(StudentDAO studentDAO) {
+      this.studentDAO = studentDAO;
    }
 }

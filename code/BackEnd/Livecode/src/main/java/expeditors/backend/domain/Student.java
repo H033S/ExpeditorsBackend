@@ -1,8 +1,11 @@
 package expeditors.backend.domain;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
-public class Student {
+public class Student extends Object {
 
    public enum Status {
       FULL_TIME,
@@ -13,41 +16,27 @@ public class Student {
    private int id;
    private String name;
    private LocalDate dob;
-   private String email;
-   
-   private Status status = Status.FULL_TIME;
+   private List<String> phoneNumbers = new ArrayList<>();
 
-   public Student(int id, String name, LocalDate dob, String email, Status status) {
-//      init(id, name, dob, email, status);
+   private Status status = Status.FULL_TIME;   //FULL_TIME, PART_TIME, HIBERNATING
+
+   public Student(String name, LocalDate dob, String... phoneNumbers) {
+      this(0, name, dob, Status.FULL_TIME, List.of(phoneNumbers));
+   }
+
+   public Student(String name, LocalDate dob, Status status, String... phoneNumbers) {
+      this(0, name, dob, status, List.of(phoneNumbers));
+   }
+
+   private Student(int id, String name, LocalDate dob, Status status, List<String> phoneNumbers) {
       this.id = id;
       this.name = name;
       this.dob = dob;
-      this.email = email;
       this.status = status;
-   }
 
-   public Student(int id, String name, LocalDate dob, String email) {
-      this(id, name, dob, email, Status.FULL_TIME);
-   }
-
-   public Student(int id, String name, LocalDate dob) {
-      this(id, name, dob, null, Status.FULL_TIME);
-   }
-
-   public Student(String name, LocalDate dob) {
-      this(0, name, dob, null, Status.FULL_TIME);
-   }
-
-   private void init(int id, String name, LocalDate dob, String email, Status status) {
-      this.id = id;
-      this.name = name;
-      this.dob = dob;
-      this.email = email;
-      this.status = status;
-   }
-
-   public Student() {
-
+      if (phoneNumbers != null) {
+         this.phoneNumbers.addAll(phoneNumbers);
+      }
    }
 
    public int getId() {
@@ -74,15 +63,26 @@ public class Student {
       this.dob = dob;
    }
 
-   public String getEmail() {
-      return email;
+   public List<String> getPhoneNumbers() {
+      return List.copyOf(phoneNumbers);
    }
 
-   public void setEmail(String email) {
-      if(!email.matches(".*@.*")) {
-         throw new RuntimeException("Bad email value: " + email);
-      }
-      this.email = email;
+   public void setPhoneNumbers(List<String> phoneNumbers) {
+      this.phoneNumbers.clear();
+      this.phoneNumbers.addAll(phoneNumbers);
+   }
+
+   public void addPhoneNumber(String phoneNumber) {
+      Objects.requireNonNull(phoneNumber);
+      this.phoneNumbers.add(phoneNumber);
+   }
+
+   public Status getStatus() {
+      return status;
+   }
+
+   public void setStatus(Status status) {
+      this.status = status;
    }
 
    @Override
@@ -91,8 +91,66 @@ public class Student {
             "id=" + id +
             ", name='" + name + '\'' +
             ", dob=" + dob +
-            ", email='" + email + '\'' +
+            ", phoneNumbers='" + phoneNumbers + '\'' +
             ", status=" + status +
             '}';
+   }
+
+   public static Builder builder(String name, LocalDate dob) {
+      return new Builder()
+            .name(name)
+            .dob(dob);
+   }
+
+   public static class Builder {
+      private int id = 0;
+      private String name;
+      private LocalDate dob;
+      private List<String> phoneNumbers = new ArrayList<>();
+
+      private Status status = Status.FULL_TIME;   //FULL_TIME, PART_TIME, HIBERNATING
+
+      private Builder() {
+      }
+
+      public Builder id(int id) {
+         this.id = id;
+         return this;
+      }
+
+      public Builder name(String name) {
+         this.name = name;
+         return this;
+      }
+
+      public Builder dob(LocalDate dob) {
+         this.dob = dob;
+         return this;
+      }
+
+      public Builder status(String status) {
+         return status(Status.valueOf(status));
+      }
+
+      public Builder status(Status status) {
+         this.status = status;
+         return this;
+      }
+
+      public Builder phoneNumber(String... phoneNumbers) {
+         return phoneNumber(List.of(phoneNumbers));
+      }
+
+      public Builder phoneNumber(List<String> phoneNumbers) {
+         this.phoneNumbers.addAll(phoneNumbers);
+         return this;
+      }
+
+      public Student build() {
+         if (name == null || dob == null) {
+            throw new IllegalArgumentException("Name and dob should not be null");
+         }
+         return new Student(0, name, dob, status, phoneNumbers);
+      }
    }
 }

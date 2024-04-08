@@ -19,3 +19,4 @@ set role larku;
 create database adoptapp;
 create database larku;
 create database northwind;
+create database tracker;

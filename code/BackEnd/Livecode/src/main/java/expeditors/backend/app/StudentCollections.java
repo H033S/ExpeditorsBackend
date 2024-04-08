@@ -15,8 +15,8 @@ public class StudentCollections {
 
       Student [] sarr = new Student[2];
 
-      sarr[0] = new Student(10, "Wilma", LocalDate.of(2000, 10, 10));
-      sarr[1] = new Student(13, "Seema", LocalDate.of(2000, 10, 10));
+      sarr[0] = new Student("Wilma", LocalDate.of(2000, 10, 10), "w@xyz.com");
+      sarr[1] = new Student("Seema", LocalDate.of(2000, 10, 10), "sma@zyx.com");
 
       int len = sarr[0].getName().length();
 
