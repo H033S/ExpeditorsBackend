@@ -5,16 +5,20 @@ import expeditors.backend.domain.Student;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 /*
 StudentService should allow users to perform basic create, update, delete operations on Students to a store.
 2. StudentService should allow users to retrieve a Student by ID
 3. StudentService should allow users to retrieve all Students.
  */
+@Service
 public class StudentService {
 
    List<String> lstr = new ArrayList<>();
 
+   @Autowired
    private StudentDAO studentDAO;
 //   private StudentDAO studentDAO = new JPAStudentDAO();
 //   private InMemoryStudentDAO studentDAO = new InMemoryStudentDAO();

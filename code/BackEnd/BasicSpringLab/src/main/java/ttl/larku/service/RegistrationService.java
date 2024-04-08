@@ -1,23 +1,36 @@
 package ttl.larku.service;
 
+import jakarta.annotation.PostConstruct;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import ttl.larku.domain.ScheduledClass;
 import ttl.larku.domain.Student;
 
 import java.util.ArrayList;
 import java.util.List;
 
-//TODO - Need to make this into a bean
+@Service
 public class RegistrationService {
 
-    //TODO - something required here
     private CourseService courseService;
     private StudentService studentService;
     private ClassService classService;
 
-    public RegistrationService() {
-        courseService = new CourseService();
-        studentService = new StudentService();
-        classService = new ClassService();
+    public RegistrationService(CourseService courseService,
+                               StudentService studentService,
+                               ClassService classService) {
+        this.courseService = courseService;
+        this.studentService = studentService;
+        this.classService = classService;
+
+        int count = studentService.getAllStudents().size();
+        System.out.println("Count: " + count);
+    }
+
+//    @PostConstruct
+    public void blah() {
+        int count = studentService.getAllStudents().size();
+        System.out.println("Count: " + count);
     }
 
 
