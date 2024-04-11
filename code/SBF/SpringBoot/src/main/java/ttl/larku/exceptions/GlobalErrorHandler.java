@@ -2,6 +2,7 @@ package ttl.larku.exceptions;
 
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.util.MimeType;
@@ -166,6 +167,10 @@ public class GlobalErrorHandler {
     @ExceptionHandler(value = {Exception.class})
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     protected RestResultWrapper lastPortOfCall(Exception ex, WebRequest request) {
+        var pd = ProblemDetail.forStatusAndDetail(HttpStatus.INTERNAL_SERVER_ERROR,
+              "Unexpected Exception: " + ex);
+
+        System.out.println("pd: " + pd.toString());
         RestResultWrapper rr = RestResultWrapper.ofError("Unexpected Exception: " + ex);
 
         return rr;
