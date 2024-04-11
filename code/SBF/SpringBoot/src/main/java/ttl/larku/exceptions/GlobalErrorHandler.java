@@ -167,10 +167,6 @@ public class GlobalErrorHandler {
     @ExceptionHandler(value = {Exception.class})
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     protected RestResultWrapper lastPortOfCall(Exception ex, WebRequest request) {
-        var pd = ProblemDetail.forStatusAndDetail(HttpStatus.INTERNAL_SERVER_ERROR,
-              "Unexpected Exception: " + ex);
-
-        System.out.println("pd: " + pd.toString());
         RestResultWrapper rr = RestResultWrapper.ofError("Unexpected Exception: " + ex);
 
         return rr;
