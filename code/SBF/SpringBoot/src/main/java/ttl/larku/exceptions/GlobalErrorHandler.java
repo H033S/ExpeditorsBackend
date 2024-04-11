@@ -155,6 +155,14 @@ public class GlobalErrorHandler {
         return ResponseEntity.status(HttpStatus.UNSUPPORTED_MEDIA_TYPE).body(rr);
     }
 
+    /**
+     * Last Stop Handler, for catching any Exception that is not handled
+     * elsewhere.
+     *
+     * @param ex
+     * @param request
+     * @return
+     */
     @ExceptionHandler(value = {Exception.class})
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     protected RestResultWrapper lastPortOfCall(Exception ex, WebRequest request) {
