@@ -1,7 +1,13 @@
 package ttl.larku.controllers.rest;
 
+import jakarta.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.net.URI;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
@@ -17,12 +23,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import ttl.larku.domain.Student;
 import ttl.larku.service.StudentService;
-
-import jakarta.servlet.http.HttpServletRequest;
-import java.io.IOException;
-import java.net.URI;
-import java.util.List;
-import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
 
@@ -43,7 +43,12 @@ public class StudentRestController {
     public ResponseEntity<?> getStudent(@PathVariable("id") int id) {
         Student s = studentService.getStudent(id);
         if (s == null) {
-            return ResponseEntity.badRequest().body(RestResultWrapper.ofError("Student with id: " + id + " not found"));
+//            throw new IdNotFoundException(id, "Student not found");
+            //return ResponseEntity.badRequest().body(RestResultWrapper.ofError("Student with id: " + id + " not found"));
+            var pd = uriCreator.getProblemDetail(HttpStatus.BAD_REQUEST,
+                  "Student with id: " + id + " not found");
+            return ResponseEntity.badRequest()
+                  .body(RestResultWrapper.ofError(pd));
         }
         return ResponseEntity.ok(RestResultWrapper.ofValue(s));
     }

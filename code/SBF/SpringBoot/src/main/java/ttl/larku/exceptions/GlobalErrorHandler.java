@@ -1,7 +1,9 @@
 package ttl.larku.exceptions;
 
 import org.springframework.beans.TypeMismatchException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.util.MimeType;
@@ -21,6 +23,7 @@ import ttl.larku.controllers.rest.RestResultWrapper;
 
 import java.util.ArrayList;
 import java.util.List;
+import ttl.larku.controllers.rest.UriCreator;
 
 import static java.util.stream.Collectors.toList;
 
@@ -39,6 +42,8 @@ import static java.util.stream.Collectors.toList;
 @ResponseStatus(HttpStatus.BAD_REQUEST)
 public class GlobalErrorHandler {
 
+    @Autowired
+    private UriCreator uriCreator;
 
     /**
      * Handle BadRequest (400) errors.
@@ -76,7 +81,8 @@ public class GlobalErrorHandler {
      * @return a bad request + restresult that contains the errors
      */
     @ExceptionHandler(value = {MethodArgumentNotValidException.class})
-    public RestResultWrapper<?> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, WebRequest request) {
+    public RestResultWrapper<?> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
+                                                             WebRequest request) {
         var errors = ex.getFieldErrors();
         List<String> errMsgs = errors.stream()
                 .map(error -> "@Valid error:" + error.getField() + ": " + error.getDefaultMessage()
@@ -153,5 +159,31 @@ public class GlobalErrorHandler {
         RestResultWrapper<?> rr = RestResultWrapper.ofError(errMessage);
 
         return ResponseEntity.status(HttpStatus.UNSUPPORTED_MEDIA_TYPE).body(rr);
+    }
+
+    @ExceptionHandler(IdNotFoundException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    protected RestResultWrapper<?> handleIdNotFoundException(IdNotFoundException ext, WebRequest request) {
+        var id = ext.getId();
+        var problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST,
+              id + " not found");
+        var instance = uriCreator.getURI();
+        problemDetail.setInstance(instance);
+
+        var rr = RestResultWrapper.ofError(problemDetail);
+        return rr;
+    }
+
+    @ExceptionHandler(value = {Exception.class})
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    protected RestResultWrapper<?> lastPortOfCall(Exception ex, WebRequest request) {
+
+//        var pd = ProblemDetail.forStatusAndDetail(HttpStatus.INTERNAL_SERVER_ERROR,
+//              "Unexpected Exception: " + ex);
+//        RestResultWrapper<?> rr = RestResultWrapper.ofError(pd);
+
+        RestResultWrapper<?> rr = RestResultWrapper.ofError("Last Port ;Unexpected Exception: " + ex);
+
+        return rr;
     }
 }

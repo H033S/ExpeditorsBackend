@@ -23,6 +23,8 @@ public class StudentService {
    private int numCalls;
    private AtomicInteger betterCounter = new AtomicInteger(1);
 
+   int xyz = 10;
+
    public StudentService() {
 //      studentDAO = new JPAStudentDAO();
 //      studentDAO = new InMemoryStudentDAO();
@@ -33,6 +35,7 @@ public class StudentService {
 
    public Student createStudent(Student student) {
 //      int y = numCalls++;
+      xyz++;
       int x = betterCounter.getAndIncrement();
       //Validate DOB
       //Other business logic
