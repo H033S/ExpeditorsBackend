@@ -2,9 +2,9 @@ package ttl.larku.controllers.rest;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-
 import java.util.ArrayList;
 import java.util.List;
+import org.springframework.http.ProblemDetail;
 
 public class RestResultWrapper<T> {
 
@@ -24,6 +24,15 @@ public class RestResultWrapper<T> {
     	return new RestResultWrapper<E>(Status.Ok).entity(value);
     }
 
+    public static <E> RestResultWrapper<E> ofError(ProblemDetail problemDetail) {
+        var rr = new RestResultWrapper<E>(Status.Error);
+        rr.getErrors().add("pdType: " + problemDetail.getType());
+        rr.getErrors().add("pdTitle: " + problemDetail.getTitle());
+        rr.getErrors().add("pdStatus: " + String.valueOf(problemDetail.getStatus()));
+        rr.getErrors().add("pdDetail: " + problemDetail.getDetail());
+        rr.getErrors().add("pdInstance: " + problemDetail.getInstance());
+        return rr;
+    }
 
     public static <E> RestResultWrapper<E> ofError(List<String> errors) {
     	return new RestResultWrapper<E>(Status.Error).errors(errors);

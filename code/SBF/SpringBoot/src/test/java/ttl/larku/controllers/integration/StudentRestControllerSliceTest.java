@@ -1,20 +1,21 @@
 package ttl.larku.controllers.integration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.Arrays;
+import java.util.List;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.ApplicationContext;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ProblemDetail;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -26,9 +27,6 @@ import ttl.larku.controllers.rest.UriCreator;
 import ttl.larku.domain.Student;
 import ttl.larku.service.CourseService;
 import ttl.larku.service.StudentService;
-
-import java.util.Arrays;
-import java.util.List;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.hasSize;
@@ -106,6 +104,12 @@ public class StudentRestControllerSliceTest {
     public void testGetOneStudentBadId() throws Exception {
 
         Mockito.when(studentService.getStudent(badStudentId)).thenReturn(null);
+        var status = HttpStatus.BAD_REQUEST;
+        var message = "Student with id: " + badStudentId + " not found";
+
+        var pd = ProblemDetail.forStatusAndDetail(status, message);
+        Mockito.when(uriCreator.getProblemDetail(status, message)).thenReturn(pd);
+
         ResultActions actions = mockMvc
                 .perform(get("/adminrest/student/{id}", badStudentId)
                         .accept(MediaType.APPLICATION_JSON));
