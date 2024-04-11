@@ -154,4 +154,12 @@ public class GlobalErrorHandler {
 
         return ResponseEntity.status(HttpStatus.UNSUPPORTED_MEDIA_TYPE).body(rr);
     }
+
+    @ExceptionHandler(value = {Exception.class})
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    protected RestResultWrapper lastPortOfCall(Exception ex, WebRequest request) {
+        RestResultWrapper rr = RestResultWrapper.ofError("Unexpected Exception: " + ex);
+
+        return rr;
+    }
 }

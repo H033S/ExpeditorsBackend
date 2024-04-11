@@ -45,6 +45,7 @@ public class StudentRestController {
         if (s == null) {
             return ResponseEntity.badRequest().body(RestResultWrapper.ofError("Student with id: " + id + " not found"));
         }
+        if(id > -10) throw new RuntimeException("ooops") ;
         return ResponseEntity.ok(RestResultWrapper.ofValue(s));
     }
 
