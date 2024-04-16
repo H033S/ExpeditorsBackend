@@ -51,8 +51,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @Tag("integration")
 public class StudentServiceTest {
 
-    private String name1 = "Bloke";
-    private String name2 = "Blokess";
+    private String name1 = "Johnson";
+    private String name2 = "Sarla";
     private String newName = "Karl Jung";
     private String phoneNumber1 = "290 298 4790";
     private String phoneNumber2 = "3838 939 93939";
@@ -66,13 +66,7 @@ public class StudentServiceTest {
 
     @BeforeEach
     public void setup() {
-        //studentService = new StudentService();
-        //studentService = applicationContext.getBean("studentService", StudentService.class);
         studentService.clear();
-//        for (String name : context.getBeanDefinitionNames()) {
-//            System.out.println(name);
-//        }
-//        System.out.println(getClass().getName() + ":" + context.getBeanDefinitionCount() + " beans");
     }
 
     @Test
@@ -134,7 +128,7 @@ public class StudentServiceTest {
         Student student2 = studentService.createStudent(name2, phoneNumber2, Status.FULL_TIME);
 
         assertEquals(2, studentService.getAllStudents().size());
-        String searchName = "InMem: " + name1;
+        String searchName = name1;
         List<Student> blokes = studentService.getByName(searchName);
 
         assertEquals(1, blokes.size());

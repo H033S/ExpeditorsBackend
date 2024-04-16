@@ -45,12 +45,6 @@ public class TestDependencyDiscovererBean {
             System.out.println("***************************************");
             System.out.println("Beans Dependant on: " + node.getBeanName() + " : " + node.getClazz());
             dd.printBeanNode(node, "   ");
-//            try {
-//                //System.out.println(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(node));
-//                System.out.println(writer.writeValueAsString(node));
-//            } catch (JsonProcessingException e) {
-//                throw new RuntimeException(e);
-//            }
         });
     }
 }

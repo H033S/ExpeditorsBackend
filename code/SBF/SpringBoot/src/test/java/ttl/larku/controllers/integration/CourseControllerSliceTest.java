@@ -2,6 +2,9 @@ package ttl.larku.controllers.integration;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.net.URI;
+import java.util.Arrays;
+import java.util.List;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
@@ -25,15 +28,10 @@ import ttl.larku.domain.Course;
 import ttl.larku.service.CourseService;
 import ttl.larku.service.StudentService;
 
-import java.net.URI;
-import java.util.Arrays;
-import java.util.List;
-
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;

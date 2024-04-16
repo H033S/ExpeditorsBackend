@@ -22,7 +22,7 @@
     <!--		<bean id="studentDAO2" class="ttl.larku.dao.jpahibernate.JPAStudentDAO" />-->
     <!--		-->
 
-    <!--		<bean id="courseService" class="ttl.larku.service.CourseService" autowire="byType">-->
+    <!--		<bean id="courseService" class="ttl.larku.service.DefaultCourseService" autowire="byType">-->
     <!--		</bean>-->
     <!--		-->
     <!--		<bean id="courseDAO" class="ttl.larku.dao.inmemory.InMemoryCourseDAO" />-->

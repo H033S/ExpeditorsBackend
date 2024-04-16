@@ -9,6 +9,8 @@ public class Course {
     private String code;
     private float credits = 2.5f;
 
+    private String rating;
+
     @JsonIgnore
     private String name;
 
@@ -48,6 +50,15 @@ public class Course {
         this.code = code;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+
     public float getCredits() {
         return credits;
     }
@@ -56,20 +67,20 @@ public class Course {
         this.credits = credits;
     }
 
+    public String getRating() {
+        return rating;
+    }
+
+    public void setRating(String rating) {
+        this.rating = rating;
+    }
+
     public float[] getCreditList() {
         return creditList;
     }
 
     public void setCreditList(float[] creditList) {
         this.creditList = creditList;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     @Override
@@ -105,7 +116,14 @@ public class Course {
 
     @Override
     public String toString() {
-        return "Course [id=" + id + ", title=" + title + ", code=" + code + ", credits=" + credits + "]";
+        return "Course{" +
+              "id=" + id +
+              ", title='" + title + '\'' +
+              ", code='" + code + '\'' +
+              ", name='" + name + '\'' +
+              ", rating='" + rating + '\'' +
+              ", credits=" + credits +
+              '}';
     }
 
 
