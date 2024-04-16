@@ -53,6 +53,7 @@ public class AdopterServiceUnitTest {
         Mockito.when(adopterDAO.insert(adopters.get(0))).thenReturn(adopters.get(0));
 
         Adopter adopter = adopterService.addAdopter(adopters.get(0));
+        assertEquals(adopters.get(0).getName(), "Joey");
 
        Mockito.verify(adopterDAO).insert(adopters.get(0));
     }

@@ -20,6 +20,10 @@ public class Student extends Object {
 
    private Status status = Status.FULL_TIME;   //FULL_TIME, PART_TIME, HIBERNATING
 
+   public Student() {
+      int stop = 10;
+   }
+
    public Student(String name, LocalDate dob, String... phoneNumbers) {
       this(0, name, dob, Status.FULL_TIME, List.of(phoneNumbers));
    }
@@ -38,6 +42,7 @@ public class Student extends Object {
          this.phoneNumbers.addAll(phoneNumbers);
       }
    }
+
 
    public int getId() {
       return id;
