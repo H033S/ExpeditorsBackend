@@ -1,5 +1,7 @@
 package ttl.larku.controllers.integration;
 
+import java.time.format.DateTimeFormatter;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -13,15 +15,12 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
-import ttl.larku.LarkUTestDataConfig;
 import ttl.larku.domain.ScheduledClass;
 import ttl.larku.domain.Student;
+import ttl.larku.jconfig.LarkUTestDataConfig;
 import ttl.larku.service.ClassService;
 import ttl.larku.service.CourseService;
 import ttl.larku.service.StudentService;
-
-import java.time.format.DateTimeFormatter;
-import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.jupiter.api.Assertions.assertTrue;

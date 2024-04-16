@@ -1,5 +1,7 @@
 package ttl.larku.service;
 
+import java.time.Duration;
+import java.util.List;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import ttl.larku.dao.BaseDAO;
@@ -8,25 +10,24 @@ import ttl.larku.domain.Student.Status;
 import ttl.larku.domain.StudentCreatedEvent;
 import ttl.larku.service.props.ServiceThatWeDontOwn;
 
-import java.time.Duration;
-import java.util.List;
-
 @Service
 public class StudentService {
 
-//    @Autowired
     private BaseDAO<Student> studentDAO;
 
     private ApplicationEventPublisher publisher;
 
-//    @Autowired
     private ServiceThatWeDontOwn ctwdo;
 
+
     //Autowiring happening here
-    public StudentService(BaseDAO<Student> studentDAO, ApplicationEventPublisher publisher, ServiceThatWeDontOwn ctwdo) {
+    public StudentService(BaseDAO<Student> studentDAO,
+                          ApplicationEventPublisher publisher,
+                          ServiceThatWeDontOwn ctwdo) {
         this.studentDAO = studentDAO;
         this.publisher = publisher;
         this.ctwdo = ctwdo;
+
     }
 
 
@@ -77,7 +78,7 @@ public class StudentService {
     }
 
     public List<Student> getByName(String name) {
-        List<Student> result = studentDAO.findBy(s -> s.getName().equals(name));
+        List<Student> result = studentDAO.findBy(s -> s.getName().contains(name));
 
         return result;
     }
