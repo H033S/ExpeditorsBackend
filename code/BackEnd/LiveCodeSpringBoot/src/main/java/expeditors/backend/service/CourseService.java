@@ -17,7 +17,6 @@ public class CourseService {
         int stop = 0;
     }
 
-
     public Course createCourse(String code, String title) {
         Course course = new Course(code, title);
         course = courseDAO.insert(course);

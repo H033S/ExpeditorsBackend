@@ -79,6 +79,8 @@ public class StudentRestControllerSliceTest {
         MediaType contentType = accept;
 
         Mockito.when(studentService.getStudent(goodStudentId)).thenReturn(students.get(0));
+
+
         MockHttpServletRequestBuilder builder = get("/adminrest/student/{id}", goodStudentId)
                 .accept(accept)
                 .contentType(contentType);
