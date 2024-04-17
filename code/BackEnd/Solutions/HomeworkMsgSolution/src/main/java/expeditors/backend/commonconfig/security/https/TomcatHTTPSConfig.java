@@ -16,7 +16,7 @@ import org.springframework.context.annotation.Profile;
  */
 @Configuration
 @Profile("ssl")
-public class HTTPSConfig {
+public class TomcatHTTPSConfig {
 
     private final static String CONNECTOR_PROTOCOL = "org.apache.coyote.http11.Http11NioProtocol";
 
