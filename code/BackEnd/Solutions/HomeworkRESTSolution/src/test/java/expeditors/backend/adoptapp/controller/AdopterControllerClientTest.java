@@ -59,6 +59,11 @@ public class AdopterControllerClientTest {
                 .retrieve()
                 .toEntity(ptr);
 
+//        ResponseEntity<List<Adopter>> response = restClient.get()
+//              .uri(rootUrl)
+//              .retrieve()
+//              .toEntity(List<Adopter>.class);
+
         assertEquals(HttpStatus.OK, response.getStatusCode());
     }
 
@@ -82,6 +87,7 @@ public class AdopterControllerClientTest {
                 .uri(oneAdopterUrl, 1000)
                 .retrieve()
                 .onStatus(code -> code == HttpStatus.NOT_FOUND, (req, resp) -> {
+
                 })
                 .toBodilessEntity();
 

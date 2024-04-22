@@ -20,9 +20,6 @@ public class StudentService {
 
    @Autowired
    private StudentDAO studentDAO;
-//   private StudentDAO studentDAO = new JPAStudentDAO();
-//   private InMemoryStudentDAO studentDAO = new InMemoryStudentDAO();
-//   private JPAStudentDAO studentDAO = new JPAStudentDAO();
 
    private int numCalls;
    private AtomicInteger betterCounter = new AtomicInteger(1);
@@ -30,11 +27,6 @@ public class StudentService {
    int xyz = 10;
 
    public StudentService() {
-//      studentDAO = new JPAStudentDAO();
-//      studentDAO = new InMemoryStudentDAO();
-//      studentDAO = DAOFactory.studentDAO();
-
-      int stop = 0;
    }
 
    public Student createStudent(Student student) {

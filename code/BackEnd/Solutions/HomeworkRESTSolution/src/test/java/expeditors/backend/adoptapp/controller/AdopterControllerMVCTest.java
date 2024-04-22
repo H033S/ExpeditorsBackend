@@ -5,10 +5,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import expeditors.backend.adoptapp.domain.Adopter;
 import expeditors.backend.adoptapp.domain.Pet;
 import expeditors.backend.adoptapp.domain.PetType;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.ApplicationContext;
 import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
@@ -35,6 +37,14 @@ public class AdopterControllerMVCTest {
 
     @Autowired
     private ObjectMapper mapper;
+
+    @Autowired
+    private ApplicationContext context;
+
+    @BeforeEach
+    public void init() {
+       int stop = 0;
+    }
 
     @Test
     public void testGetAll() throws Exception {

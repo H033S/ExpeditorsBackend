@@ -5,6 +5,8 @@ import expeditors.backend.domain.Student;
 import expeditors.backend.service.StudentService;
 import java.net.URI;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -23,8 +25,13 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 @RequestMapping("/student")
 public class StudentServiceController {
 
+   private Logger logger = LoggerFactory.getLogger(this.getClass());
+
    @Autowired
    private StudentService studentService;
+
+   @Autowired
+   private UriCreator uriCreator;
 
    @GetMapping
    public List<Student> getAll() {
@@ -47,11 +54,14 @@ public class StudentServiceController {
 
       //http://localhost:8080/student/newStudent.getId()
 
-      URI newResource = ServletUriComponentsBuilder
-            .fromCurrentRequest()
-            .path("/{id}")
-            .buildAndExpand(student.getId())
-            .toUri();
+      URI newResource = uriCreator.getURI(student.getId());
+//      URI newResource = ServletUriComponentsBuilder
+//            .fromCurrentRequest()
+//            .path("/{id}")
+//            .buildAndExpand(student.getId())
+//            .toUri();
+
+      logger.info("Added Student: " + newStudent);
 
       //return ResponseEntity.created(newResource).body(newStudent);
       return ResponseEntity.created(newResource).build();

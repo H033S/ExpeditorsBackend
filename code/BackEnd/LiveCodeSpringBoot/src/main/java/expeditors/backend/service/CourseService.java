@@ -5,6 +5,7 @@ import expeditors.backend.domain.Course;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestClient;
 
 
 @Service
@@ -13,7 +14,14 @@ public class CourseService {
     @Autowired
     private BaseDAO<Course> courseDAO;
 
+    private RestClient ratingClient;
+
     public CourseService() {
+        this.ratingClient = RestClient.builder()
+              .baseUrl("http://localhost:10001/ratingService")
+              .defaultHeader("Accept", "application/json")
+              .defaultHeader("Content-Type", "application/json")
+              .build();
         int stop = 0;
     }
 
@@ -54,7 +62,8 @@ public class CourseService {
     }
 
     public Course getCourse(int id) {
-        return courseDAO.findById(id);
+        var course = courseDAO.findById(id);
+        return course;
     }
 
     public List<Course> getAllCourses() {
