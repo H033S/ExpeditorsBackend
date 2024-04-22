@@ -38,9 +38,6 @@ public class AdopterControllerMVCTest {
     @Autowired
     private ObjectMapper mapper;
 
-    @Autowired
-    private ApplicationContext context;
-
     @BeforeEach
     public void init() {
        int stop = 0;
