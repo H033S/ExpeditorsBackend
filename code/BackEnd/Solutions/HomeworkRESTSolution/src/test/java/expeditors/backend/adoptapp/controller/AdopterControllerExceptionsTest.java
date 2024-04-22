@@ -1,16 +1,15 @@
 package expeditors.backend.adoptapp.controller;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import expeditors.backend.adoptapp.domain.Adopter;
 import expeditors.backend.adoptapp.domain.Pet;
+import expeditors.backend.adoptapp.domain.PetType;
 import java.time.LocalDate;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
@@ -50,7 +49,7 @@ public class AdopterControllerExceptionsTest {
     @Test
     public void testPostAdopterWithNullNameShouldThrowValidationException() throws Exception {
         Adopter c = new Adopter(null, "383 9999 9393", LocalDate.of(1960, 6, 9),
-                Pet.builder(Pet.PetType.DOG).name("woofie").breed("mixed").build());
+                Pet.builder(PetType.DOG).name("woofie").breed("mixed").build());
         String jsonString = mapper.writeValueAsString(c);
 
         ResultActions actions = mockMvc.perform(post("/petservice")
@@ -84,7 +83,7 @@ public class AdopterControllerExceptionsTest {
     @Test
     public void testBadContentTypeThrowsMediaTypeNotSupportedException() throws Exception {
         Adopter c = new Adopter("Adopter For Delete", "383 9999 9393", LocalDate.of(1960, 6, 9),
-                Pet.builder(Pet.PetType.DOG).name("woofie").breed("mixed").build());
+                Pet.builder(PetType.DOG).name("woofie").breed("mixed").build());
         String jsonString = mapper.writeValueAsString(c);
 
         ResultActions actions = mockMvc.perform(post("/petservice")

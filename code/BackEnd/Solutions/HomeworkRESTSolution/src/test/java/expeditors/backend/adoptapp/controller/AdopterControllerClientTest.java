@@ -2,6 +2,7 @@ package expeditors.backend.adoptapp.controller;
 
 import expeditors.backend.adoptapp.domain.Adopter;
 import expeditors.backend.adoptapp.domain.Pet;
+import expeditors.backend.adoptapp.domain.PetType;
 import jakarta.annotation.PostConstruct;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -90,7 +91,7 @@ public class AdopterControllerClientTest {
     @Test
     public void testPostAdopter() throws URISyntaxException {
         Adopter a = new Adopter("Joey", "383 9999 9393", LocalDate.of(1960, 6, 9),
-                Pet.builder(Pet.PetType.DOG).name("woofie").breed("mixed").build());
+                Pet.builder(PetType.DOG).name("woofie").breed("mixed").build());
 
         ResponseEntity<Void> result = restClient.post()
                 .uri(rootUrl)
@@ -108,7 +109,7 @@ public class AdopterControllerClientTest {
     @Test
     public void testDeleteAdopterWithGoodId() {
         Adopter c = new Adopter("Joey", "383 9999 9393", LocalDate.of(1960, 6, 9),
-                Pet.builder(Pet.PetType.DOG).name("woofie").breed("mixed").build());
+                Pet.builder(PetType.DOG).name("woofie").breed("mixed").build());
 
         ResponseEntity<Void> result = restClient.post()
                 .uri(rootUrl)

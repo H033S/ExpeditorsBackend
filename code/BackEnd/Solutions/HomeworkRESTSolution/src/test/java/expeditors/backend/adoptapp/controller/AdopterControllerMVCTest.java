@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import expeditors.backend.adoptapp.domain.Adopter;
 import expeditors.backend.adoptapp.domain.Pet;
+import expeditors.backend.adoptapp.domain.PetType;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -70,7 +71,7 @@ public class AdopterControllerMVCTest {
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     public void testPostAdopter() throws Exception {
         Adopter c = new Adopter("Joey", "383 9999 9393", LocalDate.of(1960, 6, 9),
-                Pet.builder(Pet.PetType.DOG).name("woofie").breed("mixed").build());
+                Pet.builder(PetType.DOG).name("woofie").breed("mixed").build());
         String jsonString = mapper.writeValueAsString(c);
 
         ResultActions actions = mockMvc.perform(post("/petservice")
@@ -89,7 +90,7 @@ public class AdopterControllerMVCTest {
     @Test
     public void testDeleteAdopterWithGoodId() throws Exception {
         Adopter c = new Adopter("Adopter For Delete", "383 9999 9393", LocalDate.of(1960, 6, 9),
-                Pet.builder(Pet.PetType.DOG).name("woofie").breed("mixed").build());
+                Pet.builder(PetType.DOG).name("woofie").breed("mixed").build());
         String jsonString = mapper.writeValueAsString(c);
 
         ResultActions actions = mockMvc.perform(post("/petservice")

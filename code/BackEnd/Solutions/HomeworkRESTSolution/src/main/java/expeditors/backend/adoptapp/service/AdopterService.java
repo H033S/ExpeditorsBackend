@@ -2,7 +2,7 @@ package expeditors.backend.adoptapp.service;
 
 import expeditors.backend.adoptapp.dao.AdopterDAO;
 import expeditors.backend.adoptapp.domain.Adopter;
-import expeditors.backend.adoptapp.domain.Pet;
+import expeditors.backend.adoptapp.domain.PetType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -38,7 +38,7 @@ public class AdopterService {
         this.adopterDAO = adopterDAO;
     }
 
-    public List<Adopter> getAdoptersByPetType(Pet.PetType type) {
+    public List<Adopter> getAdoptersByPetType(PetType type) {
         List<Adopter> result = adopterDAO
                 .findAll().stream()
                 .filter(a -> a.getPet().getType() == type)

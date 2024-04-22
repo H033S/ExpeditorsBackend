@@ -25,38 +25,19 @@
         <td>[[${adopter.phoneNumber}]]</td>
     </tr>
     <tr>
-        <td>Pets</td>
-        <td>
-           <span th:each="pet : ${adopter.pets}">
-                [[${pet}]]<br/>
-           </span>
-        </td>
+        <td>Pet Type</td>
+        <td>[[${adopter.pet.type}]]</td>
+    </tr>
+    <tr>
+        <td>Pet Name</td>
+        <td>[[${adopter.pet.name}]]</td>
+    </tr>
+    <tr>
+        <td>Pet Breed</td>
+        <td>[[${adopter.pet.breed}]]</td>
     </tr>
 </table>
 <br/>
-<div>
-    <table>
-        <tr>
-            <td>
-                <form th:action="@{/pets/addPetToAdopter(adopterId=${adopter.id})}"
-                      method="get" th:object="${pet}">
-                    <input type="hidden" name="adopterId" th:value="${adopter.id}"/>
-                    <input type="submit" value="Add Pet"/>
-                </form>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <form th:action="@{/pets/removePetFromAdopter(adopterId=${adopter.id})}"
-                      method="post" th:object="${pet}">
-                    <input type="submit" value="Remove Pet With Id"/>
-                    <input type="text" name="petId"/>
-                    <input type="hidden" th:value="${adopter.id}"/>
-                </form>
-            </td>
-        </tr>
-    </table>
-</div>
 <br/>
 <a th:href="@{/}">Home</a>
 </body>

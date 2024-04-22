@@ -3,6 +3,7 @@ package expeditors.backend.adoptapp.service;
 import expeditors.backend.adoptapp.dao.AdopterDAO;
 import expeditors.backend.adoptapp.domain.Adopter;
 import expeditors.backend.adoptapp.domain.Pet;
+import expeditors.backend.adoptapp.domain.PetType;
 import java.time.LocalDate;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -39,13 +40,13 @@ public class AdopterServiceUnitTest {
 
     List<Adopter> adopters = List.of(
           new Adopter("Joey", "383 9999 9393", LocalDate.of(1960, 6, 9),
-                Pet.builder(Pet.PetType.DOG).name("woofie").build()),
+                Pet.builder(PetType.DOG).name("woofie").build()),
           new Adopter("H2-Francine", "383 9339 9999 9393", LocalDate.parse("2020-05-09"),
-                Pet.builder(Pet.PetType.DOG).name("slinky").breed("dalmation").build()),
+                Pet.builder(PetType.DOG).name("slinky").breed("dalmation").build()),
           new Adopter("H2-Darlene", "44484 9339 77939", LocalDate.parse("2020-05-09"),
-                Pet.builder(Pet.PetType.TURTLE).name("swifty").build()),
+                Pet.builder(PetType.TURTLE).name("swifty").build()),
           new Adopter("H2-Miguel", "77 888 93938", LocalDate.parse("2022-03-09"),
-                Pet.builder(Pet.PetType.DOG).name("woofwoof").breed("Terrier").build())
+                Pet.builder(PetType.DOG).name("woofwoof").breed("Terrier").build())
     );
 
     @Test
@@ -116,7 +117,7 @@ public class AdopterServiceUnitTest {
     public void testUpdateWithExistingAdopter() {
 
         Adopter adopter = new Adopter("Joey", "383 9999 9393", LocalDate.of(1960, 6, 9),
-                Pet.builder(Pet.PetType.DOG).name("woofie").build());
+                Pet.builder(PetType.DOG).name("woofie").build());
 
         Mockito.when(adopterDAO.update(adopter)).thenReturn(true);
 
@@ -130,7 +131,7 @@ public class AdopterServiceUnitTest {
     public void testUpdateNonExistingAdopter() {
         int id = 1000;
         Adopter adopter = new Adopter("Joey", "383 9999 9393", LocalDate.of(1960, 6, 9),
-              Pet.builder(Pet.PetType.DOG).name("woofie").build());
+              Pet.builder(PetType.DOG).name("woofie").build());
 
         Mockito.when(adopterDAO.update(adopter)).thenReturn(false);
 
@@ -146,7 +147,7 @@ public class AdopterServiceUnitTest {
         Mockito.when(adopterDAO.findAll()).thenReturn(adopters);
 
         List<Adopter> result =
-              adopterService.getAdoptersByPetType(Pet.PetType.TURTLE);
+              adopterService.getAdoptersByPetType(PetType.TURTLE);
         assertEquals(1, result.size());
 
         Mockito.verify(adopterDAO).findAll();
