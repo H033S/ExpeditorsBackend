@@ -155,4 +155,5 @@ public class AdopterServiceTest {
         var newPet = Pet.builder(PetType.CAT).name("curly").build();
         foundAdopter.setPet(newPet);
     }
+
 }
