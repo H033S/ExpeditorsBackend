@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.ttl.uricreator.LibUriCreator;
+import org.ttl.liburicreator.LibUriCreator;
 
 import static java.util.stream.Collectors.toList;
 
@@ -37,8 +37,11 @@ public class ControllerWithUriCreatorLib {
    @Autowired
    private TryWithResourcesDemo twrDemo;
 
+//   @Autowired
+//   private UriCreator uriCreator;
+
    @Autowired
-   private LibUriCreator uriCreator;
+   private LibUriCreator libUriCreator;
 
    @GetMapping
    public List<Student> getAll() throws Exception{
@@ -75,7 +78,8 @@ public class ControllerWithUriCreatorLib {
 
       //http://localhost:8080/student/newStudent.getId()
 
-      URI newResource = uriCreator.getURI(student.getId());
+      //URI newResource = uriCreator.getURI(student.getId());
+      URI newResource = libUriCreator.getURI(student.getId());
 //      URI newResource = ServletUriComponentsBuilder
 //            .fromCurrentRequest()
 //            .path("/{id}")

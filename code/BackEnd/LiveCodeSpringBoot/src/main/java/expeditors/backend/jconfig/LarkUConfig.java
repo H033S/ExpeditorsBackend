@@ -11,10 +11,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
-import org.ttl.uricreator.LibUriCreator;
 
 @Configuration
-@ComponentScan({"expeditors.backend", "org.ttl"})
+@ComponentScan({"expeditors.backend", "org.ttl.liburicreator"})
 public class LarkUConfig {
    /*
     <bean id="inMemoryStudentDAO" class="expeditors.backend.dao.inmemory.InMemoryStudentDAO"/>
