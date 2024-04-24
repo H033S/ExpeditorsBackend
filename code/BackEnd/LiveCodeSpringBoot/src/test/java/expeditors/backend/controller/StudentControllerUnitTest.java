@@ -2,6 +2,8 @@ package expeditors.backend.controller;
 
 import expeditors.backend.domain.Student;
 import expeditors.backend.service.StudentService;
+import jakarta.validation.Validation;
+import jakarta.validation.ValidatorFactory;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.time.LocalDate;
@@ -14,8 +16,15 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BeanPropertyBindingResult;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.Errors;
+import org.springframework.validation.Validator;
+import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
+import org.springframework.validation.beanvalidation.SpringValidatorAdapter;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.never;
 
 @ExtendWith(MockitoExtension.class)
 public class StudentControllerUnitTest {
@@ -25,6 +34,9 @@ public class StudentControllerUnitTest {
 
    @Mock
    private UriCreator uriCreator;
+
+   @Mock
+   private Validator validator;
 
    @InjectMocks
    private StudentServiceController controller;
@@ -39,7 +51,11 @@ public class StudentControllerUnitTest {
 
       Mockito.when(studentService.getStudents()).thenReturn(students);
 
-      List<Student> result = controller.getAll();
+      try {
+         List<Student> result = controller.getAll();
+      } catch (Exception e) {
+         throw new RuntimeException(e);
+      }
       assertEquals(2, students.size());
 
       Mockito.verify(studentService).getStudents();
@@ -54,8 +70,12 @@ public class StudentControllerUnitTest {
       Mockito.when(studentService.createStudent(students.getFirst())).thenReturn(students.getFirst());
       Mockito.when(uriCreator.getURI(students.getFirst().getId())).thenReturn(expecedURI);
 
-      //Make the call
-      ResponseEntity<?> response = controller.addStudent(students.getFirst());
+      Student student = new Student(null, LocalDate.parse("2000-10-10"));
+
+      Validator validator = new LocalValidatorFactoryBean();
+      //Empty Errors object
+      Errors errors = new BeanPropertyBindingResult(students.getFirst(), "student");
+      ResponseEntity<?> response = controller.addStudent(students.getFirst(), errors);
 
       //Do assertions
       assertEquals(HttpStatus.CREATED, response.getStatusCode());
@@ -66,6 +86,31 @@ public class StudentControllerUnitTest {
 
 
       Mockito.verify(studentService).createStudent(students.getFirst());
+
+   }
+
+   @Test
+   public void testAddInvalidStudent() throws URISyntaxException {
+      String expectedHeader = "http://localhost:8080/student/0";
+      URI expecedURI = new URI(expectedHeader);
+      Student student = new Student(null, LocalDate.parse("2000-10-10"));
+
+      ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+      jakarta.validation.Validator hibValidator = factory.getValidator();
+
+      SpringValidatorAdapter springValidator = new SpringValidatorAdapter(hibValidator);
+      BindingResult bindingResult= new BeanPropertyBindingResult(student, "student");
+      springValidator.validate(student, bindingResult);
+
+//      Errors errors = validator.validateObject(student);
+      //Make the call
+      ResponseEntity<?> response = controller.addStudent(student, bindingResult);
+
+      //Do assertions
+      assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+
+
+      Mockito.verify(studentService, never()).createStudent(student);
 
    }
 

@@ -17,6 +17,7 @@ public class Adopter {
 
     //If you also want to validate the Pet when an Adopter is validated.
     @Valid
+    @NotNull
     Pet pet;
 
     public Adopter(String name, String phoneNumber, LocalDate adoptionDate, Pet pet) {

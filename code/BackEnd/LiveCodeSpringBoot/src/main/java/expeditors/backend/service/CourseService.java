@@ -14,14 +14,7 @@ public class CourseService {
     @Autowired
     private BaseDAO<Course> courseDAO;
 
-    private RestClient ratingClient;
-
     public CourseService() {
-        this.ratingClient = RestClient.builder()
-              .baseUrl("http://localhost:10001/ratingService")
-              .defaultHeader("Accept", "application/json")
-              .defaultHeader("Content-Type", "application/json")
-              .build();
         int stop = 0;
     }
 
@@ -63,10 +56,12 @@ public class CourseService {
 
     public Course getCourse(int id) {
         var course = courseDAO.findById(id);
+
         return course;
     }
 
     public List<Course> getAllCourses() {
+
         return courseDAO.findAll();
     }
 

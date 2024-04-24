@@ -44,6 +44,8 @@ public class GlobalErrorHandler {
     @Autowired
     private UriCreator uriCreator;
 
+
+
     /**
      * Handle BadRequest (400) errors.
      * <p>

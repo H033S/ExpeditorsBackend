@@ -5,8 +5,10 @@ import expeditors.backend.adoptapp.service.AdopterService;
 import expeditors.backend.utils.UriCreator;
 import jakarta.validation.Valid;
 import java.util.Map;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.Validator;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -62,6 +64,13 @@ public class AdopterController {
         }
         return ResponseEntity.ok(adopter);
     }
+
+    public void validate(@Valid Object obj) {
+
+    }
+
+    @Autowired
+    private Validator validator;
 
     @PostMapping
     public ResponseEntity<?> addAdopter(@RequestBody @Valid Adopter adopter) {

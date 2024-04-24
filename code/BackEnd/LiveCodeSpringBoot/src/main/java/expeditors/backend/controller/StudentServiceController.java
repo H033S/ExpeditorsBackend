@@ -1,8 +1,10 @@
 package expeditors.backend.controller;
 
 
+import expeditors.backend.app.TryWithResourcesDemo;
 import expeditors.backend.domain.Student;
 import expeditors.backend.service.StudentService;
+import jakarta.validation.Valid;
 import java.net.URI;
 import java.util.List;
 import org.slf4j.Logger;
@@ -11,7 +13,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.Errors;
+import org.springframework.validation.Validator;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,6 +25,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import static java.util.stream.Collectors.toList;
 
 @RestController
 @RequestMapping("/student")
@@ -31,11 +38,15 @@ public class StudentServiceController {
    private StudentService studentService;
 
    @Autowired
+   private TryWithResourcesDemo twrDemo;
+
+   @Autowired
    private UriCreator uriCreator;
 
    @GetMapping
-   public List<Student> getAll() {
+   public List<Student> getAll() throws Exception{
       List<Student> students = studentService.getStudents();
+
       return students;
    }
 
@@ -48,8 +59,21 @@ public class StudentServiceController {
       return ResponseEntity.ok(student);
    }
 
+   @Autowired
+   private Validator validator;
+
    @PostMapping
-   public ResponseEntity<?> addStudent(@RequestBody Student student) {
+   public ResponseEntity<?> addStudent(@RequestBody /*@Valid*/ Student student, Errors errors) {
+      validator.validate(student, errors);
+
+      if (errors.hasErrors()) {
+         List<String> errmsgs = errors.getFieldErrors().stream()
+               .map(error -> "Manual Validation error:" + error.getField() + ": " + error.getDefaultMessage()
+                     + ", supplied Value: " + error.getRejectedValue())
+               .collect(toList());
+         return ResponseEntity.badRequest().body(errmsgs);
+      }
+
       Student newStudent = studentService.createStudent(student);
 
       //http://localhost:8080/student/newStudent.getId()
@@ -66,6 +90,13 @@ public class StudentServiceController {
       //return ResponseEntity.created(newResource).body(newStudent);
       return ResponseEntity.created(newResource).build();
    }
+
+//   private boolean validateStudent(Student student) {
+//      if(student.getName() == null || student.getDob() == null) {
+//         return false;
+//      }
+//      return true;
+//   }
 
    @DeleteMapping("/{id}")
    public ResponseEntity<?> deleteStudent(@PathVariable("id") int id) {
@@ -86,6 +117,14 @@ public class StudentServiceController {
 
       return ResponseEntity.noContent().build();
    }
+
+
+//   @ExceptionHandler(Exception.class)
+//   public void handleControllerExceptions(Exception e) {
+//      System.out.println("In Controller Exception Handler");
+//   }
 }
 
 //REpresantational State Transfer
+
+

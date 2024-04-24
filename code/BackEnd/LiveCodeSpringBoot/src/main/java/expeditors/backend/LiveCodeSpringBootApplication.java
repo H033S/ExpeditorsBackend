@@ -1,7 +1,10 @@
 package expeditors.backend;
 
+import expeditors.backend.domain.Course;
 import expeditors.backend.domain.Student;
+import expeditors.backend.service.CourseService;
 import expeditors.backend.service.StudentService;
+import java.time.LocalDate;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -24,7 +27,7 @@ public class LiveCodeSpringBootApplication {
 }
 
 @Component
-class MyRunner implements CommandLineRunner
+class StudentsInitializer implements CommandLineRunner
 {
    @Autowired
    private StudentService studentService;
@@ -36,5 +39,28 @@ class MyRunner implements CommandLineRunner
       List<Student> students = studentService.getStudents();
       System.out.println("students: " + students.size());
       System.out.println(students);
+   }
+}
+
+@Component
+class CourseInitializer implements CommandLineRunner
+{
+   @Autowired
+   private CourseService courseService;
+
+   @Override
+   public void run(String... args) throws Exception {
+      System.out.println("Initializing Courses ");
+
+      var courses = List.of(
+            new Course("Math-101", "Intro to Math"),
+            new Course("Astro-202", "Intro to Astronomy")
+      );
+
+      courses.forEach(courseService::createCourse) ;
+
+      courses = courseService.getAllCourses();
+      System.out.println("courses: " + courses.size());
+      System.out.println(courses);
    }
 }
