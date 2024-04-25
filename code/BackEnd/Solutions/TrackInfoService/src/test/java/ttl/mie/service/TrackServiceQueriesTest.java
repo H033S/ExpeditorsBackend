@@ -101,7 +101,7 @@ public class TrackServiceQueriesTest {
    public void testSearchForDurationWithString() {
       var dur = Duration.parse("PT5M");
       //Map<String, String> propMap = Map.of("g.length", Duration.ofSeconds(480));
-      Map<String, String> propMap = Map.of("g.length", "PT8M");
+      Map<String, String> propMap = Map.of("G.length", "PT6M");
 
       List<TrackDTO> result = trackService.getTracksBySearchSpec(propMap);
       out.println("result: " + result.size());
