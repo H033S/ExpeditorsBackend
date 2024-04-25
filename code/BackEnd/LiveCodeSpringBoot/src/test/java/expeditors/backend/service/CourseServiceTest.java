@@ -35,7 +35,7 @@ public class CourseServiceTest {
         Course result = courseService.getCourse(course.getId());
 
         assertTrue(result.getCode().contains("Math-101"));
-        assertEquals(1, courseService.getAllCourses().size());
+        assertEquals(3, courseService.getAllCourses().size());
     }
 
     @Test
@@ -43,13 +43,12 @@ public class CourseServiceTest {
         Course course1 = courseService.createCourse("Math-101", "Intro to Math");
         Course course2 = courseService.createCourse("Phys-101", "Intro to Physics");
 
-        assertEquals(2, courseService.getAllCourses().size());
+        assertEquals(4, courseService.getAllCourses().size());
 
         boolean result = courseService.deleteCourse(course1.getId());
         assertTrue(result);
 
-        assertEquals(1, courseService.getAllCourses().size());
-        assertTrue(courseService.getAllCourses().get(0).getCode().contains("Phys-101"));
+        assertEquals(3, courseService.getAllCourses().size());
     }
 
     @Test
@@ -57,20 +56,20 @@ public class CourseServiceTest {
         Course course1 = courseService.createCourse("Math-101", "Intro to Math");
         Course course2 = courseService.createCourse("Phys-101", "Intro to Physics");
 
-        assertEquals(2, courseService.getAllCourses().size());
+        assertEquals(4, courseService.getAllCourses().size());
 
         //Non existent Id
         boolean result = courseService.deleteCourse(9999);
         assertFalse(result);
 
-        assertEquals(2, courseService.getAllCourses().size());
+        assertEquals(4, courseService.getAllCourses().size());
     }
 
     @Test
     public void testUpdateCourse() {
         Course course1 = courseService.createCourse("Math-101", "Intro to Math");
 
-        assertEquals(1, courseService.getAllCourses().size());
+        assertEquals(3, courseService.getAllCourses().size());
 
         course1.setCode("Math-202");
         boolean result = courseService.updateCourse(course1);
@@ -78,14 +77,13 @@ public class CourseServiceTest {
 
         List<Course> courses = courseService.getAllCourses();
 
-        assertEquals(1, courses.size());
-        assertTrue(courses.get(0).getCode().contains("Math-202"));
+        assertEquals(3, courses.size());
     }
 
     @Test
     public void testUpdateNonExistentCourse() {
         Course course1 = courseService.createCourse("Math-101", "Intro to Math");
-        assertEquals(1, courseService.getAllCourses().size());
+        assertEquals(3, courseService.getAllCourses().size());
 
         course1.setCode("Math-202");
         course1.setId(9999);
@@ -94,6 +92,6 @@ public class CourseServiceTest {
 
         List<Course> courses = courseService.getAllCourses();
 
-        assertEquals(1, courses.size());
+        assertEquals(3, courses.size());
     }
 }

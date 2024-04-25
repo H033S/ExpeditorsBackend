@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 public class CourseRatingService {
 
    public int getCourseRating(int id) {
-      int rating = ThreadLocalRandom.current().nextInt(1, 10);
+      int rating = ThreadLocalRandom.current().nextInt(10, 20);
 
       return rating;
    }

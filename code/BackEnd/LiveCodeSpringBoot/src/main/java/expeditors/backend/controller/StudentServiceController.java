@@ -7,6 +7,7 @@ import expeditors.backend.service.StudentService;
 import jakarta.validation.Valid;
 import java.net.URI;
 import java.util.List;
+import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -44,19 +46,32 @@ public class StudentServiceController {
    private UriCreator uriCreator;
 
    @GetMapping
-   public List<Student> getAll() throws Exception{
-      List<Student> students = studentService.getStudents();
+   public List<Student> getAll(@RequestParam Map<String, String> queryStrings) throws Exception{
+      List<Student> students = null;
+      if(queryStrings.isEmpty()) {
+         students = studentService.getStudents();
+      }else {
+
+         students = studentService.getByParameters(queryStrings);
+      }
 
       return students;
    }
 
-   @GetMapping("/{id}")
+
+   @GetMapping("/{id:\\d+}")
    public ResponseEntity<?> getStudent(@PathVariable("id") int id) {
       Student student = studentService.getStudent(id);
       if (student == null) {
          return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No Student with id: " + id);
       }
       return ResponseEntity.ok(student);
+   }
+
+   @GetMapping("/{id:[A-Z].*}")
+   public ResponseEntity<?> getStudentAlpha(@PathVariable("id") String str) {
+      System.out.println("Got a String: " + str);
+      return ResponseEntity.noContent().build();
    }
 
    @Autowired

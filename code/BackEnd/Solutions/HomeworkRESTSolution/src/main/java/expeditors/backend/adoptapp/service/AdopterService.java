@@ -78,6 +78,8 @@ public class AdopterService {
                      && a.getPet().getBreed().equals(value);
                pred = pred == null ? tmpPred : pred.or(tmpPred);
             }
+
+            //With direct reflection
             case String s -> {
                Predicate<Adopter> tmpPrede = (a) -> {
                   var getMethodName = "get" + key.substring(0, 1).toUpperCase() + key.substring(1);
@@ -94,6 +96,7 @@ public class AdopterService {
                pred = pred == null ? tmpPrede : pred.or(tmpPrede);
             }
 
+            //Using the Spring BeanWrapper to do the reflection
 //            case String s -> {
 //               Predicate<Adopter> adoptionDatePred = (a) -> {
 //                  BeanWrapper bw = new BeanWrapperImpl(a);

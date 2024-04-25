@@ -68,4 +68,20 @@ public class GlobalErrorHandler {
 
         return rr;
     }
+
+    /**
+     * Handle the case where input cannot be converted to the types specified
+     * in controller arguments.
+     * @param ex the exception thrown
+     * @param request the incoming request
+     * @return a bad request + restresult that contains the errors
+     */
+//    @ExceptionHandler(value = {MethodArgumentTypeMismatchException.class})
+//    protected ResponseEntity<?> handleMethodArgument(MethodArgumentTypeMismatchException ex, WebRequest request) {
+//        var errMessage = "MethodArgumentTypeMismatch: name: " + ex.getName() + ", value: " + ex.getValue() + ", message: " +
+//              ex.getMessage() + ", parameter: " + ex.getParameter();
+//
+//
+//        return ResponseEntity.badRequest().body(errMessage);
+//    }
 }

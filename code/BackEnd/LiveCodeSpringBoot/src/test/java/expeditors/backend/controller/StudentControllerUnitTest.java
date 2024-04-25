@@ -8,6 +8,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -52,7 +53,7 @@ public class StudentControllerUnitTest {
       Mockito.when(studentService.getStudents()).thenReturn(students);
 
       try {
-         List<Student> result = controller.getAll();
+         List<Student> result = controller.getAll(Map.of());
       } catch (Exception e) {
          throw new RuntimeException(e);
       }

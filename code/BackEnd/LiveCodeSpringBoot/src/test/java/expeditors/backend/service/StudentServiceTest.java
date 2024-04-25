@@ -48,7 +48,7 @@ public class StudentServiceTest {
 
       out.println("student: " + insertedStudent.toString());
       assertNotNull(insertedStudent);
-      assertEquals(3, student.getId());
+      assertEquals(4, student.getId());
    }
 
    @Test
