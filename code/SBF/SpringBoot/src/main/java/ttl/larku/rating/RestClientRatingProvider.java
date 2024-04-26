@@ -1,4 +1,4 @@
-package ttl.larku.handler;
+package ttl.larku.rating;
 
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpStatus;

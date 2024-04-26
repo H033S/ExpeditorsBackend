@@ -20,7 +20,8 @@ public interface StudentDAO {
 
    public default List<Student> findByName(String name) {
       var result =  findAll().stream()
-            .filter(s -> s.getName().contains(name))
+            .filter(s ->
+                  s.getName().contains(name) )
             .toList();
       return result;
    }

@@ -1,4 +1,4 @@
-package ttl.larku.handler;
+package ttl.larku.rating;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
