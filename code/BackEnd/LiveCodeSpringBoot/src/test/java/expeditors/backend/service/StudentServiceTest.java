@@ -16,6 +16,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import static java.lang.System.out;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -42,9 +43,12 @@ public class StudentServiceTest {
 
       Student insertedStudent = studentService.createStudent(student);
 
-      System.out.println("student: " + insertedStudent.toString());
+      List<Student> all = studentService.getStudents();
+      all.forEach(out::println);
+
+      out.println("student: " + insertedStudent.toString());
       assertNotNull(insertedStudent);
-      assertEquals(3, student.getId());
+      assertEquals(4, student.getId());
    }
 
    @Test
@@ -54,7 +58,7 @@ public class StudentServiceTest {
 
       Student insertedStudent = studentService.createStudent(student);
 
-      System.out.println("student: " + insertedStudent);
+      out.println("student: " + insertedStudent);
       assertNotNull(insertedStudent);
 
       boolean deleted = studentService.deleteStudent(insertedStudent.getId());

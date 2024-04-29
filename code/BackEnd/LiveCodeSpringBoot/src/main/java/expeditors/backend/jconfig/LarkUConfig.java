@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
 @Configuration
-@ComponentScan({"expeditors.backend"})
+@ComponentScan({"expeditors.backend", "org.ttl.liburicreator"})
 public class LarkUConfig {
    /*
     <bean id="inMemoryStudentDAO" class="expeditors.backend.dao.inmemory.InMemoryStudentDAO"/>
@@ -24,8 +24,9 @@ public class LarkUConfig {
    public StudentDAO studentDAO() {
       var dao = new InMemoryStudentDAO();
       List<Student> students = List.of(
-            new Student("Arnie", LocalDate.of(1934, 10, 10), "38 0303 83393"),
-            Student.builder("Myrtle", LocalDate.of(1987, 10, 10)).phoneNumber("378 00 7585").build()
+            new Student("Arnie", LocalDate.of(1934, 10, 10), Student.Status.HIBERNATING, "38 0303 83393"),
+            Student.builder("Myrtle", LocalDate.of(1987, 10, 10)).phoneNumber("378 00 7585").build(),
+            new Student("Frank", LocalDate.of(1954, 10, 10), Student.Status.HIBERNATING, "38 0303 83393")
       );
       students.forEach(dao::insert);
 

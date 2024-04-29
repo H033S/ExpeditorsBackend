@@ -4,12 +4,6 @@ import jakarta.validation.constraints.NotNull;
 
 public class Pet {
 
-    public enum PetType {
-        CAT,
-        DOG,
-        TURTLE
-    }
-
     private int petId;
     private String name;
     @NotNull

@@ -2,9 +2,12 @@ package expeditors.backend.service;
 
 import expeditors.backend.dao.StudentDAO;
 import expeditors.backend.domain.Student;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Predicate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,9 +23,6 @@ public class StudentService {
 
    @Autowired
    private StudentDAO studentDAO;
-//   private StudentDAO studentDAO = new JPAStudentDAO();
-//   private InMemoryStudentDAO studentDAO = new InMemoryStudentDAO();
-//   private JPAStudentDAO studentDAO = new JPAStudentDAO();
 
    private int numCalls;
    private AtomicInteger betterCounter = new AtomicInteger(1);
@@ -30,11 +30,6 @@ public class StudentService {
    int xyz = 10;
 
    public StudentService() {
-//      studentDAO = new JPAStudentDAO();
-//      studentDAO = new InMemoryStudentDAO();
-//      studentDAO = DAOFactory.studentDAO();
-
-      int stop = 0;
    }
 
    public Student createStudent(Student student) {
@@ -79,5 +74,44 @@ public class StudentService {
 
    public void setStudentDAO(StudentDAO studentDAO) {
       this.studentDAO = studentDAO;
+   }
+
+   public List<Student> getByParameters(Map<String, String> queryStrings) {
+      Predicate<Student> finalPred = null;
+
+      for(var entry: queryStrings.entrySet()) {
+        var key = entry.getKey();
+        var value = entry.getValue();
+
+        switch(key) {
+           case "name" -> {
+              //Predicate<Student> pred = (s) -> s != null && s.getName().equals(value);
+              Predicate<Student> pred = (s) -> s != null && s.getName().contains(value);
+
+              finalPred = finalPred == null ? pred : finalPred.or(pred);
+           }
+           case "dob" -> {
+              var dobValue = LocalDate.parse(value);
+              Predicate<Student> pred = (s) -> s != null && s.getDob().equals(dobValue);
+
+              finalPred = finalPred == null ? pred : finalPred.or(pred);
+           }
+           case "status" -> {
+              var eStatus = Student.Status.valueOf(value);
+
+              Predicate<Student> pred = (s) -> s != null && s.getStatus().equals(eStatus);
+
+              finalPred = finalPred == null ? pred : finalPred.or(pred);
+           }
+        }
+      }
+
+      finalPred = finalPred != null ? finalPred : (s) -> true;
+
+      List<Student> result = studentDAO.findAll().stream()
+            .filter(finalPred)
+            .toList();
+
+      return result;
    }
 }

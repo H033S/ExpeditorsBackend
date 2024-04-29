@@ -1,5 +1,6 @@
 package expeditors.backend.domain;
 
+import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,8 +15,13 @@ public class Student extends Object {
    }
 
    private int id;
+
+   @NotNull
    private String name;
+
+   @NotNull
    private LocalDate dob;
+
    private List<String> phoneNumbers = new ArrayList<>();
 
    private Status status = Status.FULL_TIME;   //FULL_TIME, PART_TIME, HIBERNATING

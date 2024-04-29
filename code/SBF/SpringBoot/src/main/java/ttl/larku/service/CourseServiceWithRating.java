@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 import ttl.larku.dao.BaseDAO;
 import ttl.larku.domain.Course;
-import ttl.larku.handler.RatingProvider;
+import ttl.larku.rating.RatingProvider;
 
 
 @Service("courseService")

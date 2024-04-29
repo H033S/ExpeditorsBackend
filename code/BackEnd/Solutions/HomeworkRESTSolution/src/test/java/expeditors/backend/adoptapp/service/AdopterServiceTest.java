@@ -2,6 +2,7 @@ package expeditors.backend.adoptapp.service;
 
 import expeditors.backend.adoptapp.domain.Adopter;
 import expeditors.backend.adoptapp.domain.Pet;
+import expeditors.backend.adoptapp.domain.PetType;
 import java.time.LocalDate;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -39,7 +40,7 @@ public class AdopterServiceTest {
         int oldCount = adopters.size();
 
         Adopter adopter = new Adopter("Joey", "383 9999 9393", LocalDate.of(1960, 6, 9),
-                Pet.builder(Pet.PetType.DOG).name("woofie").build());
+                Pet.builder(PetType.DOG).name("woofie").build());
         adopterService.addAdopter(adopter);
 
 
@@ -54,7 +55,7 @@ public class AdopterServiceTest {
 
         List<Adopter> adopters = adopterService.getAllAdopters();
         Adopter adopter = new Adopter("Joey", "383 9999 9393", LocalDate.of(1960, 6, 9),
-                Pet.builder(Pet.PetType.DOG).name("woofie").build());
+                Pet.builder(PetType.DOG).name("woofie").build());
         adopterService.addAdopter(adopter);
 
         Adopter a = adopterService.getAdopter(1);
@@ -73,7 +74,7 @@ public class AdopterServiceTest {
         int oldCount = adopterService.getAllAdopters().size();
 
         Adopter adopter = new Adopter("Joey", "383 9999 9393", LocalDate.of(1960, 6, 9),
-                Pet.builder(Pet.PetType.DOG).name("woofie").build());
+                Pet.builder(PetType.DOG).name("woofie").build());
         Adopter newAdopter = adopterService.addAdopter(adopter);
 
         int midCount = adopterService.getAllAdopters().size();
@@ -96,7 +97,7 @@ public class AdopterServiceTest {
     public void testUpdateWithExistingAdopter() {
 
         Adopter adopter = new Adopter("Joey", "383 9999 9393", LocalDate.of(1960, 6, 9),
-                Pet.builder(Pet.PetType.DOG).name("woofie").build());
+                Pet.builder(PetType.DOG).name("woofie").build());
         Adopter newAdopter = adopterService.addAdopter(adopter);
 
         assertTrue(newAdopter.getName().contains("Joey"));
@@ -114,7 +115,7 @@ public class AdopterServiceTest {
     public void testUpdateNonExistingAdopter() {
 
         Adopter adopter = new Adopter("Joey", "383 9999 9393", LocalDate.of(1960, 6, 9),
-                Pet.builder(Pet.PetType.DOG).name("woofie").build());
+                Pet.builder(PetType.DOG).name("woofie").build());
         Adopter newAdopter = adopterService.addAdopter(adopter);
 
         newAdopter.setId(1000);
@@ -126,17 +127,17 @@ public class AdopterServiceTest {
     @Test
     public void testGetByPetType() {
         Adopter adopter = new Adopter("Joey", "383 9999 9393", LocalDate.of(1960, 6, 9),
-                Pet.builder(Pet.PetType.DOG).name("woofie").build());
+                Pet.builder(PetType.DOG).name("woofie").build());
         Adopter adopter2 = new Adopter("Franny", "282 9393 8834", LocalDate.of(1990, 6, 9),
-                Pet.builder(Pet.PetType.TURTLE).name("swifty").build());
+                Pet.builder(PetType.TURTLE).name("swifty").build());
 
         adopterService.addAdopter(adopter);
         adopterService.addAdopter(adopter2);
-        List<Adopter> result = adopterService.getAdoptersByPetType(Pet.PetType.TURTLE);
+        List<Adopter> result = adopterService.getAdoptersByPetType(PetType.TURTLE);
 
         assertEquals(2, result.size());
 
-        result = adopterService.getAdoptersByPetType(Pet.PetType.CAT);
+        result = adopterService.getAdoptersByPetType(PetType.CAT);
 
         assertEquals(0, result.size());
     }
@@ -144,14 +145,15 @@ public class AdopterServiceTest {
     @Test
     public void testAddPetToExistingAdopter() {
         Adopter adopter = new Adopter("New Joey", "383 9999 9393", LocalDate.of(1960, 6, 9),
-                Pet.builder(Pet.PetType.DOG).name("woofie").build());
+                Pet.builder(PetType.DOG).name("woofie").build());
 
         var insertedAdopter = adopterService.addAdopter(adopter);
 
         var foundAdopter = adopterService.getAdopter(insertedAdopter.getId());
         assertNotNull(foundAdopter);
 
-        var newPet = Pet.builder(Pet.PetType.CAT).name("curly").build();
+        var newPet = Pet.builder(PetType.CAT).name("curly").build();
         foundAdopter.setPet(newPet);
     }
+
 }

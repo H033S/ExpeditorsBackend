@@ -10,14 +10,17 @@ public class RandomStudent {
             "Alan Aguillon Juarez",
             "Antonio Nazco",
             "Antony Alfaro",
+            "Julio Cesar Rodriguez",
             "Arjun Panikar",
+
             "Carla Cairns",
             "Edwin Soto",
             "Jesus Cortez Valdez",
             "Juan De Dios Hernandez",
-            "Julio Cesar Rodriguez",
             "Komal Patel",
             "Lokesh Gopi",
+
+
             "Lucas Maesaka",
             "Mainor Lobo",
             "Marcus Silva",

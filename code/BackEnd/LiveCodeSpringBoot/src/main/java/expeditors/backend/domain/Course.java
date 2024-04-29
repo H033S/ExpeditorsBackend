@@ -9,6 +9,8 @@ public class Course {
 
     private String name;
 
+    private int rating;
+
     private static float[] creditList = {1, 1.5f, 2, 2.5f, 3, 3.5f, 4};
 
     public Course() {
@@ -52,12 +54,12 @@ public class Course {
         this.credits = credits;
     }
 
-    public float[] getCreditList() {
+    public static float[] getCreditList() {
         return creditList;
     }
 
-    public void setCreditList(float[] creditList) {
-        this.creditList = creditList;
+    public static void setCreditList(float[] creditList) {
+        Course.creditList = creditList;
     }
 
     public String getName() {
@@ -66,6 +68,14 @@ public class Course {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public int getRating() {
+        return rating;
+    }
+
+    public void setRating(int rating) {
+        this.rating = rating;
     }
 
     @Override
@@ -101,6 +111,13 @@ public class Course {
 
     @Override
     public String toString() {
-        return "Course [id=" + id + ", title=" + title + ", code=" + code + ", credits=" + credits + "]";
+        return "Course{" +
+              "id=" + id +
+              ", title='" + title + '\'' +
+              ", code='" + code + '\'' +
+              ", credits=" + credits +
+              ", name='" + name + '\'' +
+              ", rating=" + rating +
+              '}';
     }
 }

@@ -1,8 +1,8 @@
 package expeditors.backend;
 
-import expeditors.backend.adoptapp.AdopterSpringBootApp;
 import expeditors.backend.adoptapp.domain.Adopter;
 import expeditors.backend.adoptapp.domain.Pet;
+import expeditors.backend.adoptapp.domain.PetType;
 import expeditors.backend.adoptapp.service.AdopterService;
 import java.time.LocalDate;
 import java.util.List;
@@ -32,13 +32,13 @@ class InMemoryInitializer implements CommandLineRunner {
     public void run(String... args) throws Exception {
         var adopters = List.of(
               new Adopter("Cmd-Joey", "383 9999 9393", LocalDate.of(1960, 6, 9),
-                    Pet.builder(Pet.PetType.DOG).name("woofie").build()),
+                    Pet.builder(PetType.DOG).name("woofie").build()),
               new Adopter("Cmd-Francine", "383 9339 9999 9393", LocalDate.parse("2020-05-09"),
-                    Pet.builder(Pet.PetType.DOG).name("slinky").breed("dalmation").build()),
+                    Pet.builder(PetType.DOG).name("slinky").breed("dalmation").build()),
               new Adopter("Cmd-Darlene", "44484 9339 77939", LocalDate.parse("2020-05-09"),
-                    Pet.builder(Pet.PetType.TURTLE).name("swifty").build()),
+                    Pet.builder(PetType.TURTLE).name("swifty").build()),
               new Adopter("Cmd-Miguel", "77 888 93938", LocalDate.parse("2022-03-09"),
-                    Pet.builder(Pet.PetType.DOG).name("woofwoof").breed("Terrier").build())
+                    Pet.builder(PetType.DOG).name("woofwoof").breed("Terrier").build())
         );
         adopters.forEach(adopterService::addAdopter);
 
