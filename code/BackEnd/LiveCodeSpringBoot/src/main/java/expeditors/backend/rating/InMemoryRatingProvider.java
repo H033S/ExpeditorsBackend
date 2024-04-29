@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 @Component
-@Profile("inmem")
+@Profile("inmemrating")
 public class InMemoryRatingProvider implements RatingProvider {
 
    private int ratingLowerLimit = 1;

@@ -1,5 +1,6 @@
 package expeditors.backend.rating;
 
+import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
@@ -10,12 +11,12 @@ public class RestClientHolder {
 
    private String ratingUrl;
 
-   public RestClientHolder() {
+   public RestClientHolder(RestTemplateBuilder restTemplateBuilder) {
       var baseUrl = "http://localhost:10001";
       var rootUrl = "/courseRating";
       ratingUrl = rootUrl + "/{id}";
 
-      this.restClient = RestClient.builder()
+      this.restClient = RestClient.builder(restTemplateBuilder.build())
             .baseUrl(baseUrl)
             .defaultHeader("Accept", "application/json")
             .defaultHeader("Content-Type", "application/json")
