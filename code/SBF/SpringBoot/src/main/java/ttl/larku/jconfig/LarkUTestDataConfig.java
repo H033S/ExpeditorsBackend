@@ -59,7 +59,7 @@ public class LarkUTestDataConfig {
         return student;
     }
 
-    Course course1() {
+    public Course course1() {
         Course course = new Course();
         course.setId(1);
         course.setTitle("Intro To BasketWeaving");
@@ -69,7 +69,7 @@ public class LarkUTestDataConfig {
         return course;
     }
 
-    Course course2() {
+    public Course course2() {
         Course course = new Course();
         course.setId(2);
         course.setTitle("Yet More Botany");
@@ -79,7 +79,7 @@ public class LarkUTestDataConfig {
         return course;
     }
 
-    Course course3() {
+    public Course course3() {
         Course course = new Course();
         course.setId(3);
         course.setTitle("Intro To Math");
@@ -90,7 +90,7 @@ public class LarkUTestDataConfig {
     }
 
 
-    ScheduledClass class1() {
+    public ScheduledClass class1() {
         ScheduledClass sc = new ScheduledClass();
         sc.setId(1);
         sc.setStartDate(LocalDate.parse("2021-10-10"));
@@ -100,7 +100,7 @@ public class LarkUTestDataConfig {
         return sc;
     }
 
-    ScheduledClass class2() {
+    public ScheduledClass class2() {
         ScheduledClass sc = new ScheduledClass();
         sc.setId(2);
         sc.setStartDate(LocalDate.parse("2022-10-10"));
@@ -110,7 +110,7 @@ public class LarkUTestDataConfig {
         return sc;
     }
 
-    ScheduledClass class3() {
+    public ScheduledClass class3() {
         ScheduledClass sc = new ScheduledClass();
         sc.setId(3);
         sc.setStartDate(LocalDate.parse("2022-10-10"));
@@ -141,9 +141,8 @@ public class LarkUTestDataConfig {
 
         BaseDAO<ScheduledClass> classDAO = classDAOWithInitData();
         Student s = dao.findById(student1().getId());
-        s.getClasses().add(classDAO.findById(1));
-        s.getClasses().add(classDAO.findById(2));
-
+        s.addClass(classDAO.findById(1));
+        s.addClass(classDAO.findById(2));
     }
 
     public Map<Integer, Student> initStudents() {
