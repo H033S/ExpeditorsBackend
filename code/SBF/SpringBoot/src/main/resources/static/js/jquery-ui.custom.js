@@ -4933,7 +4933,7 @@
 
         _create: function () {
             var accordionId = this.accordionId = "ui-accordion-" +
-                (this.element.attr("artistId") || ++uid),
+                (this.element.attr("id") || ++uid),
                 options = this.options;
 
             this.prevShow = this.prevHide = $();
@@ -4973,16 +4973,16 @@
                 .attr("role", "tab")
                 .each(function (i) {
                     var header = $(this),
-                        headerId = header.attr("artistId"),
+                        headerId = header.attr("id"),
                         panel = header.next(),
-                        panelId = panel.attr("artistId");
+                        panelId = panel.attr("id");
                     if (!headerId) {
                         headerId = accordionId + "-header-" + i;
-                        header.attr("artistId", headerId);
+                        header.attr("id", headerId);
                     }
                     if (!panelId) {
                         panelId = accordionId + "-panel-" + i;
-                        panel.attr("artistId", panelId);
+                        panel.attr("id", panelId);
                     }
                     header.attr("aria-controls", panelId);
                     panel.attr("aria-labelledby", headerId);
@@ -5066,8 +5066,8 @@
                 .removeAttr("aria-controls")
                 .removeAttr("tabIndex")
                 .each(function () {
-                    if (/^ui-accordion/.test(this.artistId)) {
-                        this.removeAttribute("artistId");
+                    if (/^ui-accordion/.test(this.id)) {
+                        this.removeAttribute("id");
                     }
                 });
             this._destroyIcons();
@@ -5081,8 +5081,8 @@
                 .removeAttr("aria-labelledby")
                 .removeClass("ui-helper-reset ui-widget-content ui-corner-bottom ui-accordion-content ui-accordion-content-active ui-state-disabled")
                 .each(function () {
-                    if (/^ui-accordion/.test(this.artistId)) {
-                        this.removeAttribute("artistId");
+                    if (/^ui-accordion/.test(this.id)) {
+                        this.removeAttribute("id");
                     }
                 });
             if (this.options.heightStyle !== "content") {
@@ -6420,7 +6420,7 @@
                 // we don't search against the document in case the element
                 // is disconnected from the DOM
                 ancestor = this.element.parents().last();
-                labelSelector = "label[for='" + this.element.attr("artistId") + "']";
+                labelSelector = "label[for='" + this.element.attr("id") + "']";
                 this.buttonElement = ancestor.find(labelSelector);
                 if (!this.buttonElement.length) {
                     ancestor = ancestor.length ? ancestor.siblings() : this.element.siblings();
@@ -6703,7 +6703,7 @@
             disabled: false // The initial disabled state
         };
         $.extend(this._defaults, this.regional['']);
-        this.dpDiv = bindHover($('<div artistId="' + this._mainDivId + '" class="ui-datepicker ui-widget ui-widget-content ui-helper-clearfix ui-corner-all"></div>'));
+        this.dpDiv = bindHover($('<div id="' + this._mainDivId + '" class="ui-datepicker ui-widget ui-widget-content ui-helper-clearfix ui-corner-all"></div>'));
     }
 
     $.extend(Datepicker.prototype, {
@@ -6751,9 +6751,9 @@
             }
             var nodeName = target.nodeName.toLowerCase();
             var inline = (nodeName == 'div' || nodeName == 'span');
-            if (!target.artistId) {
+            if (!target.id) {
                 this.uuid += 1;
-                target.artistId = 'dp' + this.uuid;
+                target.id = 'dp' + this.uuid;
             }
             var inst = this._newInst($(target), inline);
             inst.settings = $.extend({}, settings || {}, inlineSettings || {});
@@ -6766,9 +6766,9 @@
 
         /* Create a new instance object. */
         _newInst: function (target, inline) {
-            var artistId = target[0].artistId.replace(/([^A-Za-z0-9_-])/g, '\\\\$1'); // escape jQuery meta chars
+            var id = target[0].id.replace(/([^A-Za-z0-9_-])/g, '\\\\$1'); // escape jQuery meta chars
             return {
-                artistId: artistId, input: target, // associated target
+                id: id, input: target, // associated target
                 selectedDay: 0, selectedMonth: 0, selectedYear: 0, // current selection
                 drawMonth: 0, drawYear: 0, // month being drawn
                 inline: inline, // is datepicker inline or not
@@ -6901,8 +6901,8 @@
             var inst = this._dialogInst; // internal instance
             if (!inst) {
                 this.uuid += 1;
-                var artistId = 'dp' + this.uuid;
-                this._dialogInput = $('<input type="text" artistId="' + artistId +
+                var id = 'dp' + this.uuid;
+                this._dialogInput = $('<input type="text" id="' + id +
                     '" style="position: absolute; top: -100px; width: 0px;"/>');
                 this._dialogInput.keydown(this._doKeyDown);
                 $('body').append(this._dialogInput);
@@ -7449,7 +7449,7 @@
             var $target = $(event.target),
                 inst = $.datepicker._getInst($target[0]);
 
-            if ((($target[0].artistId != $.datepicker._mainDivId &&
+            if ((($target[0].id != $.datepicker._mainDivId &&
                 $target.parents('#' + $.datepicker._mainDivId).length == 0 &&
                 !$target.hasClass($.datepicker.markerClassName) &&
                 !$target.closest("." + $.datepicker._triggerClass).length &&
@@ -7459,8 +7459,8 @@
         },
 
         /* Adjust one of the date sub-fields. */
-        _adjustDate: function (artistId, offset, period) {
-            var target = $(artistId);
+        _adjustDate: function (id, offset, period) {
+            var target = $(id);
             var inst = this._getInst(target[0]);
             if (this._isDisabledDatepicker(target[0])) {
                 return;
@@ -7472,8 +7472,8 @@
         },
 
         /* Action for current link. */
-        _gotoToday: function (artistId) {
-            var target = $(artistId);
+        _gotoToday: function (id) {
+            var target = $(id);
             var inst = this._getInst(target[0]);
             if (this._get(inst, 'gotoCurrent') && inst.currentDay) {
                 inst.selectedDay = inst.currentDay;
@@ -7490,8 +7490,8 @@
         },
 
         /* Action for selecting a new month/year. */
-        _selectMonthYear: function (artistId, select, period) {
-            var target = $(artistId);
+        _selectMonthYear: function (id, select, period) {
+            var target = $(id);
             var inst = this._getInst(target[0]);
             inst['selected' + (period == 'M' ? 'Month' : 'Year')] =
                 inst['draw' + (period == 'M' ? 'Month' : 'Year')] =
@@ -7501,8 +7501,8 @@
         },
 
         /* Action for selecting a day. */
-        _selectDay: function (artistId, month, year, td) {
-            var target = $(artistId);
+        _selectDay: function (id, month, year, td) {
+            var target = $(id);
             if ($(td).hasClass(this._unselectableClass) || this._isDisabledDatepicker(target[0])) {
                 return;
             }
@@ -7510,20 +7510,20 @@
             inst.selectedDay = inst.currentDay = $('a', td).html();
             inst.selectedMonth = inst.currentMonth = month;
             inst.selectedYear = inst.currentYear = year;
-            this._selectDate(artistId, this._formatDate(inst,
+            this._selectDate(id, this._formatDate(inst,
                 inst.currentDay, inst.currentMonth, inst.currentYear));
         },
 
         /* Erase the input field and hide the date picker. */
-        _clearDate: function (artistId) {
-            var target = $(artistId);
+        _clearDate: function (id) {
+            var target = $(id);
             var inst = this._getInst(target[0]);
             this._selectDate(target, '');
         },
 
         /* Update the input field with the selected date. */
-        _selectDate: function (artistId, dateStr) {
-            var target = $(artistId);
+        _selectDate: function (id, dateStr) {
+            var target = $(id);
             var inst = this._getInst(target[0]);
             dateStr = (dateStr != null ? dateStr : this._formatDate(inst));
             if (inst.input)
@@ -8029,31 +8029,31 @@
 	 */
         _attachHandlers: function (inst) {
             var stepMonths = this._get(inst, 'stepMonths');
-            var artistId = '#' + inst.artistId.replace(/\\\\/g, "\\");
+            var id = '#' + inst.id.replace(/\\\\/g, "\\");
             inst.dpDiv.find('[data-handler]').map(function () {
                 var handler = {
                     prev: function () {
-                        window['DP_jQuery_' + dpuuid].datepicker._adjustDate(artistId, -stepMonths, 'M');
+                        window['DP_jQuery_' + dpuuid].datepicker._adjustDate(id, -stepMonths, 'M');
                     },
                     next: function () {
-                        window['DP_jQuery_' + dpuuid].datepicker._adjustDate(artistId, +stepMonths, 'M');
+                        window['DP_jQuery_' + dpuuid].datepicker._adjustDate(id, +stepMonths, 'M');
                     },
                     hide: function () {
                         window['DP_jQuery_' + dpuuid].datepicker._hideDatepicker();
                     },
                     today: function () {
-                        window['DP_jQuery_' + dpuuid].datepicker._gotoToday(artistId);
+                        window['DP_jQuery_' + dpuuid].datepicker._gotoToday(id);
                     },
                     selectDay: function () {
-                        window['DP_jQuery_' + dpuuid].datepicker._selectDay(artistId, +this.getAttribute('data-month'), +this.getAttribute('data-year'), this);
+                        window['DP_jQuery_' + dpuuid].datepicker._selectDay(id, +this.getAttribute('data-month'), +this.getAttribute('data-year'), this);
                         return false;
                     },
                     selectMonth: function () {
-                        window['DP_jQuery_' + dpuuid].datepicker._selectMonthYear(artistId, this, 'M');
+                        window['DP_jQuery_' + dpuuid].datepicker._selectMonthYear(id, this, 'M');
                         return false;
                     },
                     selectYear: function () {
-                        window['DP_jQuery_' + dpuuid].datepicker._selectMonthYear(artistId, this, 'Y');
+                        window['DP_jQuery_' + dpuuid].datepicker._selectMonthYear(id, this, 'Y');
                         return false;
                     }
                 };
@@ -8609,7 +8609,7 @@
 
             uiDialog.attr({
                 role: "dialog",
-                "aria-labelledby": uiDialogTitle.attr("artistId")
+                "aria-labelledby": uiDialogTitle.attr("id")
             });
 
             uiDialogTitlebar.find("*").add(uiDialogTitlebar).disableSelection();
@@ -9129,12 +9129,12 @@
         maxZ: 0,
 
         getTitleId: function ($el) {
-            var artistId = $el.attr("artistId");
-            if (!artistId) {
+            var id = $el.attr("id");
+            if (!id) {
                 this.uuid += 1;
-                artistId = this.uuid;
+                id = this.uuid;
             }
-            return "ui-dialog-title-" + artistId;
+            return "ui-dialog-title-" + id;
         },
 
         overlay: function (dialog) {
@@ -9617,7 +9617,7 @@
                 item
                     .attr("aria-haspopup", "true")
                     .prepend(submenuCarat);
-                menu.attr("aria-labelledby", item.attr("artistId"));
+                menu.attr("aria-labelledby", item.attr("id"));
             });
 
             // If the active item has been removed, blur the menu
@@ -9644,7 +9644,7 @@
             // Only update aria-activedescendant if there's a role
             // otherwise we assume focus is managed elsewhere
             if (this.options.role) {
-                this.element.attr("aria-activedescendant", focused.attr("artistId"));
+                this.element.attr("aria-activedescendant", focused.attr("id"));
             }
 
             // Highlight active parent menu item, if any
@@ -11473,7 +11473,7 @@
 
             this.anchors.each(function (i, anchor) {
                 var selector, panel, panelId,
-                    anchorId = $(anchor).uniqueId().attr("artistId"),
+                    anchorId = $(anchor).uniqueId().attr("id"),
                     tab = $(anchor).closest("li"),
                     originalAriaControls = tab.attr("aria-controls");
 
@@ -11516,9 +11516,9 @@
             return this.element.find("ol,ul").eq(0);
         },
 
-        _createPanel: function (artistId) {
+        _createPanel: function (id) {
             return $("<div>")
-                .attr("artistId", artistId)
+                .attr("id", id)
                 .addClass("ui-tabs-panel ui-widget-content ui-corner-bottom")
                 .data("ui-tabs-destroy", true);
         },
@@ -11921,8 +11921,8 @@
         },
 
         _getPanelForTab: function (tab) {
-            var artistId = $(tab).attr("aria-controls");
-            return this.element.find(this._sanitizeSelector("#" + artistId));
+            var id = $(tab).attr("aria-controls");
+            return this.element.find(this._sanitizeSelector("#" + id));
         }
     });
 
@@ -12104,19 +12104,19 @@
                     li = $(options.tabTemplate
                         .replace(/#\{href\}/g, url)
                         .replace(/#\{label\}/g, label)),
-                    artistId = !url.indexOf("#") ?
+                    id = !url.indexOf("#") ?
                         url.replace("#", "") :
                         this._tabId(li);
 
                 li.addClass("ui-state-default ui-corner-top").data("ui-tabs-destroy", true);
-                li.attr("aria-controls", artistId);
+                li.attr("aria-controls", id);
 
                 doInsertAfter = index >= this.tabs.length;
 
                 // try to find an existing element before creating a new one
-                panel = this.element.find("#" + artistId);
+                panel = this.element.find("#" + id);
                 if (!panel.length) {
-                    panel = this._createPanel(artistId);
+                    panel = this._createPanel(id);
                     if (doInsertAfter) {
                         if (index > 0) {
                             panel.insertAfter(this.panels.eq(-1));
@@ -12206,9 +12206,9 @@
                 panelTemplate: "<div></div>"
             },
 
-            _createPanel: function (artistId) {
+            _createPanel: function (id) {
                 return $(this.options.panelTemplate)
-                    .attr("artistId", artistId)
+                    .attr("id", id)
                     .addClass("ui-tabs-panel ui-widget-content ui-corner-bottom")
                     .data("ui-tabs-destroy", true);
             }
@@ -12441,23 +12441,23 @@
 
     var increments = 0;
 
-    function addDescribedBy(elem, artistId) {
+    function addDescribedBy(elem, id) {
         var describedby = (elem.attr("aria-describedby") || "").split(/\s+/);
-        describedby.push(artistId);
+        describedby.push(id);
         elem
-            .data("ui-tooltip-artistId", artistId)
+            .data("ui-tooltip-id", id)
             .attr("aria-describedby", $.trim(describedby.join(" ")));
     }
 
     function removeDescribedBy(elem) {
-        var artistId = elem.data("ui-tooltip-artistId"),
+        var id = elem.data("ui-tooltip-id"),
             describedby = (elem.attr("aria-describedby") || "").split(/\s+/),
-            index = $.inArray(artistId, describedby);
+            index = $.inArray(id, describedby);
         if (index !== -1) {
             describedby.splice(index, 1);
         }
 
-        elem.removeData("ui-tooltip-artistId");
+        elem.removeData("ui-tooltip-id");
         describedby = $.trim(describedby.join(" "));
         if (describedby) {
             elem.attr("aria-describedby", describedby);
@@ -12518,7 +12518,7 @@
             this._super(key, value);
 
             if (key === "content") {
-                $.each(this.tooltips, function (artistId, element) {
+                $.each(this.tooltips, function (id, element) {
                     that._updateContent(element);
                 });
             }
@@ -12528,7 +12528,7 @@
             var that = this;
 
             // close open tooltips
-            $.each(this.tooltips, function (artistId, element) {
+            $.each(this.tooltips, function (id, element) {
                 var event = $.Event("blur");
                 event.target = event.currentTarget = element[0];
                 that.close(event, true);
@@ -12570,7 +12570,7 @@
             // If the tooltip is open and we're tracking then reposition the tooltip.
             // This makes sure that a tracking tooltip doesn't obscure a focused element
             // if the user was hovering when the element gained focused.
-            if (this.options.track && target.data("ui-tooltip-artistId")) {
+            if (this.options.track && target.data("ui-tooltip-id")) {
                 this._find(target).position($.extend({
                     of: target
                 }, this.options.position));
@@ -12596,7 +12596,7 @@
                     }
                     if (this.title) {
                         $(this).uniqueId();
-                        that.parents[this.artistId] = {
+                        that.parents[this.id] = {
                             element: this,
                             title: this.title
                         };
@@ -12665,7 +12665,7 @@
             }
 
             tooltip = this._tooltip(target);
-            addDescribedBy(target, tooltip.attr("artistId"));
+            addDescribedBy(target, tooltip.attr("id"));
             tooltip.find(".ui-tooltip-content").html(content);
 
             function position(event) {
@@ -12758,9 +12758,9 @@
             this._off(this.document, "mousemove");
 
             if (event && event.type === "mouseleave") {
-                $.each(this.parents, function (artistId, parent) {
+                $.each(this.parents, function (id, parent) {
                     parent.element.title = parent.title;
-                    delete that.parents[artistId];
+                    delete that.parents[id];
                 });
             }
 
@@ -12770,10 +12770,10 @@
         },
 
         _tooltip: function (element) {
-            var artistId = "ui-tooltip-" + increments++,
+            var id = "ui-tooltip-" + increments++,
                 tooltip = $("<div>")
                     .attr({
-                        artistId: artistId,
+                        id: id,
                         role: "tooltip"
                     })
                     .addClass("ui-tooltip ui-widget ui-corner-all ui-widget-content " +
@@ -12785,25 +12785,25 @@
             if ($.fn.bgiframe) {
                 tooltip.bgiframe();
             }
-            this.tooltips[artistId] = element;
+            this.tooltips[id] = element;
             return tooltip;
         },
 
         _find: function (target) {
-            var artistId = target.data("ui-tooltip-artistId");
-            return artistId ? $("#" + artistId) : $();
+            var id = target.data("ui-tooltip-id");
+            return id ? $("#" + id) : $();
         },
 
         _removeTooltip: function (tooltip) {
             tooltip.remove();
-            delete this.tooltips[tooltip.attr("artistId")];
+            delete this.tooltips[tooltip.attr("id")];
         },
 
         _destroy: function () {
             var that = this;
 
             // close open tooltips
-            $.each(this.tooltips, function (artistId, element) {
+            $.each(this.tooltips, function (id, element) {
                 // Delegate to close method to handle common cleanup
                 var event = $.Event("blur");
                 event.target = event.currentTarget = element[0];
@@ -12811,7 +12811,7 @@
 
                 // Remove immediately; destroying an open tooltip doesn't use the
                 // hide animation
-                $("#" + artistId).remove();
+                $("#" + id).remove();
 
                 // Restore the title
                 if (element.data("ui-tooltip-title")) {
@@ -13795,9 +13795,9 @@
 
                 // support: Firefox
                 // Firefox incorrectly exposes anonymous content
-                // https://bugzilla.mozilla.org/show_bug.cgi?artistId=561664
+                // https://bugzilla.mozilla.org/show_bug.cgi?id=561664
                 try {
-                    active.artistId;
+                    active.id;
                 } catch (e) {
                     active = document.body;
                 }

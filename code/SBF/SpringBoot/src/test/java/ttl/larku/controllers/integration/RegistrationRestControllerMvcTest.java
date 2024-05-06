@@ -106,17 +106,6 @@ public class RegistrationRestControllerMvcTest {
 
     @Test
     public void testGetOnePath() throws Exception {
-//        ResultActions a1 = mockMvc
-//                .perform(get("/adminrest/course").accept(MediaType.APPLICATION_JSON));
-//        MvcResult m1 = a1.andReturn();
-//        String r1 = (String)m1.getResponse().getContentAsString();
-//        System.err.println("All Courses: " + r1);
-//
-//        ResultActions a2 = mockMvc
-//                .perform(get("/adminrest/class").accept(MediaType.APPLICATION_JSON));
-//        MvcResult m2 = a2.andReturn();
-//        String r2 = (String)m2.getResponse().getContentAsString();
-//        System.err.println("All Classes: " + r2);
 
         ResultActions actions = mockMvc
                 .perform(get("/adminrest/class/code/MATH-101")

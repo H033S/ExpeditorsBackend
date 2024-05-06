@@ -54,18 +54,6 @@ public class SpringBootApp {
         SpringApplication app = new SpringApplication(SpringBootApp.class);
         app.addInitializers(new MyInitializer());
         ConfigurableApplicationContext context = app.run(args);
-
-        int i = 0;
-
-//        ConnectionService cs = context.getBean("connectionService", ConnectionService.class);
-//        int result = cs.makeConnection();
-//
-//        System.out.println("Result is " + result);
-//
-//        ServiceThatWeDontOwn stwdo = context.getBean("serviceThatWeDontOwn", ServiceThatWeDontOwn.class);
-//        System.out.println("stwdo: " + stwdo);
-
-//        context.close();
     }
 
     public static void mainWithBuilder(String [] args) {
@@ -96,15 +84,6 @@ public class SpringBootApp {
         return args -> {
             System.out.println("Bean Runner Called");
         };
-    }
-}
-
-//@Component
-class ContextConfigDemo implements CommandLineRunner {
-
-    @Override
-    public void run(String... args) throws Exception {
-
     }
 }
 
@@ -145,6 +124,10 @@ class ApplicationCommandLineRunner implements ApplicationRunner {
     }
 }
 
+/**
+ * You can register an ApplicationContextInitializer, which will
+ * get called *BEFORE* any beans are added to the context.
+ */
 @Component
 class MyInitializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
 
@@ -158,22 +141,35 @@ class MyInitializer implements ApplicationContextInitializer<ConfigurableApplica
     }
 }
 
+/**
+ * A SpringEvent Listener.  Can have separate Listener
+ * methods which listen for specific events, based on the
+ * argument of the method.
+ */
 @Component
 class GeneralEventListener {
     private Logger logger = LoggerFactory.getLogger(getClass());
 
+
+    //Listen for StudentCreatedEvent
     @EventListener
 //    @Async
     public void handleStudentCreatedEvent(StudentCreatedEvent event) {
         logger.info("Handle Student Created: " + event + " in " + Thread.currentThread());
     }
 
+    //Listen for ServletRequestHandledEvent, sent after a Controller method has
+    //been finished processing a request.
     @EventListener
     public void handleServletRequestEvent(ServletRequestHandledEvent event) {
         logger.info("ServletRequest: " + event);
     }
 }
 
+/**
+ * Or can create a class just to listen to a particular event.
+ * E.g. in this case we are listening for only the ContextRefreshedEvent.
+ */
 @Component
 class ContextRefreshedHandler implements ApplicationListener<ContextRefreshedEvent> {
     @Override
@@ -186,15 +182,10 @@ class ContextRefreshedHandler implements ApplicationListener<ContextRefreshedEve
     }
 }
 
-//@Component
-//class AnotherApplicationEventHandler {
-//    @EventListener
-//    public void onApplicationEvent(ServletRequestHandledEvent event) {
-//        System.out.println("ServletRequestHandled: " + event);
-//    }
-//}
-
-
+/**
+ * A method with an argument of type ApplicationEvent would listen to all
+ * events that Spring generates.
+ */
 //@Component
 //class AllEventListener {
 //    @EventListener
