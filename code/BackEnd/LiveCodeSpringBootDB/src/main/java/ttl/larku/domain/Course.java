@@ -11,8 +11,6 @@ public class Course {
 
     private String rating;
 
-    @JsonIgnore
-    private String name;
 
     @JsonIgnore
     private float[] creditList = {1, 1.5f, 2, 2.5f, 3, 3.5f, 4};
@@ -21,9 +19,13 @@ public class Course {
     }
 
     public Course(String code, String title) {
-        super();
+        this(code, title, 2.5F);
+    }
+
+    public Course(String code, String title, float credits) {
         this.title = title;
         this.code = code;
+        this.credits = credits;
     }
 
     public int getId() {
@@ -48,14 +50,6 @@ public class Course {
 
     public void setCode(String code) {
         this.code = code;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
 
@@ -120,7 +114,6 @@ public class Course {
               "id=" + id +
               ", title='" + title + '\'' +
               ", code='" + code + '\'' +
-              ", name='" + name + '\'' +
               ", rating='" + rating + '\'' +
               ", credits=" + credits +
               '}';

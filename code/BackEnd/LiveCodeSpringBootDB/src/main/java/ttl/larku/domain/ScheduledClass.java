@@ -14,8 +14,8 @@ public class ScheduledClass {
 
     private int id;
 
-    @JsonIgnore
-    private List<Student> students = new ArrayList<Student>();
+//    @JsonIgnore
+//    private List<Student> students = new ArrayList<Student>();
 
     @JsonDeserialize(using = LocalDateDeserializer.class)
     @JsonSerialize(using = LocalDateSerializer.class)
@@ -53,20 +53,21 @@ public class ScheduledClass {
 
     @JsonIgnore
     public List<Student> getStudents() {
-        return students;
+        return null;
+//        return students;
     }
 
     @JsonIgnore
     public void setStudents(List<Student> students) {
-        this.students = students;
+//        this.students = students;
     }
 
     public void addStudent(Student student) {
-        students.add(student);
+//        students.add(student);
     }
 
     public void removeStudent(Student student) {
-        students.remove(student);
+//        students.remove(student);
 
         //Do the other side of the relationship
         student.dropClass(this);

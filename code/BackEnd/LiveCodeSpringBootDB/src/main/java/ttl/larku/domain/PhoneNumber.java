@@ -4,7 +4,7 @@ package ttl.larku.domain;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
-public class PhoneNumber{
+public class PhoneNumber {
    public enum Type {
       HOME,
       WORK,
