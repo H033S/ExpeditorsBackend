@@ -3,51 +3,50 @@ package ttl.larku.db;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import ttl.larku.domain.PhoneNumber;
 import ttl.larku.domain.Student;
 import ttl.larku.jconfig.LarkUTestDataConfig;
 
 import static java.lang.System.out;
 
-public class JDBCTemplateDemo {
+public class JDBCClientDemo {
 
    LarkUTestDataConfig testDataConfig = new LarkUTestDataConfig();
 
    public static void main(String[] args) {
-      JDBCTemplateDemo jtd = new JDBCTemplateDemo();
+      JDBCClientDemo jtd = new JDBCClientDemo();
       String url = "jdbc:postgresql://localhost:5433/larku";
       String user = "larku";
       String pw = "larku";
       DriverManagerDataSource dataSource = new DriverManagerDataSource(url, user, pw);
 
-      JdbcTemplate template = new JdbcTemplate(dataSource);
-      NamedParameterJdbcTemplate namedParameterJdbcTemplate = new
-            NamedParameterJdbcTemplate(dataSource);
+      JdbcClient template = JdbcClient.create(dataSource);
 
 //      jtd.getSimpleWithOneColumn(template);
 //      jtd.getWholeObjectButOnlyStudent(template);
-//      jtd.getWholeObjectWithRelationShip(template);
-      //jtd.getWholeObjectWithRelationShipWithResultSetExtractor(template);
+//      jtd.getWholeObjectWithRelationShipWrongWay(template);
+//      jtd.getWholeObjectWithRelationShipWithResultSetExtractor(template);
 
       jtd.addStudentsWithPhoneNumbers(template);
    }
 
-   public void getSimpleWithOneColumn(JdbcTemplate template) {
+   public void getSimpleWithOneColumn(JdbcClient template) {
       String sql = "select name from Student where id = ?";
 
-      String name =
-            template.queryForObject(sql, String.class, 1);
+      String name = template.sql(sql)
+            .param(1)
+            .query(String.class).single();
 
       out.println("name: " + name);
    }
 
-   public void getWholeObjectButOnlyStudent(JdbcTemplate template) {
+   public void getWholeObjectButOnlyStudent(JdbcClient template) {
       String sql = "select * from Student where id = ?";
 
       RowMapper<Student> rowMapper = (resultSet, rowNum) -> {
@@ -61,13 +60,21 @@ public class JDBCTemplateDemo {
          return student;
       };
 
-      Student student =
-            template.queryForObject(sql, rowMapper, 1);
+      Student student = template.sql(sql)
+            .param(1)
+            .query(rowMapper)
+            .single();
+
+      Student student2 = template.sql(sql)
+            .param(1)
+            .query(Student.class)
+            .single();
 
       out.println("student: " + student);
+      out.println("student2: " + student2);
    }
 
-   public void getWholeObjectWithRelationShip(JdbcTemplate template) {
+   public void getWholeObjectWithRelationShipWrongWay(JdbcClient template) {
       String sql = "select * from student s left join phonenumber p on s.id = p.student_id order by s.id";
 
       RowMapper<Student> rowMapper = (resultSet, rowNum) -> {
@@ -90,12 +97,14 @@ public class JDBCTemplateDemo {
          return student;
       };
 
-      List<Student> students = template.query(sql, rowMapper);
+      List<Student> students = template.sql(sql)
+            .query(rowMapper)
+            .list();
 
       students.forEach(out::println);
    }
 
-   public void getWholeObjectWithRelationShipWithResultSetExtractor(JdbcTemplate template) {
+   public void getWholeObjectWithRelationShipWithResultSetExtractor(JdbcClient template) {
       String sql = "select * from student s left join phonenumber p on s.id = p.student_id order by s.id";
 
       List<Student> result = new ArrayList<>();
@@ -130,41 +139,56 @@ public class JDBCTemplateDemo {
          return result;
       };
 
-      List<Student> students = template.query(sql, rowMapper);
+      List<Student> students = template.sql(sql)
+            .query(rowMapper);
+
 
       students.forEach(out::println);
    }
 
-   public void addStudentsWithPhoneNumbers(JdbcTemplate template) {
+
+   public void addStudentsWithPhoneNumbers(JdbcClient template) {
       String insertStudentSql = "insert into student (name, dob, status) values(?, ?, ?)";
 
       String insertPhoneNumbersSql = "insert into phonenumber (type, number, student_id) values(?, ?, ?)";
+      List<Integer> newStudentKeys = new ArrayList<>();
 
       List<Student> students = List.of(
-                  testDataConfig.student1(),
-                  testDataConfig.student2(),
-                  testDataConfig.student3(),
-                  testDataConfig.student4()
-            );
+            testDataConfig.student1(),
+            testDataConfig.student2(),
+            testDataConfig.student3(),
+            testDataConfig.student4()
+      );
 
       List<Object[]> studentParams = students.stream()
-            .map(s -> new Object[]{s.getName(), s.getDob(), s.getStatus().toString()})
+            .map(s -> new Object[]{s.getName() + "-JDBC", s.getDob(), s.getStatus().toString()})
             .toList();
 
       List<Object[]> phoneParams = students.stream()
             .flatMap(s -> s.getPhoneNumbers().stream()
                   .map(pn -> new Object[]{pn.getType().toString(), pn.getNumber(), s.getId()}))
-            .collect(Collectors.toList());
-
-      phoneParams.add(new Object[]{"WORK", "38 00 045765", 1});
+            .toList();
 
       out.println("Running sql: " + insertStudentSql);
-      int [] newStudents = template.batchUpdate(insertStudentSql, studentParams);
+      var keyHolder = new GeneratedKeyHolder();
+      for (Object[] params : studentParams) {
+         template.sql(insertStudentSql)
+               .params(params)
+               .update(keyHolder);
+
+//         out.println("Keys for new student: " + keyHolder.getKeys());
+         newStudentKeys.add((int)keyHolder.getKeys().get("id"));
+      }
+
 
       out.println("Running sql: " + insertPhoneNumbersSql);
-      int [] newPhones = template.batchUpdate(insertPhoneNumbersSql, phoneParams);
+      for (Object[] params : phoneParams) {
+         template.sql(insertPhoneNumbersSql)
+               .params(params)
+               .update(keyHolder);
+      }
 
-      out.println("students added : " + newStudents.length);
-      out.println("phones added: " + newStudents.length);
+      out.println("students added : " + newStudentKeys.size());
+      newStudentKeys.forEach(out::println);
    }
 }

@@ -1,14 +1,17 @@
 package ttl.larku.jconfig;
 
+import javax.sql.DataSource;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.validation.Validator;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import ttl.larku.dao.BaseDAO;
 import ttl.larku.dao.inmemory.InMemoryCourseDAO;
+import ttl.larku.dao.jdbc.JdbcStudentDAO;
 import ttl.larku.dao.jpahibernate.JPAClassDAO;
 import ttl.larku.dao.jpahibernate.JPACourseDAO;
 import ttl.larku.domain.Course;
@@ -38,6 +41,12 @@ public class LarkUConfig {
       return jpaStudentDAO();
    }
 
+   @Bean(name = "studentDAO")
+   @Profile("jdbc")
+   public BaseDAO<Student> studentDAOJdbc(DataSource dataSource) {
+      return new JdbcStudentDAO(dataSource);
+   }
+
    @Bean
    @Profile("development")
    public BaseDAO<Course> courseDAO() {
@@ -45,7 +54,7 @@ public class LarkUConfig {
    }
 
    @Bean(name = "courseDAO")
-   @Profile("production")
+   @Profile("production | jdbc")
    public BaseDAO<Course> courseDAOJPA() {
       return jpaCourseDAO();
    }
@@ -57,7 +66,7 @@ public class LarkUConfig {
    }
 
    @Bean(name = "classDAO")
-   @Profile("production")
+   @Profile("production | jdbc")
    public BaseDAO<ScheduledClass> classDAOJPA() {
       return jpaClassDAO();
    }
@@ -141,5 +150,14 @@ public class LarkUConfig {
    @Bean
    public Validator validator() {
       return new LocalValidatorFactoryBean();
+   }
+
+   @Bean
+   public DataSource dataSource() {
+      String url = "jdbc:postgresql://localhost:5433/larku";
+      String user = "larku";
+      String pw = "larku";
+      DriverManagerDataSource dataSource = new DriverManagerDataSource(url, user, pw);
+      return dataSource;
    }
 }
