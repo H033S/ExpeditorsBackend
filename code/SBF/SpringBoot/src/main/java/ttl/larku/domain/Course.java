@@ -1,19 +1,27 @@
 package ttl.larku.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Transient;
 
+@Entity
 public class Course {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String title;
     private String code;
     private float credits = 2.5f;
 
+    @Transient
     private String rating;
 
-//    @JsonIgnore
-//    private String name;
 
+    @Transient
     @JsonIgnore
     private float[] creditList = {1, 1.5f, 2, 2.5f, 3, 3.5f, 4};
 
@@ -54,14 +62,6 @@ public class Course {
     public void setCode(String code) {
         this.code = code;
     }
-
-//    public String getName() {
-//        return name;
-//    }
-//
-//    public void setName(String name) {
-//        this.name = name;
-//    }
 
 
     public float getCredits() {
