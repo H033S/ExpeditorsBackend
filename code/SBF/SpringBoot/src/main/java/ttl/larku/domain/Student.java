@@ -5,16 +5,25 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
-
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Transient;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-
+@Entity
 public class Student {
 
    public enum Status {
@@ -25,6 +34,9 @@ public class Student {
 
    ;
 
+
+   @Id
+   @GeneratedValue(strategy = GenerationType.IDENTITY)
    private int id;
 
    @NotNull
@@ -33,14 +45,31 @@ public class Student {
    //    @Size(min = 10, message = "Phonenumber must be at least 10 digits")
    @NotNull
    @Valid
+//   @Transient
+//   @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, orphanRemoval = true)
+   @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+//   @JoinColumn(name = "student_id")
+   @JoinTable
+         (
+               name="student_phones",
+               joinColumns={ @JoinColumn(name="student_id", referencedColumnName="id") },
+               inverseJoinColumns={ @JoinColumn(name="phone_id", referencedColumnName="id", unique=true) }
+         )
+
+   //A List is generally a bad idea with Hibernate.  To see why, use the
+   //List, add a bunch of phoneNumbers, and then try and delete one.
+   //Watch the ensuing fun in the SQL.  Lots of deletes and inserts.
+//   private Set<PhoneNumber> phoneNumbers = new HashSet<>();
    private List<PhoneNumber> phoneNumbers = new ArrayList<>();
 
    @JsonDeserialize(using = LocalDateDeserializer.class)
    @JsonSerialize(using = LocalDateSerializer.class)
    private LocalDate dob;
 
+   @Enumerated(EnumType.STRING)
    private Status status = Status.FULL_TIME;
 
+   @Transient
    private List<ScheduledClass> classes = new ArrayList<>();
 
    private static int nextId = 0;
@@ -95,7 +124,8 @@ public class Student {
    }
 
    public String getPhoneNumber() {
-      return !phoneNumbers.isEmpty() ? phoneNumbers.get(0).getNumber() : null;
+      //return !phoneNumbers.isEmpty() ? phoneNumbers.get(0).getNumber() : null;
+      return !phoneNumbers.isEmpty() ? phoneNumbers.stream().findFirst().orElse(null).getNumber() : null;
    }
 
    public List<PhoneNumber> getPhoneNumbers() {
@@ -103,10 +133,11 @@ public class Student {
    }
 
    public void setPhoneNumber(String phoneNumber) {
-      if(phoneNumbers.isEmpty()) {
+      if (phoneNumbers.isEmpty()) {
          addPhoneNumber(new PhoneNumber(phoneNumber));
-      }else {
+      } else {
         this.phoneNumbers.set(0, new PhoneNumber(phoneNumber));
+//         this.phoneNumbers.add(new PhoneNumber(phoneNumber));
       }
    }
 
@@ -116,6 +147,10 @@ public class Student {
 
    public void addPhoneNumber(PhoneNumber phoneNumber) {
       this.phoneNumbers.add(phoneNumber);
+   }
+
+   public void removePhoneNumber(PhoneNumber phoneNumber) {
+      this.phoneNumbers.remove(phoneNumber);
    }
 
    public LocalDate getDob() {
@@ -141,7 +176,7 @@ public class Student {
    }
 
    public void setClasses(List<ScheduledClass> classes) {
-      if(classes != null) {
+      if (classes != null) {
          this.classes.clear();
          this.classes.addAll(classes);
       }
