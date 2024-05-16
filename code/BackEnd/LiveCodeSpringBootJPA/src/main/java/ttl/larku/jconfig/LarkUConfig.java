@@ -13,6 +13,7 @@ import ttl.larku.dao.BaseDAO;
 import ttl.larku.dao.inmemory.InMemoryCourseDAO;
 import ttl.larku.dao.jdbc.JdbcStudentDAO;
 import ttl.larku.dao.jpahibernate.JPAClassDAO;
+import ttl.larku.dao.jpahibernate.JPAClassRepoAdapter;
 import ttl.larku.dao.jpahibernate.JPACourseDAO;
 import ttl.larku.domain.Course;
 import ttl.larku.domain.ScheduledClass;
@@ -122,6 +123,7 @@ public class LarkUConfig {
 
    public BaseDAO<ScheduledClass> jpaClassDAO() {
       return new JPAClassDAO();
+//      return new JPAClassRepoAdapter();
    }
 
    /**
@@ -150,14 +152,5 @@ public class LarkUConfig {
    @Bean
    public Validator validator() {
       return new LocalValidatorFactoryBean();
-   }
-
-   @Bean
-   public DataSource dataSource() {
-      String url = "jdbc:postgresql://localhost:5433/larku";
-      String user = "larku";
-      String pw = "larku";
-      DriverManagerDataSource dataSource = new DriverManagerDataSource(url, user, pw);
-      return dataSource;
    }
 }

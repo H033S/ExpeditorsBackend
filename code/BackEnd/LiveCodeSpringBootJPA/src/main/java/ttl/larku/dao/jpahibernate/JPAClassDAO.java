@@ -1,5 +1,8 @@
 package ttl.larku.dao.jpahibernate;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.TypedQuery;
 import ttl.larku.dao.BaseDAO;
 import ttl.larku.domain.ScheduledClass;
 
@@ -11,61 +14,46 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class JPAClassDAO implements BaseDAO<ScheduledClass> {
 
-    private Map<Integer, ScheduledClass> classes = new ConcurrentHashMap<Integer, ScheduledClass>();
-    private AtomicInteger nextId = new AtomicInteger(1);
-
-    private String from;
-
-    public JPAClassDAO(String from) {
-        this.from = from + ": ";
-    }
-
-    public JPAClassDAO() {
-        this("JPA");
-    }
-
+    @PersistenceContext
+    private EntityManager entityManager;
     @Override
     public boolean update(ScheduledClass updateObject) {
-        return classes.computeIfPresent(updateObject.getId(), (key, oldValue) -> updateObject) != null;
+        entityManager.merge(updateObject);
+        return true;
     }
 
     @Override
     public boolean delete(ScheduledClass sc) {
-        return classes.remove(sc.getId()) != null;
+        entityManager.remove(sc);
+        return true;
     }
 
     @Override
     public ScheduledClass insert(ScheduledClass newObject) {
-        //Create a new Id
-        int newId = nextId.getAndIncrement();
-        newObject.setId(newId);
-        classes.put(newId, newObject);
-
+        entityManager.persist(newObject);
         return newObject;
     }
 
     @Override
     public ScheduledClass findById(int id) {
-        return classes.get(id);
+        return entityManager.find(ScheduledClass.class, id);
     }
 
     @Override
     public List<ScheduledClass> findAll() {
-        return new ArrayList<ScheduledClass>(classes.values());
+        String queryString = "select sc from ScheduledClass sc join fetch sc.course";
+        TypedQuery<ScheduledClass> query = entityManager.createQuery(queryString, ScheduledClass.class);
+        List<ScheduledClass> result = query.getResultList();
+
+        return result;
     }
 
     @Override
     public void deleteStore() {
-        classes = null;
+//        entityManager.re
     }
 
     @Override
     public void createStore() {
-        classes = new ConcurrentHashMap<>();
-        nextId = new AtomicInteger(1);
-    }
-
-    public void setClasses(Map<Integer, ScheduledClass> classes) {
-        this.classes = classes;
     }
 }
