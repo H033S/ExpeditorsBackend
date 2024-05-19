@@ -1,14 +1,30 @@
 drop table if exists student_scheduledclass;
 drop table if exists scheduledclass;
 drop table if exists course;
+drop table if exists courseversioned;
 drop table if exists student_phones;
 drop table if exists phonenumber;
 drop table if exists student;
 
 drop sequence if exists scheduledclass_id_seq;
 drop sequence if exists course_id_seq;
+drop sequence if exists courseversioned_id_seq;
 drop sequence if exists phonenumber_id_seq;
 drop sequence if exists student_id_seq;
+
+create table public.courseversioned
+(
+    id      serial
+        constraint courseversioned_pk
+            primary key,
+    version  integer not null,
+    code    varchar(20)  not null,
+    title   varchar(100) not null,
+    credits numeric(3, 1)
+);
+
+alter table public.courseversioned
+    owner to larku;
 
 create table public.course
 (
