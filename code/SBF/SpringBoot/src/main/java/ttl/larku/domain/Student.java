@@ -13,7 +13,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Transient;
 import jakarta.validation.Valid;
@@ -32,9 +31,6 @@ public class Student {
       HIBERNATING
    }
 
-   ;
-
-
    @Id
    @GeneratedValue(strategy = GenerationType.IDENTITY)
    private int id;
@@ -48,17 +44,24 @@ public class Student {
 //   @Transient
 //   @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, orphanRemoval = true)
    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-//   @JoinColumn(name = "student_id")
-   @JoinTable
-         (
-               name="student_phones",
-               joinColumns={ @JoinColumn(name="student_id", referencedColumnName="id") },
-               inverseJoinColumns={ @JoinColumn(name="phone_id", referencedColumnName="id", unique=true) }
-         )
 
-   //A List is generally a bad idea with Hibernate.  To see why, use the
-   //List, add a bunch of phoneNumbers, and then try and delete one.
-   //Watch the ensuing fun in the SQL.  Lots of deletes and inserts.
+   //Using a JoinColum will generate some unnecessary SQL
+   //The name is the name of the foreign key column in the PhoneNumber
+   // table.  You would this approach if you really really really don't
+   // want to have a Student reference in PhoneNumber.
+   @JoinColumn(name = "student_id")
+   //@JoinTable will generate even more unnecessary SQL.
+//   @JoinTable
+//         (
+//               name="student_phones",
+//               joinColumns={ @JoinColumn(name="student_id", referencedColumnName="id") },
+//               inverseJoinColumns={ @JoinColumn(name="phone_id", referencedColumnName="id", unique=true) }
+//         )
+
+   //A List is generally a bad idea with Hibernate if you use a
+   // join table .  To see why, use the @JoinTable above and a List to hold the
+   // phonenumbers. add a bunch of phoneNumbers, and then try and delete one.
+   // Watch the ensuing fun in the SQL.  Lots of deletes and inserts.
 //   private Set<PhoneNumber> phoneNumbers = new HashSet<>();
    private List<PhoneNumber> phoneNumbers = new ArrayList<>();
 
@@ -136,7 +139,7 @@ public class Student {
       if (phoneNumbers.isEmpty()) {
          addPhoneNumber(new PhoneNumber(phoneNumber));
       } else {
-        this.phoneNumbers.set(0, new PhoneNumber(phoneNumber));
+         this.phoneNumbers.set(0, new PhoneNumber(phoneNumber));
 //         this.phoneNumbers.add(new PhoneNumber(phoneNumber));
       }
    }

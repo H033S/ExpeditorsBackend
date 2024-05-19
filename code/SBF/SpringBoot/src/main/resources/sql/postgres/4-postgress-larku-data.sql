@@ -11,9 +11,17 @@ alter sequence scheduledclass_id_seq restart;
 delete from course;
 alter sequence course_id_seq restart;
 
+delete from courseversioned;
+alter sequence course_id_seq restart;
+
 delete from student;
 alter sequence student_id_seq restart;
 
+
+INSERT INTO courseversioned (code, credits, title, version) VALUES
+('BKTW-101',3.0,'Introduction to BasketWeaving', 1),
+('BOT-202',2.0,'Yet more Botany', 1),
+('MATH-101',4.0,'Intro To Math', 1);
 
 INSERT INTO course (code, credits, title) VALUES
 ('BKTW-101',3.0,'Introduction to BasketWeaving'),
