@@ -8,12 +8,12 @@ import ttl.larku.dao.BaseDAO;
 import ttl.larku.dao.jpahibernate.JPAStudentDAO;
 import ttl.larku.domain.Student;
 import ttl.larku.domain.Student.Status;
-import ttl.larku.domain.StudentVersioned;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.LockModeType;
 import java.time.LocalDate;
 import java.util.List;
+import ttl.larku.domain.StudentVersioned;
 
 @Service
 //@Transactional

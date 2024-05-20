@@ -10,6 +10,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ttl.larku.domain.Course;
 import ttl.larku.domain.PhoneNumber;
+import ttl.larku.domain.ScheduledClass;
 import ttl.larku.domain.Student;
 
 import static java.lang.System.out;
@@ -73,6 +74,23 @@ public class JPADemo {
 
          manager.getTransaction().commit();
       }
+   }
+   @Test
+   public void dumpScheduledClasses() {
+      try (EntityManager manager = emf.createEntityManager();) {
+
+//         TypedQuery<ScheduledClass> query =
+//               manager.createQuery("select sc from ScheduledClass sc", ScheduledClass.class);
+
+         TypedQuery<ScheduledClass> query =
+               manager.createQuery("select sc from ScheduledClass sc join fetch sc.course", ScheduledClass.class);
+
+         List<ScheduledClass> result = query.getResultList();
+
+         out.println("num : " + result.size());
+         result.forEach(out::println);
+      }
+
    }
 
    @Test

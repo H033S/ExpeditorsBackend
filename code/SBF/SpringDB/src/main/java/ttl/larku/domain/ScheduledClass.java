@@ -73,7 +73,7 @@ public class ScheduledClass {
 
     //@JsonIgnore
     public List<Student> getStudents() {
-        return students;
+        return List.copyOf(students);
     }
 
     //@JsonIgnore

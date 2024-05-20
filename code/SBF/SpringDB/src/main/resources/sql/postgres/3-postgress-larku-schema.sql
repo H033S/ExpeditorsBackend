@@ -15,8 +15,18 @@ DROP TABLE if exists Course;
 
 
 DROP TABLE if exists Student;
+DROP TABLE if exists StudentVersioned;
 -- drop sequence if exists student_id_seq;
 
+CREATE TABLE StudentVersioned
+(
+    id          serial primary key not null,
+    name        VARCHAR(255) NOT NULL,
+    phoneNumber VARCHAR(20),
+    dob         DATE,
+    status      VARCHAR(20),
+    version     integer
+);
 
 -- Create Tables
 CREATE TABLE Student

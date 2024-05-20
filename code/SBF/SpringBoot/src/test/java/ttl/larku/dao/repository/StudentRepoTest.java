@@ -20,7 +20,7 @@ public class StudentRepoTest {
       List<Student> students = studentRepo.findAll();
 
       out.println("num results: " + students.size());
-      students.forEach(out::println);
+//      students.forEach(out::println);
 
       assertEquals(4, students.size());
    }

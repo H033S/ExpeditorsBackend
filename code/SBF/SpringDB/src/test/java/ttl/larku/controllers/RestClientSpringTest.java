@@ -47,7 +47,7 @@ public class RestClientSpringTest {
 
     @PostConstruct
     public void init() {
-        baseUrl = "http://localhost:" + port;
+        baseUrl = "https://localhost:" + port;
         rootUrl = "/adminrest/student";
         oneStudentUrl = rootUrl + "/{id}";
 

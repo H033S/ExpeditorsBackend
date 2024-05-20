@@ -30,166 +30,179 @@ import java.util.stream.Collectors;
 @NamedQuery(name = "Student.smallSelect", query = "Select s from Student s")
 @NamedQuery(name = "Student.bigSelect", query = "select distinct s from Student s left join fetch s.classes sc left join fetch sc.course")
 @NamedQuery(name = "Student.bigSelectOne", query = "select distinct s from Student s left join fetch s.classes "
-		+ "sc left join fetch sc.course where s.id = :id")
+      + "sc left join fetch sc.course where s.id = :id")
 @NamedQuery(name = "Student.getByName", query = "select distinct s from Student s left join fetch s.classes "
-        + "sc left join fetch sc.course where s.name like CONCAT('%',:name,'%')")
+      + "sc left join fetch sc.course where s.name like CONCAT('%',:name,'%')")
 @NamedQuery(name = "Student.exists", query = "select case when count(s) > 0 then true else false end from Student s where s.id = :id")
 public class Student {
 
-    public enum Status {
-        FULL_TIME, PART_TIME, HIBERNATING
-    };
+   public enum Status {
+      FULL_TIME, PART_TIME, HIBERNATING
+   }
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+   ;
 
-    private String name;
+   @Id
+   @GeneratedValue(strategy = GenerationType.IDENTITY)
+   private int id;
 
-    private String phoneNumber;
+   private String name;
 
-
-    @JsonDeserialize(using = LocalDateDeserializer.class)
-    @JsonSerialize(using = LocalDateSerializer.class)
-    private LocalDate dob;
-
-    @Enumerated(EnumType.STRING)
-    private Status status = Status.FULL_TIME;
-
-    /*
-     * Important INFO.  If you use a List in a many-to-many relationship,
-     * then Hibernate does awful things when you remove an element from
-     * one side - it deletes all the corresponding entries in the link table,
-     * and then re-inserts the ones which are still valid.  In our case,
-     * if we remove a ScheduledClass, it would remove *all* the records
-     * from the link table for all students who had that class.  It would then
-     * reinsert records for all those students with their other classes.
-     *
-     * Awful.  Using a Set makes it behave better.  Now only the link table
-     * entries for students for this particular class are removed.
-     */
-    @JacksonXmlElementWrapper(localName = "classes")
-    @JacksonXmlProperty(localName = "class")
-    @ManyToMany (fetch = FetchType.LAZY)
-    @Cascade({CascadeType.PERSIST, CascadeType.MERGE})
-    @JoinTable(name = "Student_ScheduledClass",
-            joinColumns = @JoinColumn(name = "students_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "classes_id", referencedColumnName = "id"),
-            uniqueConstraints = {
-                    @UniqueConstraint(columnNames = {"students_id", "classes_id"})})
-    private Set<ScheduledClass> classes;
+   private String phoneNumber;
 
 
-    public Student() {
-        this("Unknown");
-    }
+   @JsonDeserialize(using = LocalDateDeserializer.class)
+   @JsonSerialize(using = LocalDateSerializer.class)
+   private LocalDate dob;
 
-    public Student(String name) {
-        this(name, null, null, Status.FULL_TIME, new ArrayList<ScheduledClass>());
-    }
+   @Enumerated(EnumType.STRING)
+   private Status status = Status.FULL_TIME;
+
+   /*
+    * Important INFO.  If you use a List in a many-to-many relationship,
+    * then Hibernate does awful things when you remove an element from
+    * one side - it deletes all the corresponding entries in the link table,
+    * and then re-inserts the ones which are still valid.  In our case,
+    * if we remove a ScheduledClass, it would remove *all* the records
+    * from the link table for all students who had that class.  It would then
+    * reinsert records for all those students with their other classes.
+    *
+    * Awful.  Using a Set makes it behave better.  Now only the link table
+    * entries for students for this particular class are removed.
+    */
+   @JacksonXmlElementWrapper(localName = "classes")
+   @JacksonXmlProperty(localName = "class")
+   @ManyToMany(fetch = FetchType.LAZY)
+   @Cascade({CascadeType.PERSIST, CascadeType.MERGE})
+   @JoinTable(name = "Student_ScheduledClass",
+         joinColumns = @JoinColumn(name = "students_id", referencedColumnName = "id"),
+         inverseJoinColumns = @JoinColumn(name = "classes_id", referencedColumnName = "id"),
+         uniqueConstraints = {
+               @UniqueConstraint(columnNames = {"students_id", "classes_id"})})
+   private Set<ScheduledClass> classes = new HashSet<>();
+
+
+   public Student() {
+      this("Unknown");
+   }
+
+   public Student(String name) {
+      this(name, null, null, Status.FULL_TIME, new ArrayList<ScheduledClass>());
+   }
 
 //    public Student(String name, String phoneNumber, Status status) {
 //        this(name, phoneNumber, null, status, new ArrayList<ScheduledClass>());
 //    }
 
-    public Student(String name, String phoneNumber, LocalDate dob, Status status) {
-        this(name, phoneNumber, dob, status, new ArrayList<ScheduledClass>());
-    }
+   public Student(String name, String phoneNumber, LocalDate dob, Status status) {
+      this(name, phoneNumber, dob, status, new ArrayList<ScheduledClass>());
+   }
 
-    public Student(String name, String phoneNumber, LocalDate dob, Status status, List<ScheduledClass> classes) {
-        super();
-        this.name = name;
-        this.status = status;
-        this.dob = dob;
-        this.phoneNumber = phoneNumber;
-        this.classes = new HashSet<>(classes);
-    }
+   public Student(String name, String phoneNumber, LocalDate dob, Status status, List<ScheduledClass> classes) {
+      super();
+      this.name = name;
+      this.status = status;
+      this.dob = dob;
+      this.phoneNumber = phoneNumber;
+      setClassesCommon(classes);
+   }
 
-    public int getId() {
-        return id;
-    }
+   public int getId() {
+      return id;
+   }
 
-    public void setId(int id) {
-        this.id = id;
-    }
+   public void setId(int id) {
+      this.id = id;
+   }
 
-    public String getName() {
-        return name;
-    }
+   public String getName() {
+      return name;
+   }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+   public void setName(String name) {
+      this.name = name;
+   }
 
-    @JsonIgnore
-    public Status[] getStatusList() {
-        return Status.values();
-    }
+   @JsonIgnore
+   public Status[] getStatusList() {
+      return Status.values();
+   }
 
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
+   public String getPhoneNumber() {
+      return phoneNumber;
+   }
 
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
+   public void setPhoneNumber(String phoneNumber) {
+      this.phoneNumber = phoneNumber;
+   }
 
-    public Status getStatus() {
-        return status;
-    }
+   public Status getStatus() {
+      return status;
+   }
 
-    public void setStatus(Status status) {
-        this.status = status;
-    }
+   public void setStatus(Status status) {
+      this.status = status;
+   }
 
-    public LocalDate getDob() {
-        return dob;
-    }
+   public LocalDate getDob() {
+      return dob;
+   }
 
-    public void setDob(LocalDate dob) {
-        this.dob = dob;
-    }
+   public void setDob(LocalDate dob) {
+      this.dob = dob;
+   }
 
-//    public List<ScheduledClass> getClasses() {
-        public Set<ScheduledClass> getClasses() {
-        return classes;
-    }
+   //    public List<ScheduledClass> getClasses() {
+   public Set<ScheduledClass> getClasses() {
+      return Set.copyOf(classes);
+   }
 
-//    public void setClasses(List<ScheduledClass> classes) {
-        public void setClasses(Set<ScheduledClass> classes) {
-        this.classes = classes;
-    }
+   @JsonIgnore
+   public void setClasses(List<ScheduledClass> classes) {
+      setClassesCommon(classes);
+   }
 
-    public void addClass(ScheduledClass sClass) {
-        classes.add(sClass);
-    }
+   public void setClasses(Set<ScheduledClass> classes) {
+      setClassesCommon(classes);
+   }
 
-    public void dropClass(ScheduledClass sClass) {
-        classes.remove(sClass);
-    }
+   private void setClassesCommon(Collection<ScheduledClass> classes) {
+      if(classes != null) {
+         this.classes.clear();
+         this.classes.addAll(classes);
+      }
+   }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Student student = (Student) o;
-        return id == student.id && name.equals(student.name);
-    }
+   public void addClass(ScheduledClass sClass) {
+      classes.add(sClass);
+   }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, name);
-    }
+   public void dropClass(ScheduledClass sClass) {
+      classes.remove(sClass);
+   }
 
-    @Override
-    public String toString() {
-        return "Student{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", phoneNumber='" + phoneNumber + '\'' +
-                ", dob=" + dob +
-                ", status=" + status +
+   @Override
+   public boolean equals(Object o) {
+      if (this == o) return true;
+      if (o == null || getClass() != o.getClass()) return false;
+      Student student = (Student) o;
+      return id == student.id && name.equals(student.name);
+   }
+
+   @Override
+   public int hashCode() {
+      return Objects.hash(id, name);
+   }
+
+   @Override
+   public String toString() {
+      return "Student{" +
+            "id=" + id +
+            ", name='" + name + '\'' +
+            ", phoneNumber='" + phoneNumber + '\'' +
+            ", dob=" + dob +
+            ", status=" + status +
 //                ", classes=" + classes +
-                '}';
-    }
+            '}';
+   }
 }
