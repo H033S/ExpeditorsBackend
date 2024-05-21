@@ -6,6 +6,16 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Transient;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -15,16 +25,17 @@ import java.util.List;
 import java.util.Objects;
 
 
+@Entity
 public class Student {
 
    public enum Status {
       FULL_TIME,
       PART_TIME,
       HIBERNATING
-   }
+   };
 
-   ;
-
+   @Id
+   @GeneratedValue(strategy = GenerationType.IDENTITY)
    private int id;
 
    @NotNull
@@ -33,14 +44,18 @@ public class Student {
    //    @Size(min = 10, message = "Phonenumber must be at least 10 digits")
    @NotNull
    @Valid
+   //@OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+   @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
    private List<PhoneNumber> phoneNumbers = new ArrayList<>();
 
    @JsonDeserialize(using = LocalDateDeserializer.class)
    @JsonSerialize(using = LocalDateSerializer.class)
    private LocalDate dob;
 
+   @Enumerated(EnumType.STRING)
    private Status status = Status.FULL_TIME;
 
+   @Transient
    private List<ScheduledClass> classes = new ArrayList<>();
 
    private static int nextId = 0;
