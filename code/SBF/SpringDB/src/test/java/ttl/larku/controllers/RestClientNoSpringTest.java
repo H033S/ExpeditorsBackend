@@ -23,11 +23,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
-@Disabled
+//@Disabled
 public class RestClientNoSpringTest {
 
     // GET with url parameters
-    String rootUrl = "http://localhost:8080/adminrest/student";
+    //String rootUrl = "http://localhost:8080/adminrest/student";
+    String rootUrl = "https://localhost:8443/adminrest/student";
     String oneStudentUrl = rootUrl + "/{id}";
     RestTemplate rt;
     ObjectMapper mapper = new ObjectMapper();

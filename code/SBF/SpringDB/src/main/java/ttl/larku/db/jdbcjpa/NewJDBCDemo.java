@@ -180,32 +180,6 @@ public class NewJDBCDemo {
       }
    }
 
-   public static void getGeneratedKeyOnInsert(DataSource dataSource) {
-      String insertStr = "insert into student (name, phonenumber, dob, status) " +
-            "values (?, ?, ?, ?)";
-      try (Connection connection = dataSource.getConnection();
-           PreparedStatement statement = connection.prepareStatement(insertStr,
-                 Statement.RETURN_GENERATED_KEYS)) {
-         statement.setString(1, "FooBar");
-         statement.setString(2, "876 489 93393");
-         statement.setObject(3, LocalDate.parse("2000-10-10"));
-         statement.setString(4, "FULL_TIME");
-         int affectedRows = statement.executeUpdate();
-
-
-         int newKey = -1;
-         try (ResultSet keys = statement.getGeneratedKeys()) {
-            keys.next();
-            newKey = keys.getInt(1);
-
-         }
-
-         System.out.println("affectedRow: " + affectedRows + ", New Key: " + newKey);
-      } catch (SQLException e) {
-         e.printStackTrace();
-      }
-   }
-
       public static void main (String[]args){
          //addStudentToClass(1, 2);
          //Postgres
@@ -231,7 +205,6 @@ public class NewJDBCDemo {
          DataSource dataSource = new DriverManagerDataSource(url, user, pw);
 //        getAllStudents(dataSource);
          //getAllStudentsWithEveryThing(dataSource, 1);
-         //simpleSqlInjection(dataSource);
-         getGeneratedKeyOnInsert(dataSource);
+         simpleSqlInjection(dataSource);
       }
    }

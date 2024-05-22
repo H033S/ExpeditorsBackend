@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,7 +27,6 @@ import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-//@SpringBootTest(properties = {"spring.h2.console.enabled=true" }, webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 //@Sql(scripts = {"/schema-h2.sql", "/data-h2.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 //@Sql(scripts = { "/ttl/larku/db/createVersionedDB-h2.sql",
@@ -48,88 +46,56 @@ public class JPALocksTest extends SqlScriptBase {
 	@Resource(name = "studentDaoService")
 	private StudentDaoService studentService;
 
-	@Test
-	@Transactional
-	public void testCreateStudent() {
-		Student s = new Student("Joe");
-		assertEquals(0, s.getId());
-
-		entityManager.persist(s);
-
-		assertNotEquals(0, s.getId());
-
-		System.out.println("post persist student is " + s);
-	}
-
-	@Test
-//    @Transactional(isolation = Isolation.READ_COMMITTED)
-//    @Transactional(isolation = Isolation.REPEATABLE_READ)
-	// @Transactional(isolation = Isolation.SERIALIZABLE)
-	@DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
-	public void testUpdateStudentVersioned() {
-		try {
-			StudentVersioned s = entityManager.find(StudentVersioned.class, 1); 
-			studentService.updateStudentVersioned(s);
-
-			s = entityManager.find(StudentVersioned.class, 1);
-			assertEquals("Myrtle", s.getName());
-			System.out.println("student at end is " + s);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
 
 	/**
 	 * Test Isolation Levels.
+	 * Use this test along with JPALocksPartnerTest to test the effect
+	 * of different Lock Modes.  Best run in debug mode with breakpoints
+	 * set as per comments in the code.
+	 * Some things to observe.
+	 * - Try doing a find with one of the PESSIMISTIC lock modes.
+	 *   Stop at a break point before the commit.
+	 *   Try and execute an update statement from psql for Student id 1.
+	 *   You will see the update block till you stop past the commit in
+	 *   this code.
+	 * - Using an Optimistic Lock mode will not block the psql update.
+	 *   But _note that to use Optimistic Lock mode you need to make
+	 *   sure the @Version in StudentVersioned is not commented out.
+	 * - Start both tests in debug mode and make them get
+	 *   the PESSIMISTIC_READ lock.  Neither of the tests should block
+	 *   for the lock.  But the update in psql should still block.
+	 * - If one OR both tests want a PESSIMISTIC_WRITE lock
+	 *   then the last one to try getting the lock will wait till the
+	 *   other has committed.
+	 *
 	 */
 	@Test
-	@Transactional(isolation = Isolation.READ_COMMITTED)
-//    @Transactional(isolation = Isolation.REPEATABLE_READ)
-	// @Transactional(isolation = Isolation.SERIALIZABLE)
 	@DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
-	public void testUpdateStudent() {
+	public void testLockModesWithOurOwnEntityManger() {
+		EntityManager myManager = emf.createEntityManager();
+		myManager.getTransaction().begin();
 
-		TypedQuery<Student> query = entityManager.createQuery("select s from Student s", Student.class);
-		List<Student> students = query.getResultList();
-		Student s = entityManager.find(Student.class, 1, LockModeType.PESSIMISTIC_READ);
+		TypedQuery<StudentVersioned> query = myManager.createQuery("select s from StudentVersioned s", StudentVersioned.class);
+		List<StudentVersioned> students = query.getResultList();
+		StudentVersioned s = myManager.find(StudentVersioned.class, 1, LockModeType.PESSIMISTIC_READ);
+//		StudentVersioned s = myManager.find(StudentVersioned.class, 1, LockModeType.PESSIMISTIC_WRITE);
+//		StudentVersioned s = myManager.find(StudentVersioned.class, 1, LockModeType.OPTIMISTIC);
 		s.setName("Myrtle");
-		s.getClasses().remove(0);
 
-		// assertEquals(2, s.getClasses().size());
-		entityManager.flush();
-		entityManager.clear();
+		//Put a Break point here at the flush.
+		//You should be able to read the data from psql for student with id 1, even though
+		//we have the PESSIMISTIC_READ lock.
+		//If you try and update the Student from psql, you should block till this
+		//transaction commits.
+		myManager.flush();
+		myManager.getTransaction().commit();
+		myManager.clear();
 
-		s = entityManager.find(Student.class, 1);
+		s = myManager.find(StudentVersioned.class, 1);
 		assertEquals("Myrtle", s.getName());
-		assertEquals(2, s.getClasses().size());
 		System.out.println("student at end is " + s);
-	}
 
-	/**
-	 * Test Isolation Levels.
-	 */
-	@Test
-	public void testUpdateStudentWithStudentService() {
-
-		int studentId = 2;
-		TypedQuery<Student> query = entityManager.createNamedQuery("Student.bigSelectOne", Student.class);
-		query.setParameter("id", studentId);
-		Student student = query.getSingleResult();
-
-		student.setName("Myrtle");
-		student.getClasses().remove(0);
-
-		RestResultWrapper<Student> rr = studentService.updateStudentR(student);
-
-		assertTrue(rr.getStatus() == Status.Ok);
-
-		query = entityManager.createNamedQuery("Student.bigSelectOne", Student.class);
-		query.setParameter("id", studentId);
-		student = query.getSingleResult();
-
-		assertEquals("Myrtle", student.getName());
-		assertEquals(1, student.getClasses().size());
-		System.out.println("student at end is " + student);
+		myManager.close();
 	}
 
 	@Test
@@ -170,7 +136,7 @@ public class JPALocksTest extends SqlScriptBase {
 
 	@Test
 	@Transactional(propagation = Propagation.NOT_SUPPORTED)
-	public void testMergeStudentCascade() {
+	public void testUpdateCascade() {
 		EntityManager localManager = emf.createEntityManager();
 		localManager.getTransaction().begin();
 
@@ -180,8 +146,8 @@ public class JPALocksTest extends SqlScriptBase {
 		Course course = localManager.find(Course.class, 1);
 		ScheduledClass sc = new ScheduledClass(course, LocalDate.parse("2019-10-10"), LocalDate.parse("2020-10-10"));
 
-		s.getClasses().add(sc);
-		sc.getStudents().add(s);
+		s.addClass(sc);
+		sc.addStudent(s);
 
 		localManager.getTransaction().commit();
 		// entityManager.merge(s);
@@ -243,14 +209,14 @@ public class JPALocksTest extends SqlScriptBase {
 		localManager.getTransaction().begin();
 		;
 		// Get student with Id 1
-		Student student = localManager.find(Student.class, 1);
+		Student student = localManager.find(Student.class, 2);
 		System.out.println("After find student: " );
 //		System.out.println("student is " + student);
 
 		// They are registered for class with Id 2
 		ScheduledClass sc = localManager.find(ScheduledClass.class, 2);
 		System.out.println("class is " + sc + "students " + sc.getStudents());
-		assertEquals(2, sc.getStudents().size());
+		assertEquals(1, sc.getStudents().size());
 
 		// Try and remove the class
 		localManager.remove(sc);
@@ -261,7 +227,7 @@ public class JPALocksTest extends SqlScriptBase {
 
 		// But guess who is still there - everybody
 		ScheduledClass sc2 = localManager.find(ScheduledClass.class, 2);
-		Student s2 = localManager.find(Student.class, 1);
+		Student s2 = localManager.find(Student.class, 2);
 
 		System.out.println("student after delete is " + s2);
 		System.out.println("sc after delete is " + sc2);
@@ -282,30 +248,20 @@ public class JPALocksTest extends SqlScriptBase {
 		Student student = entityManager.find(Student.class, 1);
 		System.out.println("student is " + student);
 
-		ScheduledClass sc = entityManager.find(ScheduledClass.class, 2);
+		ScheduledClass sc = entityManager.find(ScheduledClass.class, 3);
 		System.out.println("class is " + sc + "students " + sc.getStudents());
-		assertEquals(1, sc.getStudents().size());
+		assertEquals(2, sc.getStudents().size());
 		assertEquals(2, student.getClasses().size());
 
 		// Remove all the students for this class
-		// Expensive!!!
 		for (Student s : sc.getStudents()) {
-			// Use an iterator because we want to change the
-			// List while iterating
-			Iterator<ScheduledClass> it = s.getClasses().iterator();
-			while (it.hasNext()) {
-				ScheduledClass studentClass = it.next();
-				if (studentClass.getId() == sc.getId()) {
-					it.remove();
-					break;
-				}
-			}
+			s.dropClass(sc);
 		}
 
 		entityManager.remove(sc);
 		entityManager.flush();
 
-		ScheduledClass sc2 = entityManager.find(ScheduledClass.class, 2);
+		ScheduledClass sc2 = entityManager.find(ScheduledClass.class, 3);
 		Student s2 = entityManager.find(Student.class, 1);
 
 		System.out.println("student after delete is " + s2);
@@ -320,7 +276,6 @@ public class JPALocksTest extends SqlScriptBase {
 	public void testDeleteScheduledClassDirectly() {
 		int classToDelete = 2;
 		EntityManager localManager = emf.createEntityManager();
-		localManager.setFlushMode(FlushModeType.COMMIT);
 		try {
 			//First Check to see that the student has 2 classes currently
 			TypedQuery<Student> tq = localManager.createNamedQuery("Student.bigSelectOne", Student.class);
@@ -329,6 +284,7 @@ public class JPALocksTest extends SqlScriptBase {
 			Student student = tq.getSingleResult();
 			Set<ScheduledClass> classes = student.getClasses();
 			assertEquals(2, student.getClasses().size());
+
 			long count = classes.stream()
 					.filter(sc -> sc.getId() == classToDelete)
 					.count();
@@ -342,7 +298,7 @@ public class JPALocksTest extends SqlScriptBase {
 			localManager.getTransaction().begin();
 			// Remove all links to classToDelete in the link table
 			Query query = localManager
-					.createNativeQuery("delete from student_scheduledclass where " + "classes_id = :id");
+					.createNativeQuery("delete from student_scheduledclass where classes_id = :id");
 			query.setParameter("id", classToDelete);
 			int rows = query.executeUpdate();
 			assertEquals(1, rows);
