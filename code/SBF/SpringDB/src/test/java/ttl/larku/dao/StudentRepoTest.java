@@ -10,6 +10,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
 import ttl.larku.dao.repository.SimpleStudentRepo;
 import ttl.larku.dao.repository.StudentRepo;
@@ -33,11 +34,12 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 //Or you can just re-run the sql files before each test method
 //@Sql(scripts = { "/ttl/larku/db/createDB-h2.sql", "/ttl/larku/db/populateDB-h2.sql" }, executionPhase= Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+@Sql(scripts = { "/sql/postres", "/ttl/larku/db/populateDB-h2.sql" }, executionPhase= Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 
 //This next one will roll back the transaction after
 //each test, so the database will actually stay the
 //same for the next test.
-@Transactional
+//@Transactional
 @Tag("dao")
 public class StudentRepoTest extends SqlScriptBase {
 

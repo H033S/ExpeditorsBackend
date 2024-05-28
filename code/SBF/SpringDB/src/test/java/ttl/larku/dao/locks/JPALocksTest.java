@@ -8,9 +8,12 @@ import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.PersistenceUnit;
 import jakarta.persistence.Query;
 import jakarta.persistence.TypedQuery;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -35,7 +38,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 //		"/ttl/larku/db/populateVersionedDB-h2.sql" }, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 //@Transactional
 //@Rollback(false)
-//@Disabled
+@Disabled
 @Tag("dao")
 public class JPALocksTest extends SqlScriptBase {
 
@@ -49,6 +52,10 @@ public class JPALocksTest extends SqlScriptBase {
 	private StudentDaoService studentService;
 
 
+	@BeforeEach
+	public void beforeEach() throws SQLException {
+		this.runSqlScriptsOnce();
+	}
 	/**
 	 * Test Isolation Levels.
 	 * Use this test along with JPALocksPartnerTest to test the effect
@@ -113,11 +120,11 @@ public class JPALocksTest extends SqlScriptBase {
 		ScheduledClass sc = new ScheduledClass(course, LocalDate.parse("2019-10-10"), LocalDate.parse("2020-10-10"));
 		assertEquals(0, s.getId());
 
-		s.getClasses().add(sc);
+		s.addClass(sc);
 		// Have to handle both sides of the relationship
 		// in memory - Hibernate will take care of this in
 		// the database for us because of Cascade.persist
-		sc.getStudents().add(s);
+		sc.addStudent(s);
 
 		entityManager.persist(s);
 		// entityManager.flush();
