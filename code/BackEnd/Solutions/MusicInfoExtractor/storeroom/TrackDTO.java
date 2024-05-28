@@ -139,22 +139,6 @@ public record TrackDTO(int trackId, Duration length, Format format, String title
       return newAti;
    }
 
-   public TrackDTO copyWithImageUrl(String imageUrl) {
-      var newAti = new TrackDTO(this.trackId(),
-            this.length(),
-            this.format(),
-            this.title(),
-            this.album(),
-            this.group(),
-            imageUrl,
-            this.year(),
-            this.genre(),
-            this.price,
-            this.artists());
-
-      return newAti;
-   }
-
    public static TrackBuilder builder() {
       return new TrackBuilder();
    }
@@ -166,7 +150,7 @@ public record TrackDTO(int trackId, Duration length, Format format, String title
       private String title;
       private String album;
       private String group;
-      private String imageUrl = "";
+      private String imageUrl;
       private String year;
       private String genre;
       private BigDecimal price;

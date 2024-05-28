@@ -3,6 +3,7 @@ package ttl.mie.db;
 import java.time.Duration;
 import java.util.List;
 import java.util.stream.Collectors;
+import javax.sound.midi.Track;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -35,13 +36,15 @@ public class DBUtils {
    private AudioInfoExtractor atst;
 
    @Transactional
-   public void addTracksToDB(List<TrackDTO> tracks) throws Exception {
+   public int addTracksToDB(List<TrackDTO> tracks) throws Exception {
       tracks.forEach(audioInfoDao::insert);
-      convertToEntityAndAdd(tracks);
+      int numTracks = convertToEntityAndAdd(tracks);
+      return numTracks;
    }
    
-   public void convertToEntityAndAdd(List<TrackDTO> tracks) {
-      tracks.forEach(ati -> {
+   public int convertToEntityAndAdd(List<TrackDTO> tracks) {
+      int numTracks = 0;
+      for(TrackDTO ati: tracks) {
          List<ArtistDTO> artists = ati.artists();
          List<ArtistEntity> artistEntities = artists.stream()
                .map(artist -> {
@@ -70,13 +73,17 @@ public class DBUtils {
                      .format(ati.format())
                      .genre(ati.genre())
                      .year(Strings.isNotBlank(ati.year()) ? ati.year() : null)
+                     .group(ati.group())
+                     .imageUrl(ati.imageUrl())
                      .artists(artistEntities)
                      .album(Strings.isNotBlank(ati.album()) ? ati.album() : null)
-                     .duration(ati.length() > 0 ? Duration.ofSeconds(ati.length()) : null)
+                     .duration(ati.length())
                      .build();
 
          newTrack = trackRepo.save(newTrack);
-      });
+         numTracks++;
+      };
 
+      return numTracks;
    }
 }

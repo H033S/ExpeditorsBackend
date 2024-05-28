@@ -1,6 +1,7 @@
 package ttl.mie;
 
 import java.io.File;
+import java.io.InputStream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.WebApplicationType;
@@ -15,11 +16,16 @@ import ttl.mie.app.JsonFileToDB;
 public class MusicInfoExtractorApplication {
 
    public static void main(String[] args) {
-      //No Server
       new SpringApplicationBuilder(MusicInfoExtractorApplication.class)
-            .web(WebApplicationType.NONE)
             .run(args);
    }
+
+//   public static void main(String[] args) {
+//      //No Server
+//      new SpringApplicationBuilder(MusicInfoExtractorApplication.class)
+//            .web(WebApplicationType.NONE)
+//            .run(args);
+//   }
 }
 
 @Component
@@ -30,7 +36,11 @@ class DBFromJsonFileInitializer implements CommandLineRunner {
 
    @Override
    public void run(String... args) throws Exception {
-      File trackFile = new File("/tmp/tracks.json");
+//      File trackFile = new File("/tmp/tracks.json");
+      //File trackFile = new File("/tmp/testTracks.json");
+      File trackFile = new File("/tmp/lotsOfTracks.json");
+
+//      int count = jsonToDB.addTracksToDB("tracks.json");
 
       int count = jsonToDB.addTracksToDB(trackFile);
       System.out.println("Added " + count + " tracks");

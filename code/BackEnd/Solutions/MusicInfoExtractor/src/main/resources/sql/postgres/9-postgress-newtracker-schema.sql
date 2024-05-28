@@ -23,7 +23,9 @@ create table if not exists public.track
     track_id serial primary key,
     title        varchar(255),
     album        varchar(255),
-    duration     bigint,
+    band        varchar(100),
+    imageUrl        varchar(300),
+    duration     numeric(21),
     format       varchar(255),
     genre       varchar(255),
     release_year varchar(255)

@@ -4,13 +4,13 @@
 
 \c tracker;
 
-insert into track (track_id, title, album, duration, format, reLease_year )
-VALUES (1, 'h2-The Shadow Of Your Smile', 'Let them Roll', 375000000000, 'CD', '1965'),
-       (2, 'h2-I''ll Remember April', 'Alone Together', 354000000000, 'OGG', '1972'),
-       (3, 'h2-Leave It to Me', 'Three Guitars in Bossa Nova Time', 193000000000, 'CD', '1963'),
-       (4, 'h2-Have you met Miss Jones', 'Pioneers of the Electric Guitar', 138000000000, 'MP3', '2013'),
-       (5, 'h2-My Funny Valentine', 'Moonlight in Vermont', 168000000000, 'OGG', '1956'),
-       (6, 'h2-What''s New', 'Ballads', 247000000000, 'MP3', '1945-02-02');
+insert into track (track_id, title, album, band, duration, format, reLease_year )
+VALUES (1, 'h2-The Shadow Of Your Smile', 'Let them Roll', 'Big John Patton', 375000000000, 'CD', '1965'),
+       (2, 'h2-I''ll Remember April', 'Alone Together', 'Jim Hall and Ron Carter', 354000000000, 'OGG', '1972'),
+       (3, 'h2-Leave It to Me', 'Three Guitars in Bossa Nova Time', 'Herb Ellis', 193000000000, 'CD', '1963'),
+       (4, 'h2-Have you met Miss Jones', 'Pioneers of the Electric Guitar', 'George Van Eps', 138000000000, 'MP3', '2013'),
+       (5, 'h2-My Funny Valentine', 'Moonlight in Vermont', 'Johnny Smith', 168000000000, 'OGG', '1956'),
+       (6, 'h2-What''s New', 'Ballads', 'John Coltrane', 247000000000, 'MP3', '1945-02-02');
 
 INSERT INTO ARTIST (artist_id, name)
 VALUES (1, 'Big John Patton'),

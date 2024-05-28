@@ -33,6 +33,11 @@ public class TrackEntity {
 	private String title;
 	private String album;
 
+	@Column(name = "band")
+	private String group;
+
+	private String imageUrl;
+
 	private String genre;
 
 	private Duration duration;
@@ -59,11 +64,13 @@ public class TrackEntity {
 		super();
 	}
 
-	public TrackEntity(String title, String album, Duration duration,
+	public TrackEntity(String title, String album, String group, String imageUrl, Duration duration,
 							 String releaseYear, Format format, String genre, Set<ArtistEntity> artists) {
 
 		this.title = title;
 		this.album = album;
+		this.group = group;
+		this.imageUrl = imageUrl;
 		this.releaseYear = releaseYear;
 		this.duration = duration;
 		this.format = format;
@@ -105,6 +112,22 @@ public class TrackEntity {
 
 	public void setAlbum(String album) {
 		this.album = album;
+	}
+
+	public String getGroup() {
+		return group;
+	}
+
+	public void setGroup(String group) {
+		this.group = group;
+	}
+
+	public String getImageUrl() {
+		return imageUrl;
+	}
+
+	public void setImageUrl(String imageUrl) {
+		this.imageUrl = imageUrl;
 	}
 
 	public Duration getDuration() {
@@ -216,6 +239,8 @@ public class TrackEntity {
 		private int id;
 		private String title;
 		private String album;
+		private String group;
+		private String imageUrl;
 		private String genre;
 		private Duration duration;
 		private String year;
@@ -249,6 +274,15 @@ public class TrackEntity {
 		public Builder artists(Set<ArtistEntity> artists) {
 			this.artists.clear();
 			this.artists.addAll(artists);
+			return this;
+		}
+
+		public Builder group(String group) {
+			this.group = group;
+			return this;
+		}
+		public Builder imageUrl(String imageUrl) {
+			this.imageUrl = imageUrl;
 			return this;
 		}
 
@@ -293,10 +327,9 @@ public class TrackEntity {
 		}
 
 		public TrackEntity build() {
-			TrackEntity t = new TrackEntity(title, album, duration, year, format, genre, artists);
+			TrackEntity t = new TrackEntity(title, album, group, imageUrl, duration, year, format, genre, artists);
 			return t;
 		}
-
 	}
 
 }
