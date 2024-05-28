@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import ttl.larku.domain.NameAndPhoneDTO;
 import ttl.larku.domain.Student;
 import ttl.larku.domain.StudentCourseCodeSummary;
 import ttl.larku.domain.StudentPhoneSummary;
@@ -32,12 +33,16 @@ public interface StudentRepo extends JpaRepository<Student, Integer>,
    //with the left join fetch.
    //The @Override signifies that we are overriding a built-in method.
 //   @Override
-////   @Query("select distinct s from Student s left join fetch s.classes sc left join fetch sc.course")
+//   @Query("select distinct s from Student s left join fetch s.classes sc left join fetch sc.course")
 //   public List<Student> findAll();
 
    @Override
    @Query("select distinct s from Student s left join fetch s.classes sc left join fetch sc.course")
    public Page findAll(Pageable pagable);
+
+   @Query("select new ttl.larku.domain.NameAndPhoneDTO(s.name, s.phoneNumber) from" +
+         " Student s")
+   public List<NameAndPhoneDTO> getNameAndPhoneNumbers();
 
    //Comes from @NamedQuery in Student
    public Student bigSelectOne(@Param("id") int id);

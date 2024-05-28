@@ -89,7 +89,8 @@ public class RegistrationRestController {
         return ResponseEntity.ok(RestResultWrapper.ofValue(student));
     }
 
-    @RequestMapping(value = "/register/{studentId}/{classId}", method = RequestMethod.POST)
+    @RequestMapping(value = "/register/{studentId}/{classId}",
+          method = RequestMethod.POST)
     public ResponseEntity<?> registerStudentWithPath(@PathVariable int studentId, @PathVariable int classId) {
 
         return registerStudent(studentId, classId);

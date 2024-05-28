@@ -11,13 +11,13 @@ import java.util.List;
  */
 
 @Component
-//@ConfigurationProperties("expeditors.backend.sql")
 @ConfigurationProperties("spring.sql.init")
 public class ScriptFileProperties {
     private String schemaLocations;
+    private String dataLocations;
+
     private List<String> allSchemaLocs = new ArrayList<>();
     private List<String> allDataLocs = new ArrayList<>();
-    private String dataLocations;
 
     public String getSchemaLocations() {
         return schemaLocations;
