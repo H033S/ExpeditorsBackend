@@ -1,16 +1,15 @@
 package ttl.larku.dao;
 
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ApplicationContext;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
 import ttl.larku.dao.repository.SimpleStudentRepo;
 import ttl.larku.dao.repository.StudentRepo;
@@ -18,8 +17,6 @@ import ttl.larku.domain.Student;
 import ttl.larku.domain.StudentCourseCodeSummary;
 import ttl.larku.domain.StudentPhoneSummary;
 import ttl.larku.sql.SqlScriptBase;
-
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -40,7 +37,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 //This next one will roll back the transaction after
 //each test, so the database will actually stay the
 //same for the next test.
-//@Transactional
+@Transactional
 @Tag("dao")
 public class StudentRepoTest extends SqlScriptBase {
 

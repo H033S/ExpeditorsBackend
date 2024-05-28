@@ -3,6 +3,7 @@ package ttl.larku.service;
 import java.util.List;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestClient;
 import ttl.larku.dao.BaseDAO;
 import ttl.larku.domain.Course;
@@ -11,6 +12,7 @@ import ttl.larku.rating.RatingProvider;
 
 @Service("courseService")
 //@Profile("rating")
+@Transactional
 public class CourseServiceWithRating implements CourseService {
 
     private BaseDAO<Course> courseDAO;

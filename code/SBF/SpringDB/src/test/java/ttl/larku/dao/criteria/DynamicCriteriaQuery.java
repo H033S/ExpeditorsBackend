@@ -1,4 +1,4 @@
-package ttl.larku.dao;
+package ttl.larku.dao.criteria;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -140,6 +140,7 @@ public class DynamicCriteriaQuery {
 		//based on what is not null in the example Student.
 		List<jakarta.persistence.criteria.Predicate> preds = new ArrayList<>();
 		if(example.getStatus() != null) {
+			//preds.add(builder.equal(queryRoot.get(Student_.status), example.getStatus()));
 			preds.add(builder.equal(queryRoot.get(Student_.status), example.getStatus()));
 		}
 		if(example.getName() != null) {
@@ -177,7 +178,5 @@ public class DynamicCriteriaQuery {
 		for(EntityType<?> mt : entityTypes) {
 			out.println("EntityType: " + mt);
 		}
-
 	}
-
 }

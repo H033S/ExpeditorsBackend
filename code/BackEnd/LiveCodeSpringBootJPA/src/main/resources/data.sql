@@ -16,7 +16,7 @@ alter sequence student_id_seq restart;
 
 
 INSERT INTO course (code, credits, title) VALUES
-('BKTW-101',3.0,'Introduction to BasketWeaving'),
+('HUH????-101',3.0,'Introduction to BasketWeaving'),
 ('BOT-202',2.0,'Yet more Botany'),
 ('MATH-101',4.0,'Intro To Math');
 

@@ -14,3 +14,16 @@ body {
 .error {
     color: red
 }
+
+.longtxtfield {
+    width: 90%;
+}
+
+.shorttxtfield {
+    float: right;
+}
+
+.right-justfied {
+    width: 100%;
+    float: right;
+}
