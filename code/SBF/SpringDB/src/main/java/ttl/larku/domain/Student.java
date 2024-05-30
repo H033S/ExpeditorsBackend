@@ -1,15 +1,13 @@
 package ttl.larku.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
-import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.CascadeType;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -23,24 +21,28 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.UniqueConstraint;
 import java.time.LocalDate;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
 
 @Entity
-@NamedQuery(name = "Student.smallSelect", query = "Select s from Student s")
-@NamedQuery(name = "Student.bigSelect", query = "select distinct s from Student s left join fetch s.classes sc left join fetch sc.course")
+@NamedQuery(name = "Student.smallSelect", query = "Select s from Student s order by s.id")
+@NamedQuery(name = "Student.bigSelect", query = "select distinct s from Student s left join fetch s.classes sc left join fetch sc.course order by s.id")
 @NamedQuery(name = "Student.bigSelectOne", query = "select distinct s from Student s left join fetch s.classes "
-      + "sc left join fetch sc.course where s.id = :id")
+      + "sc left join fetch sc.course where s.id = :id order by s.id")
 @NamedQuery(name = "Student.getByName", query = "select distinct s from Student s left join fetch s.classes "
-      + "sc left join fetch sc.course where s.name like CONCAT('%',:name,'%')")
+      + "sc left join fetch sc.course where s.name like CONCAT('%',:name,'%') order by s.id" )
 @NamedQuery(name = "Student.exists", query = "select case when count(s) > 0 then true else false end from Student s where s.id = :id")
 public class Student {
 
    public enum Status {
       FULL_TIME, PART_TIME, HIBERNATING
-   }
-
-   ;
+   };
 
    @Id
    @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -72,6 +74,7 @@ public class Student {
     */
    @JacksonXmlElementWrapper(localName = "classes")
    @JacksonXmlProperty(localName = "class")
+
    @ManyToMany(fetch = FetchType.LAZY)
    @Cascade({CascadeType.PERSIST, CascadeType.MERGE})
    @JoinTable(name = "Student_ScheduledClass",
@@ -152,7 +155,6 @@ public class Student {
       this.dob = dob;
    }
 
-   //    public List<ScheduledClass> getClasses() {
    public Set<ScheduledClass> getClasses() {
       return Set.copyOf(classes);
    }
@@ -162,6 +164,7 @@ public class Student {
       setClassesCommon(classes);
    }
 
+   @JsonProperty
    public void setClasses(Set<ScheduledClass> classes) {
       setClassesCommon(classes);
    }

@@ -132,6 +132,7 @@ public class AudioInfoExtractor {
                      .title(fieldValueOrElse(tag, FieldKey.TITLE, ""))
                      .album(fieldValueOrElse(tag, FieldKey.ALBUM, ""))
                      .artist(fieldValueOrElse(tag, FieldKey.ARTIST, ""))
+                     .group(fieldValueOrElse(tag, FieldKey.ARTIST, ""))
                      .genre(fieldValueOrElse(tag, FieldKey.GENRE, ""))
                      .year(year)
                      .build();

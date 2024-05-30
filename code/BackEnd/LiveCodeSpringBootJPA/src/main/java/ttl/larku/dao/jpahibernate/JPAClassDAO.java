@@ -16,6 +16,7 @@ public class JPAClassDAO implements BaseDAO<ScheduledClass> {
 
     @PersistenceContext
     private EntityManager entityManager;
+
     @Override
     public boolean update(ScheduledClass updateObject) {
         entityManager.merge(updateObject);

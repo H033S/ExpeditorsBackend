@@ -47,7 +47,7 @@ public class RestClientSpringTest {
 
     @PostConstruct
     public void init() {
-        baseUrl = "https://localhost:" + port;
+        baseUrl = "http://localhost:" + port;
         rootUrl = "/adminrest/student";
         oneStudentUrl = rootUrl + "/{id}";
 
@@ -87,9 +87,6 @@ public class RestClientSpringTest {
         Status status = rr.getStatus();
         assertTrue(status == Status.Ok);
 
-        //Still need the mapper to convert the entity Object
-        //which should be represented by a map of student properties
-        //Student s = mapper.convertValue(rr.getEntity(), Student.class);
         Student s = rr.getEntity();
         System.out.println("Student is " + s);
 
@@ -165,10 +162,6 @@ public class RestClientSpringTest {
         Status status = rr.getStatus();
         assertTrue(status == Status.Ok);
 
-        //Jackson mechanism to represent a Generic Type List<Student>
-//        CollectionType listType = mapper.getTypeFactory()
-//                .constructCollectionType(List.class, Student.class);
-//        List<Student> students = mapper.convertValue(rr.getEntity(), listType);
         List<Student> students = rr.getEntity();
         System.out.println("l2 is " + students);
 
@@ -216,37 +209,6 @@ public class RestClientSpringTest {
         JsonNode entity = root.path("entity");
         List<Student> l2 = mapper.readerFor(listType).readValue(entity);
         System.out.println("l2 is " + l2);
-    }
-
-    /**
-     * Here we are using RestResultGeneric having Jackson
-     * do all the unmarshalling and give us the correct object
-     *
-     * @throws IOException
-     */
-    @Test
-    public void testGetAllUsingRestResultGeneric() throws IOException {
-        //This is the Spring REST mechanism to create a paramterized type
-        ParameterizedTypeReference<RestResultWrapper<List<Student>>>
-                ptr = new ParameterizedTypeReference<RestResultWrapper<List<Student>>>() {
-        };
-
-
-        ResponseEntity<RestResultWrapper<List<Student>>> response = restClient.get()
-                .uri(rootUrl)
-                .retrieve()
-                .toEntity(ptr);
-
-
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-
-        RestResultWrapper<List<Student>> rr = response.getBody();
-
-        Status status = rr.getStatus();
-        assertTrue(status == Status.Ok);
-
-        List<Student> l1 = rr.getEntity();
-        //assertEquals(4, l1.size());
     }
 
     /**

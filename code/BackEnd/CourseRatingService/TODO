@@ -1,0 +1,9 @@
+- Add Functionality to read and set limits remotely
+
+- Add security
+    UsersDetails
+    Role based security
+
+- Add tests to test Security
+
+- Possibly Change Client code and Tests

@@ -28,6 +28,7 @@ import ttl.larku.service.CourseService;
 import ttl.larku.service.RegistrationService;
 import ttl.larku.service.StudentDaoService;
 import ttl.larku.service.StudentRepoService;
+import ttl.larku.service.props.ServiceThatWeDontOwn;
 
 @Configuration
 @PropertySource({"classpath:/larkUContext.properties"})
@@ -74,6 +75,7 @@ public class LarkUConfig {
     }
 
     @Bean
+    @Profile("!rating")
     public CourseService courseService() {
         CourseDaoService cc = new CourseDaoService();
         cc.setCourseDAO(courseDAO());
@@ -81,22 +83,19 @@ public class LarkUConfig {
         return cc;
     }
 
-//    @Autowired
-//    private CourseRepo courseRepo;
-
     @Bean
     public CourseRepoService courseRepoService(CourseRepo courseRepo) {
         CourseRepoService cc = new CourseRepoService();
-        cc.setCourseDAO(courseRepo);
+        cc.setCourseRepo(courseRepo);
         return cc;
     }
 
     @Bean
-    public ClassService classService() {
+    public ClassService classService(CourseService courseService) {
         ClassDaoService cs = new ClassDaoService();
 //        cs.setClassDAO(classDAO());
         cs.setClassDAO(jpaClassDAO());
-        cs.setCourseService(courseService());
+        cs.setCourseService(courseService);
         return cs;
     }
 
@@ -104,10 +103,11 @@ public class LarkUConfig {
 //    private ClassRepo classRepo;
 
     @Bean
-    public ClassRepoService classRepoService(ClassRepo classRepo) {
+    public ClassRepoService classRepoService(ClassRepo classRepo, CourseRepoService courseRepoService) {
         ClassRepoService cs = new ClassRepoService();
         cs.setClassDAO(classRepo);
-        cs.setCourseService(courseService());
+        cs.setCourseService(courseRepoService);
+//        cs.setCourseService(courseService());
         return cs;
     }
 
@@ -116,11 +116,13 @@ public class LarkUConfig {
 
     @Bean
     @Primary
-    public RegistrationService registrationService(StudentDaoService studentDaoService) {
+    public RegistrationService registrationService(StudentDaoService studentDaoService,
+                                                   CourseService courseService,
+                                                   ClassService classService) {
         RegistrationService rs = new RegistrationService();
         rs.setStudentService(studentDaoService);
-        rs.setCourseService(courseService());
-        rs.setClassService(classService());
+        rs.setCourseService(courseService);
+        rs.setClassService(classService);
 
         return rs;
     }
@@ -180,5 +182,11 @@ public class LarkUConfig {
     @ConfigurationProperties("ttl.timer.config")
     public DummyTimerConfigFromProps dummyTimerConfigFromProps() {
         return new DummyTimerConfigFromProps();
+    }
+
+    @Bean
+    @ConfigurationProperties("ttl.stwdo.config")
+    public ServiceThatWeDontOwn serviceThatWeDontOwn() {
+        return new ServiceThatWeDontOwn();
     }
 }

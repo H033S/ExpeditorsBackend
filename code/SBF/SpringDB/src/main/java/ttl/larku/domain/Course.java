@@ -1,7 +1,6 @@
 package ttl.larku.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -22,10 +21,10 @@ public class Course {
     private float credits = 2.5f;
 
     //Example of ignoring a field in
-    //three different ways
+    //two different ways
     @Transient
-    @JsonIgnore
-    private String name;
+//    @JsonIgnore
+    private String rating;
 
     @Transient
     @JsonIgnore
@@ -80,12 +79,12 @@ public class Course {
         this.creditList = creditList;
     }
 
-    public String getName() {
-        return name;
+    public String getRating() {
+        return rating;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setRating(String rating) {
+        this.rating = rating;
     }
 
     @Override
@@ -121,6 +120,12 @@ public class Course {
 
     @Override
     public String toString() {
-        return "Course [id=" + id + ", title=" + title + ", code=" + code + ", credits=" + credits + "]";
+        return "Course{" +
+              "id=" + id +
+              ", title='" + title + '\'' +
+              ", code='" + code + '\'' +
+              ", credits=" + credits +
+              ", rating='" + rating + '\'' +
+              '}';
     }
 }

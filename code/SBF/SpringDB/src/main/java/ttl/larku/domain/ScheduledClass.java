@@ -26,6 +26,8 @@ import java.util.List;
 		+ "where sc.startDate = :startDate and sc.course.code = :code")
 @NamedQuery(name = "SC.getByCourseCode", query = "select distinct sc from ScheduledClass sc "
 		+ "where sc.course.code = :code")
+@NamedQuery(name = "SC.getAllClassesAndCourses", query = "select distinct sc from ScheduledClass sc "
+      + "left join fetch sc.course")
 public class ScheduledClass {
 
     @Id

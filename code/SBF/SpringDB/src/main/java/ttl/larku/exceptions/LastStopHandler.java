@@ -24,6 +24,7 @@ public class LastStopHandler extends ResponseEntityExceptionHandler {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     protected RestResultWrapper<?> lastPortOfCall(Exception ex, WebRequest request) {
         RestResultWrapper<?> rr = RestResultWrapper.ofError("Unexpected Exception: " + ex);
+        ex.printStackTrace();
         return rr;
     }
 

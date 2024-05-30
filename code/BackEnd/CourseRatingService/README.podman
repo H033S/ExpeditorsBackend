@@ -55,4 +55,3 @@ in the commands.
 
 -  To start a bash shell on the container (will only work if the image has bash)
      podman exec -it container_name bash
-
