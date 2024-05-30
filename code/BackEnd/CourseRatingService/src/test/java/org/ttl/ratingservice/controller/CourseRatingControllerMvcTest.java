@@ -1,4 +1,4 @@
-package org.ttl.courserating.controller;
+package org.ttl.ratingservice.controller;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +10,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -21,10 +22,10 @@ public class CourseRatingControllerMvcTest {
    private MockMvc mockMvc;
 
    @Test
-   public void testGetRating() throws Exception {
+   public void testGetRatingForCourse() throws Exception {
       int id = 1;
 
-      MockHttpServletRequestBuilder builder = get("/courseRating/{id}", 1)
+      MockHttpServletRequestBuilder builder = get("/rating/{id}", id)
             .accept(MediaType.APPLICATION_JSON)
             .contentType(MediaType.APPLICATION_JSON);
 
@@ -33,7 +34,10 @@ public class CourseRatingControllerMvcTest {
 
       MvcResult result = actions.andReturn();
 
-      String  rating = result.getResponse().getContentAsString();
-      System.out.println("rating: " + rating);
+      double rating = Double.parseDouble(result.getResponse().getContentAsString());
+
+      System.out.println("Rating: " + rating);
+      assertTrue(rating > 0);
    }
+
 }
