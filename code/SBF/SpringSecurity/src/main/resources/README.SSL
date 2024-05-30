@@ -1,0 +1,69 @@
+SSL Configurations for client and Tomcat
+are in .../jconfig/security/https and .../jconfig/security/client
+
+To configure the server to use SSL:
+- Make a self signed certificate.  Important - the CN field
+  where it asks you for first and last name, should be set to
+  the hostname, e.g. localhost.
+  keytool -genkeypair -alias larkuspring -keyalg RSA -keysize 2048 -storetype PKCS12
+      -keystore larkUKeyfile.p12
+
+- Make sure you point to this file with the appropriate properties in
+  application.[properties|yml]
+  Look at application-ssl.properties
+
+To configure RestClient to use SSL
+- Two ways to make it happen:
+  - Set up the Client to use your self signed certificate created above.
+    More info below.
+  - Or, add your certificate the the official jdk certificates on your machine
+    (the cacerts file).  Also more info below.
+
+- Configure the client to use a certificate:  Look in SSLConfig.java
+  - I still haven't found a clean way to set up just the RestClient to use SSL directly.
+    Doing it right now through the RestTemplate.
+    - Even with the RestTemplate, allegedly it should work through SSL bundles, but not
+      happening for me yet.
+    - So we are using pretty boiler plate code to set up the RestTemplate, and then
+      creating the RestClient from that.
+
+
+- The other way to use your self signed certificate is to
+  add the public key from your certificate to the trusted certificates on
+  of your jdk.  Then you don't need to do any special configuration of the RestClient.
+  And an interesting side effect is that the SSLBundle configuration in SSLConfig starts to work.
+
+  - To get this working you have to do first extract your public key from your new certificate:
+    Here we are exporting the public key to a file called 'larkUPublicKey.cer'.
+
+    keytool -exportcert -keystore larkUKeyfile.p12 -storepass password -storetype PKCS12
+                                -alias larkuspring -file larkUPublicKey.cer
+
+  - Then you have to input the .cer file into the cacerts file of your jdk
+    - cd to path_to_your_jdk/lib/security.
+    - You should see a file called 'cacerts' there.
+    - MAKE A BACKUP of that file, e.g. cp cacerts cacerts.bak
+    - import the cer file into cacerts.  The default password for cacerts
+      is 'changeit'.
+
+    keytool -importcert -keystore ./cacerts -storepass changeit -alias larkuspring
+          -file path_to_your_project/src/main/resources/larkUPublicKey.cer
+
+    Or, even better, use -cacerts to specify the cacerts directory from any where.
+    For e.g., from the resource directory of the project:
+    keytool -importcert -cacerts -storepass changeit -alias larkuspring -file ./larkUPublicKey.cer
+
+    Restart your server and you should be able to hit it with a simple RestClient
+    and an https url, e.g. https://localhost:8443/adminrest/student
+
+   - To remove your certificate from the cacerts file:
+     (The -cacerts option can be used to refer to the cacerts file.  Works from
+      any directory)
+     keytool -delete -alias larkuspring -cacerts -storepass changeit -v
+
+Miscellaneous:
+- To see the private key of a .p12 file:
+openssl pkcs12 -in larkUKeyfile.p12 -nocerts
+
+- To see the public keys of a .p12 file:
+openssl pkcs12 -in larkUKeyfile.p12 -nokeys
