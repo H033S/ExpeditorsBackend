@@ -1,10 +1,9 @@
 package ttl.larku.service;
 
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import ttl.larku.dao.repository.CourseRepo;
 import ttl.larku.domain.Course;
-
-import java.util.List;
 
 public class CourseRepoService implements CourseService {
 

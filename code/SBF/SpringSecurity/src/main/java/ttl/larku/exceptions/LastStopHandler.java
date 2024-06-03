@@ -1,6 +1,7 @@
 package ttl.larku.exceptions;
 
 import org.springframework.beans.TypeMismatchException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.AuthenticationException;
@@ -97,8 +98,10 @@ public class LastStopHandler extends ResponseEntityExceptionHandler {
         return ResponseEntity.status(HttpStatus.UNSUPPORTED_MEDIA_TYPE).body(rr);
     }
 
+    @Autowired
+    private WebExceptionHandler webExceptionHandler;
     //Catch all for anything not handled above
-//    @ExceptionHandler(value = {Exception.class})
+    @ExceptionHandler(value = {Exception.class})
     protected RestResultWrapper<?> lastPortOfCall(Exception ex, WebRequest request) {
         logger.error("UnExpected Exception in LastStopHandler");
         ex.printStackTrace();

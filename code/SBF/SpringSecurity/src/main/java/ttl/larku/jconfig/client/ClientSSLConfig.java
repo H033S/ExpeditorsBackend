@@ -7,12 +7,7 @@ import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
-import java.security.cert.X509Certificate;
-import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSession;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
 import org.apache.hc.client5.http.impl.classic.HttpClients;
 import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManagerBuilder;
@@ -22,7 +17,9 @@ import org.apache.hc.client5.http.ssl.SSLConnectionSocketFactory;
 import org.apache.hc.client5.http.ssl.SSLConnectionSocketFactoryBuilder;
 import org.apache.hc.client5.http.ssl.TrustSelfSignedStrategy;
 import org.apache.hc.core5.ssl.SSLContexts;
-import org.apache.hc.core5.ssl.TrustStrategy;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.web.client.RestClientSsl;
 import org.springframework.boot.ssl.SslBundle;
@@ -32,11 +29,21 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
+import org.springframework.util.ResourceUtils;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.client.RestTemplate;
 
 /**
- * To configure the server to use SSL:
+ * To configure a Client to use SSL.  We have a server that is using a
+ * self-signed certificate.  The JDK that runs our client is going to
+ * refuse to connect to that server unless:
+ * 1) we configure our client to allow self-signed certificates, which we
+ * do in 'sslRestTemplate' and 'sslRestClientBuilder' below.
+ * 2) we can avoid all that configuration if we add the self-signed certificate
+ * to the JDK that is going to run the client.  (Instructions in README.SSL)
+ *
+ * Brief Instruction on making and using self-signed certificate.
+ * (More complete instruction in README.SSL)
  * 1) Make a self signed certificate.  Important - the CN field
  * where it asks you for first and last name, should be set to
  * the hostname, e.g. localhost.
@@ -54,15 +61,26 @@ import org.springframework.web.client.RestTemplate;
 @Profile("ssl | ssltest")
 public class ClientSSLConfig {
 
+   private static Logger logger = LoggerFactory.getLogger(ClientSSLConfig.class);
+
+   @Autowired
    private SslBundles sslBundles;
    private SslBundle ourBundle;
 
-   public ClientSSLConfig(SslBundles sslBundles) {
-      this.sslBundles = sslBundles;
-      this.ourBundle = sslBundles.getBundle("web-server");
-      ourBundle.getManagers().getTrustManagers()[0] = myTrustManager[0];
+   /**
+    */
+   public ClientSSLConfig() {
+//      ourBundle.getManagers().getTrustManagers()[0] = myTrustManager[0];
    }
 
+   /**
+    * Make a RestTemplate from an ssl-bundle declared in application-ssl.properties.
+    * This will work perfectly if we are accessing sites that have valid certificates.
+    * This will *FAIL* perfectly on sites that use self-signed certificates,
+    * *UNLESS* we add those certificates to the 'cacerts' file of the JDK running the
+    * client code.  (More in README.SSL)
+    * @return
+    */
    @Bean("bundledRestTemplate")
    public RestTemplate bundleSSLTemplateThatDoesNotWork() {
       var rt = new RestTemplateBuilder()
@@ -72,6 +90,19 @@ public class ClientSSLConfig {
       return rt;
    }
 
+   /**
+    * Make a RestClient.Builder from an ssl-bundle declared in application-ssl.properties.
+    * This will work perfectly if we are accessing sites that have valid certificates.
+    * This will *FAIL* perfectly on sites that use self-signed certificates,
+    * *UNLESS* we add those certificates to the 'cacerts' file of the JDK running the
+    * client code.  (More in README.SSL)
+    *
+    * We are returning a RestClient.Builder here rather than a RestClient because we want
+    * to allow the user of this bean to be able to further configure the client.  e.g. look
+    * in RestClientFactory.
+    *
+    * @return
+    */
    @Bean("bundledRestClient")
    public RestClient.Builder bundleRestClient(RestClientSsl restClientSsl) {
       var rt = RestClient.builder()
@@ -81,7 +112,7 @@ public class ClientSSLConfig {
    }
 
    /**
-    * This one allows self-signed certificates
+    * A RestTemplate that allows us to access servers that uses self-signed certificates.
     */
    @Bean("sslRestTemplate")
    public RestTemplate sslRestTemplate(@Value("${CLIENT_PASSWORD}") String password) throws IOException, KeyStoreException, CertificateException, NoSuchAlgorithmException, UnrecoverableKeyException, KeyManagementException {
@@ -89,9 +120,7 @@ public class ClientSSLConfig {
       //We point it at the same keystore as the server
       clientStore.load(getClass().getResourceAsStream("larkUKeyfile.p12"), password.toCharArray());
 
-      TrustStrategy lam = (X509Certificate[] chain, String authType) -> true;
       SSLContext sslContext = SSLContexts.custom()
-            //.loadTrustMaterial(null, acceptingTrustStrategy)
             .loadKeyMaterial(clientStore, password.toCharArray())
             .loadTrustMaterial(new TrustSelfSignedStrategy())
             .build();
@@ -121,18 +150,26 @@ public class ClientSSLConfig {
       return restTemplate;
    }
 
+   /**
+    * A RestClient.Builder that allows us to access servers that uses self-signed certificates.
+    *
+    * We are returning a RestClient.Builder here rather than a RestClient because we want
+    * to allow the user of this bean to be able to further configure the client.  e.g. look
+    * in RestClientFactory.
+    */
    @Bean
    public RestClient.Builder sslRestClientBuilder(@Value("${CLIENT_PASSWORD}") String password) throws IOException, KeyStoreException, CertificateException, NoSuchAlgorithmException, UnrecoverableKeyException, KeyManagementException {
-//      public RestClient.Builder sslRestClient(@Value("${CLIENT_PASSWORD}") String password) throws IOException, KeyStoreException, CertificateException, NoSuchAlgorithmException, UnrecoverableKeyException, KeyManagementException {
       KeyStore clientStore = KeyStore.getInstance("PKCS12");
       //We point it at the same keystore as the server
+      //clientStore.load(getClass().getResourceAsStream("larkUKeyfile.p12"), password.toCharArray());
       clientStore.load(getClass().getResourceAsStream("larkUKeyfile.p12"), password.toCharArray());
+//      InputStream is = new FileInputStream("/tmp/certs/larkUKeyfile.p12");
+//      clientStore.load(is, password.toCharArray());
 
-      TrustStrategy lam = (X509Certificate[] chain, String authType) -> true;
       SSLContext sslContext = SSLContexts.custom()
-            //.loadTrustMaterial(null, acceptingTrustStrategy)
             .loadKeyMaterial(clientStore, password.toCharArray())
-            .loadTrustMaterial(new TrustSelfSignedStrategy())
+            //.loadTrustMaterial(new TrustSelfSignedStrategy())
+            .loadTrustMaterial(ResourceUtils.getFile("classpath:courseRatingTrustStore.p12"), password.toCharArray())
             .build();
 
       SSLConnectionSocketFactory sslSocketFactory = SSLConnectionSocketFactoryBuilder.create()
@@ -153,35 +190,10 @@ public class ClientSSLConfig {
       requestFactory.setHttpClient(httpClient);
       requestFactory.setConnectTimeout(10000); // 10 seconds
 
-      var restClient = RestClient.builder()
+      var restClientBuilder = RestClient.builder()
             .requestFactory(requestFactory);
 //            .build();
 
-      return restClient;
-   }
-
-   TrustManager[] myTrustManager = new TrustManager[]{new X509TrustManager() {
-      @Override
-      public X509Certificate[] getAcceptedIssuers() {
-         return null;
-      }
-
-      @Override
-      public void checkServerTrusted(X509Certificate[] chain, String authType)
-            throws CertificateException {
-      }
-
-      @Override
-      public void checkClientTrusted(X509Certificate[] chain, String authType)
-            throws CertificateException {
-      }
-   }};
-
-   public static class TrustAllHostNameVerifier implements HostnameVerifier {
-
-      public boolean verify(String hostname, SSLSession session) {
-         return true;
-      }
-
+      return restClientBuilder;
    }
 }

@@ -15,14 +15,12 @@ public class TimerAspect {
     @Around("execution(* ttl.larku.service.*.*(..))")
     public Object timeCall(ProceedingJoinPoint pjp) throws Throwable {
         Instant start = Instant.now();
-        System.out.println("Before Call to " + pjp.getSignature());
+        System.out.println("TimerAspect: Before Call to " + pjp.getSignature());
 
         Object retVal = pjp.proceed();
 
-        System.out.println("After Call");
 
-        System.out.println("Call to " + pjp.getSignature() + " took " + start.until(Instant.now(), ChronoUnit.MILLIS));
-        // stop stopwatch
+        System.out.println("TimerAspect After Call to " + pjp.getSignature() + " took " + start.until(Instant.now(), ChronoUnit.MILLIS) + " ms");
         return retVal;
     }
 }

@@ -8,7 +8,6 @@ import ttl.larku.dao.jpahibernate.JPAClassDAO;
 import ttl.larku.dao.jpahibernate.JPACourseDAO;
 import ttl.larku.dao.jpahibernate.JPAStudentDAO;
 import ttl.larku.dao.repository.StudentRepo;
-import ttl.larku.domain.Course;
 import ttl.larku.domain.ScheduledClass;
 import ttl.larku.domain.Student;
 

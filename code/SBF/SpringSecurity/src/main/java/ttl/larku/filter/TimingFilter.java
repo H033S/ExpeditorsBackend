@@ -13,30 +13,32 @@ import java.io.IOException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 
-@WebFilter(urlPatterns = "/adminrest/student/*")
+@WebFilter(urlPatterns = {"/adminrest/student", "/adminrest/student/*",
+      "/adminrest/course", "/adminrest/course/*",
+      "/admin/getStudents" ,"/admin/getCourses"})
 //@Component
 public class TimingFilter implements Filter {
-    @Override
-    public void init(FilterConfig filterConfig) throws ServletException {
-    }
+   @Override
+   public void init(FilterConfig filterConfig) throws ServletException {
+   }
 
-    @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-        HttpServletRequest hsRequest = (HttpServletRequest) request;
-        System.out.printf("Before TimingFilter Filter for %s", hsRequest.getRequestURI());
+   @Override
+   public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+      HttpServletRequest hsRequest = (HttpServletRequest) request;
+      System.out.printf("Before TimingFilter Filter for %s%n", hsRequest.getRequestURI());
 
-        Instant start = Instant.now();
+      Instant start = Instant.now();
 
-        chain.doFilter(request, response);
+      chain.doFilter(request, response);
 
-        Instant end = Instant.now();
+      Instant end = Instant.now();
 
-        System.out.printf("TimingFilter: Call to %s took %d ms%n",
-                hsRequest.getRequestURI(), start.until(end, ChronoUnit.MILLIS));
+      System.out.printf("TimingFilter: Call to %s took %d ms%n",
+            hsRequest.getRequestURI(), start.until(end, ChronoUnit.MILLIS));
 
-    }
+   }
 
-    @Override
-    public void destroy() {
-    }
+   @Override
+   public void destroy() {
+   }
 }

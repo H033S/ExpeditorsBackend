@@ -1,6 +1,9 @@
 package ttl.larku.dao;
 
 
+import jakarta.annotation.Resource;
+import java.time.LocalDate;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -8,10 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
 import ttl.larku.dao.repository.ClassRepo;
 import ttl.larku.domain.Course;
 import ttl.larku.domain.ScheduledClass;
-
-import jakarta.annotation.Resource;
-import java.time.LocalDate;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

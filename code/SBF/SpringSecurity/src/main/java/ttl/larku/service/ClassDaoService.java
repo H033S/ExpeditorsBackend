@@ -1,12 +1,11 @@
 package ttl.larku.service;
 
+import java.time.LocalDate;
+import java.util.List;
 import ttl.larku.dao.BaseDAO;
 import ttl.larku.dao.jpahibernate.JPAClassDAO;
 import ttl.larku.domain.Course;
 import ttl.larku.domain.ScheduledClass;
-
-import java.time.LocalDate;
-import java.util.List;
 
 public class ClassDaoService implements ClassService {
 

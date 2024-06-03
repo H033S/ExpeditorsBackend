@@ -22,7 +22,8 @@ public class SecurityFilterWeb {
     * This is the method to override to do authorization.
     */
    @Bean
-   public SecurityFilterChain webFilterChain(HttpSecurity http) throws Exception {
+   public SecurityFilterChain webFilterChain(HttpSecurity http,
+                                             AccessExceptionHandlerWeb accessExceptionHandlerWeb) throws Exception {
       // magic to make the h2-console work, since it doesn't send
       // csrf tokens. Note that since we are disabling csrf completely
       // below, we really don't need the csrf part here, but just as an example.
@@ -39,10 +40,14 @@ public class SecurityFilterWeb {
             .csrf(csrf -> csrf.ignoringRequestMatchers("/actuator/**"));
 
 
+      http.securityMatcher("/login/**", "/logout/**", //"/getWithRestClient",
+            "/adminPage", "/admin/**", "/discovery/**", "/actuator/**", "/");
+
       http
             .authorizeHttpRequests(auth ->
-                  auth.requestMatchers("/adminPage.html").hasRole("ADMIN")
+                        auth.requestMatchers("/adminPage").hasRole("ADMIN")
                         .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
+                              .requestMatchers("/").authenticated()
                         .requestMatchers("/admin", "/actuator").authenticated()
                         .requestMatchers(HttpMethod.GET, "/admin/**").authenticated()
                         .requestMatchers(HttpMethod.GET, "/discovery/**").hasRole("ADMIN")
@@ -54,11 +59,13 @@ public class SecurityFilterWeb {
                         .requestMatchers(HttpMethod.PATCH, "/admin/**").hasRole("ADMIN")
                         //restrict Actuator endPoints
                         .requestMatchers(EndpointRequest.toAnyEndpoint().excluding("health", "info")).hasRole("ADMIN")
-                        .anyRequest().authenticated())
-            .formLogin(cust -> cust.permitAll());
+                        .anyRequest().denyAll())
+            .formLogin(cust -> cust.permitAll())
+            .exceptionHandling(ex -> ex.accessDeniedHandler(accessExceptionHandlerWeb));
+
 
 //        //ExceptionHandling
-////        http.exceptionHandling().accessDeniedHandler(accessDeniedHandler).authenticationEntryPoint(authExceptionHandler);
+//        http.exceptionHandling().accessDeniedHandler(accessDeniedHandler).authenticationEntryPoint(authExceptionHandler);
 
       return http.build();
    }

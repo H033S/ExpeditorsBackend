@@ -1,5 +1,10 @@
 package ttl.larku.jconfig;
 
+import java.time.LocalDate;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import ttl.larku.dao.BaseDAO;
 import ttl.larku.dao.inmemory.InMemoryClassDAO;
 import ttl.larku.dao.inmemory.InMemoryCourseDAO;
@@ -7,12 +12,6 @@ import ttl.larku.dao.inmemory.InMemoryStudentDAO;
 import ttl.larku.domain.Course;
 import ttl.larku.domain.ScheduledClass;
 import ttl.larku.domain.Student;
-
-import java.time.LocalDate;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 public class LarkUTestDataConfig {
 
