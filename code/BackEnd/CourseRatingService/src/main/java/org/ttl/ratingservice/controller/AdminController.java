@@ -38,8 +38,7 @@ public class AdminController {
                                           @PathVariable("ul") double upperLimit) {
       synchronized (this) {
          if(lowerLimit < upperLimit) {
-            ratingService.setLowerLimit(lowerLimit);
-            ratingService.setUpperLimit(upperLimit);
+            ratingService.setBothLimits(lowerLimit, upperLimit);
             return ResponseEntity.noContent().build();
          }
          else {
@@ -52,7 +51,9 @@ public class AdminController {
 //   @PutMapping("/lowerLimit/{ll}")
 //   @ResponseStatus(HttpStatus.NO_CONTENT)
 //   public void setLowerLimit(@PathVariable("ll") double lowerLimit) {
-//      ratingService.setLowerLimit(lowerLimit);
+//      if(lowerLimit < getUpperLimit()) {
+//         ratingService.setLowerLimit(lowerLimit);
+//      }
 //   }
 //
 //
