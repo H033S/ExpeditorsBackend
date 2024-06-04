@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.util.MimeType;
 import org.springframework.validation.BindException;
 import org.springframework.web.HttpMediaTypeNotAcceptableException;
@@ -68,17 +70,17 @@ public class GlobalErrorHandler {
         return rr;
     }
 
-//    @ExceptionHandler(value = {AccessDeniedException.class})
-//    protected ResponseEntity<RestResultWrapper<?>> accessDenied(AccessDeniedException ex, WebRequest request) {
-//        RestResultWrapper<String> rr = RestResultWrapper.ofError("LSH AccessDenied: " + ex);
-//        return ResponseEntity.status(403).body(rr);
-//    }
-//
-//    @ExceptionHandler(value = {AuthenticationException.class})
-//    protected ResponseEntity<RestResultWrapper<?>> authException(AuthenticationException ex, WebRequest request) {
-//        RestResultWrapper<String> rr = RestResultWrapper.ofError("LSH AuthenticationException: " + ex);
-//        return ResponseEntity.status(401).body(rr);
-//    }
+    @ExceptionHandler(value = {AccessDeniedException.class})
+    protected ResponseEntity<RestResultWrapper<?>> accessDenied(AccessDeniedException ex, WebRequest request) {
+        RestResultWrapper<String> rr = RestResultWrapper.ofError("LSH AccessDenied: " + ex);
+        return ResponseEntity.status(403).body(rr);
+    }
+
+    @ExceptionHandler(value = {AuthenticationException.class})
+    protected ResponseEntity<RestResultWrapper<?>> authException(AuthenticationException ex, WebRequest request) {
+        RestResultWrapper<String> rr = RestResultWrapper.ofError("LSH AuthenticationException: " + ex);
+        return ResponseEntity.status(401).body(rr);
+    }
 
     /**
      * Handle validation errors for automatic validation, i.e with the @Valid annotation.

@@ -9,6 +9,7 @@ import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
 import java.util.Base64;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -28,6 +29,7 @@ import ttl.larku.jconfig.client.ClientSSLConfig;
  * applied to it.
  */
 @Component
+@Profile("networkrating")
 public class RestClientRatingProvider implements RatingProvider{
 
 

@@ -8,10 +8,10 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 @Component
-@Profile("! networkrating")
+@Profile("!networkrating")
 public class InMemoryRatingProvider implements RatingProvider {
 
-   private double lowerLimit = -5.0;
+   private double lowerLimit = 1.0;
    private double upperLimit = 5.0;
 
    private DecimalFormat decimalFormat = new DecimalFormat("0.0");
@@ -23,4 +23,10 @@ public class InMemoryRatingProvider implements RatingProvider {
 
       return rating;
    }
+
+   @Override
+   public BigDecimal getRating(int id, String user, String pw) {
+      return getRating(id);
+   }
+
 }

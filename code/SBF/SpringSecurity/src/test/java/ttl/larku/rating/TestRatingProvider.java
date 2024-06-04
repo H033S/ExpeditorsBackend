@@ -33,15 +33,6 @@ public class TestRatingProvider {
    }
 
    @Test
-   public void testwtf() throws UnrecoverableKeyException, CertificateException, IOException, KeyStoreException, NoSuchAlgorithmException, KeyManagementException {
-      var result = whoFor.testGetCourseRating();
-      System.out.println("rating: " + result);
-
-      result = whoFor.getRating(1, "bobby", "password");
-      System.out.println("rating: " + result);
-   }
-
-   @Test
    public void testRatingProviderGivesResult() {
       BigDecimal result = provider.getRating(1, "bobby", "password");
 
