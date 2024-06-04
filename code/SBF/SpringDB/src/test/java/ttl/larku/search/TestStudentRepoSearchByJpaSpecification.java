@@ -1,4 +1,4 @@
-package ttl.larku.dao.specification;
+package ttl.larku.search;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -10,14 +10,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import ttl.larku.dao.repository.StudentRepo;
 import ttl.larku.domain.Student;
-import ttl.larku.search.JpaSearchSpecSupport;
-import ttl.larku.search.JpaTrackSearchSpec;
+import ttl.larku.sql.SqlScriptBase;
 
 import static java.lang.System.out;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
-public class TestStudentRepoSearchByJpaSpecification {
+public class TestStudentRepoSearchByJpaSpecification extends SqlScriptBase {
 
    @PersistenceContext
    private EntityManager em;

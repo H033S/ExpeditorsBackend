@@ -16,7 +16,7 @@ import ttl.larku.sql.SqlScriptBase;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@SpringBootTest(webEnvironment = WebEnvironment.NONE)
+@SpringBootTest
 @Transactional
 @Tag("integration")
 public class CourseServiceWithRatingTest extends SqlScriptBase {

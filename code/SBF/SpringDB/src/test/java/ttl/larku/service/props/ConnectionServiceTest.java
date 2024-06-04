@@ -1,10 +1,11 @@
-//package ttl.larku.service.props;
-//
+package ttl.larku.service.props;
+
 //import org.junit.jupiter.api.BeforeEach;
 //import org.junit.jupiter.api.Test;
 //import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.boot.test.context.SpringBootTest;
 //import org.springframework.context.ApplicationContext;
+//import ttl.larku.service.reg.integcustomcontext.integration.MyTestConfig;
 //
 //import static org.junit.jupiter.api.Assertions.assertEquals;
 //

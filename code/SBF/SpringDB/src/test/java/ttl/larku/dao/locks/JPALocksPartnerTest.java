@@ -16,7 +16,7 @@ import ttl.larku.service.StudentDaoService;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
+@SpringBootTest
 @Tag("dao")
 public class JPALocksPartnerTest { // extends {
 

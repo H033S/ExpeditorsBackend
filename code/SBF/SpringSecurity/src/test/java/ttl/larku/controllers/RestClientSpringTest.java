@@ -5,6 +5,10 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.CollectionType;
 import jakarta.annotation.PostConstruct;
+import java.io.IOException;
+import java.time.LocalDate;
+import java.util.Base64;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -18,18 +22,15 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestClient;
 import ttl.larku.controllers.rest.RestResultWrapper;
 import ttl.larku.controllers.rest.RestResultWrapper.Status;
 import ttl.larku.domain.Student;
 import ttl.larku.jconfig.client.RestClientFactory;
 
-import java.io.IOException;
-import java.time.LocalDate;
-import java.util.Base64;
-import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
@@ -301,24 +302,26 @@ public class RestClientSpringTest {
 
     @Test
     public void postOneStudentFor401() {
-        //This is the Spring REST mechanism to create a parameterized type
-        ParameterizedTypeReference<RestResultWrapper<Student>>
-                ptr = new ParameterizedTypeReference<RestResultWrapper<Student>>() {
-        };
+        assertThrows(HttpClientErrorException.Unauthorized.class, () -> {
+            //This is the Spring REST mechanism to create a parameterized type
+            ParameterizedTypeReference<RestResultWrapper<Student>>
+                  ptr = new ParameterizedTypeReference<RestResultWrapper<Student>>() {
+            };
 
-        Student student = new Student("Curly", "339 03 03030", LocalDate.of(2000, 10, 10), Student.Status.HIBERNATING);
+            Student student = new Student("Curly", "339 03 03030", LocalDate.of(2000, 10, 10), Student.Status.HIBERNATING);
 
-        String basicAuthHeader = "basic " + Base64.getEncoder().encodeToString(("xyz" + ":" + "abc").getBytes());
+            String basicAuthHeader = "basic " + Base64.getEncoder().encodeToString(("xyz" + ":" + "abc").getBytes());
 
-        ResponseEntity<RestResultWrapper<Student>> response = restClient.post()
-                .uri(rootUrl)
-                .header("Authorization", basicAuthHeader)
-                .body(student)
-                .retrieve()
-                .onStatus(st -> st == HttpStatus.UNAUTHORIZED, (req, resp) -> {})
-                .toEntity(ptr);
-
-        assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
+            ResponseEntity<Void> response = restClient.post()
+                  .uri(rootUrl)
+                  .header("Authorization", basicAuthHeader)
+                  .body(student)
+                  .retrieve()
+//                .onStatus(st -> st == HttpStatus.UNAUTHORIZED, (req, resp) -> {
+//                    assertEquals(HttpStatus.UNAUTHORIZED, resp.getStatusCode());
+//                })
+                  .toBodilessEntity();
+        });
     }
 
     /**

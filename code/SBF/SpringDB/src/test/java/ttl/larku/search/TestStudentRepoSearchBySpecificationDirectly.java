@@ -1,4 +1,4 @@
-package ttl.larku.dao.specification;
+package ttl.larku.search;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -30,7 +30,7 @@ public class TestStudentRepoSearchBySpecificationDirectly {
          if (Long.class != query.getResultType() && long.class != query.getResultType()) {
             root.fetch("classes", JoinType.LEFT);
          }
-         return builder.equal(root.get("name"), "Manoj-SBF-Postgres");
+         return builder.like(root.get("name"), "%Manoj%");
       };
 
       List<Student> result = studentRepo.findAll(byName);
@@ -73,7 +73,7 @@ public class TestStudentRepoSearchBySpecificationDirectly {
          if (Long.class != query.getResultType() && long.class != query.getResultType()) {
             root.fetch("classes", JoinType.LEFT);
          }
-         return builder.equal(root.get("name"), "Manoj-SBF-Postgres");
+         return builder.like(root.get("name"), "%Manoj%");
       };
 
       Specification<Student> byStatus = (root, query, builder) -> {

@@ -1,6 +1,5 @@
 package ttl.larku.dao;
 
-import java.sql.SQLException;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
@@ -11,16 +10,12 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
 import ttl.larku.dao.repository.SimpleStudentRepo;
 import ttl.larku.dao.repository.StudentRepo;
-import ttl.larku.domain.NameAndPhoneDTO;
 import ttl.larku.domain.Student;
 import ttl.larku.domain.StudentCourseCodeSummary;
 import ttl.larku.domain.StudentPhoneSummary;
-import ttl.larku.sql.ScriptFileProperties;
 import ttl.larku.sql.SqlScriptBase;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -28,27 +23,23 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 
 //@DataJpaTest
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
+@SpringBootTest
 //Populate your DB.  From Most Expensive to least expensive
 
 //This will make recreate the context after every test.
 //In conjunction with appropriate 'schema[-XXX].sql' and 'data[-XXX].sql' files
 //it will also drop and recreate the DB before each test.
-//@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
+//@DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
 
 //Or you can just re-run the sql files before each test method
+//@Sql(scripts = { "/ttl/larku/db/createDB-h2.sql", "/ttl/larku/db/populateDB-h2.sql" }, executionPhase= Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 
-//@Sql(scripts = { "/sql/postgres/3-postgres-larku-schema.sql", "/sql/postgres/4-postgres-larku-data.sql" },
-//      executionPhase= Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-
-//@Sql(scripts = { "/sql/h2/schema-h2.sql", "/sql/h2/data-h2.sql" },
-//      executionPhase= Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 //This next one will roll back the transaction after
 //each test, so the database will actually stay the
 //same for the next test.
-//@Transactional
+@Transactional
 @Tag("dao")
-class StudentRepoTest extends SqlScriptBase {
+public class StudentRepoTest extends SqlScriptBase {
 
    private String name1 = "Bloke";
    private String name2 = "Blokess";
@@ -65,16 +56,16 @@ class StudentRepoTest extends SqlScriptBase {
    @Autowired
    private ApplicationContext context;
 
-   @Autowired
-   private ScriptFileProperties scriptLocs;
-
    @BeforeEach
-   public void setup() throws SQLException {
+   public void setup() {
 
       student1 = new Student(name1);
       student2 = new Student(name2);
 
-      this.runSqlScriptsOnce();
+//        for(String name: context.getBeanDefinitionNames()) {
+//            System.out.println(name);
+//        }
+//        System.out.println(context.getBeanDefinitionCount() + " beans");
    }
 
    @Test
@@ -90,7 +81,7 @@ class StudentRepoTest extends SqlScriptBase {
    //Turn off Transactions by uncommenting @Transactional
    //If you then try and print the collection, you will
    //get a Lazy Instantiation Exception.
-//   @Transactional
+   @Transactional
    public void testGetAll() {
       //Also check out the definition of findAll in the StudentRepo.
       //You can set it up there with a custom query to do a
@@ -100,26 +91,7 @@ class StudentRepoTest extends SqlScriptBase {
       //With @Transactional, this will show the n + 1 problem.
       //Will do 5 selects instead of 1.
       //With no @Transactional, this will throw a LazyInstantiationException.
-//      students.forEach(s -> System.out.println("classes size for " + s.getName() + " is " + s.getClasses().size()));
-      students.forEach(s -> System.out.println("Name: " + student1.getName()));
-
-
-      assertEquals(4, students.size());
-   }
-
-   @Test
-   public void testGetAllWithNamesAndPhoneNumbers() {
-      //Also check out the definition of findAll in the StudentRepo.
-      //You can set it up there with a custom query to do a
-      //left join fetch.  In which case you will not get
-      //either an LIE or the n + 1 selects.
-      List<NameAndPhoneDTO> students = studentRepo.getNameAndPhoneNumbers();
-      //With @Transactional, this will show the n + 1 problem.
-      //Will do 5 selects instead of 1.
-      //With no @Transactional, this will throw a LazyInstantiationException.
-//      students.forEach(s -> System.out.println("classes size for " + s.getName() + " is " + s.getClasses().size()));
-      students.forEach(System.out::println);
-
+      students.forEach(s -> System.out.println("classes size for " + s.getName() + " is " + s.getClasses().size()));
 
       assertEquals(4, students.size());
    }

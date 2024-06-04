@@ -51,11 +51,12 @@ public class JPALocksTest extends SqlScriptBase {
 	@Resource(name = "studentDaoService")
 	private StudentDaoService studentService;
 
-
 	@BeforeEach
 	public void beforeEach() throws SQLException {
 		this.runSqlScriptsOnce();
 	}
+
+
 	/**
 	 * Test Isolation Levels.
 	 * Use this test along with JPALocksPartnerTest to test the effect

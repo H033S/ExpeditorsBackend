@@ -26,7 +26,7 @@ import ttl.larku.sql.SqlScriptBase;
 import static java.lang.System.out;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
+@SpringBootTest
 @Transactional
 @Tag("expensive")
 public class JPACriteriaMoreStuff extends SqlScriptBase {
