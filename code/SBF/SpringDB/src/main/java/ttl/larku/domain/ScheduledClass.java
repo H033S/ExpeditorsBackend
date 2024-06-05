@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -18,6 +19,7 @@ import jakarta.persistence.NamedQuery;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import org.checkerframework.checker.units.qual.C;
 
 @Entity
 @NamedQuery(name = "SC.withStudents", query = "select distinct sc from ScheduledClass sc left join fetch sc.students "
@@ -47,7 +49,7 @@ public class ScheduledClass {
     private LocalDate endDate;
 
 
-    @ManyToOne
+    @ManyToOne //(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private Course course;
 
     private static int nextId = 0;

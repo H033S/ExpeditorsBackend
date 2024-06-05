@@ -82,8 +82,8 @@ public class RestClientSSLTest extends SqlScriptBase {
 
     @Test
     public void testCallCourseRatingServiceRestClientAndStraighHttpsURL() {
-        var myRatingClient= clientFactory.sslClientFromBundle("https://localhost:10043/rating", "bobby", password);
-//        var myRatingClient= clientFactory.sslClientFromRestClient("https://localhost:10043/rating", "bobby", password);
+//        var myRatingClient= clientFactory.sslClientFromBundle("https://localhost:10043/rating", "bobby", password);
+        var myRatingClient= clientFactory.sslClientFromRestClient("https://localhost:10043/rating", "bobby", password);
 //        var myRatingClient= clientFactory.sslFromRestTemplate("https://localhost:10043/rating", "bobby", password);
         var response = myRatingClient.get()
               .uri("/{id}", 2)

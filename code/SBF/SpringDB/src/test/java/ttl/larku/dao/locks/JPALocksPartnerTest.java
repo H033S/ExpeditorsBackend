@@ -43,8 +43,9 @@ public class JPALocksPartnerTest { // extends {
 
 		TypedQuery<StudentVersioned> query = myManager.createQuery("select s from StudentVersioned s", StudentVersioned.class);
 		List<StudentVersioned> students = query.getResultList();
-//		StudentVersioned s = myManager.find(StudentVersioned.class, 1, LockModeType.PESSIMISTIC_READ);
-		StudentVersioned s = myManager.find(StudentVersioned.class, 1, LockModeType.PESSIMISTIC_WRITE);
+		StudentVersioned s = myManager.find(StudentVersioned.class, 1, LockModeType.PESSIMISTIC_READ);
+//		StudentVersioned s = myManager.find(StudentVersioned.class, 1, LockModeType.PESSIMISTIC_WRITE);
+
 //		StudentVersioned s = myManager.find(StudentVersioned.class, 1, LockModeType.OPTIMISTIC);
 		s.setName("JPALocksPartner");
 

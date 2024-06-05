@@ -49,7 +49,7 @@ public class StudentVersioned {
 
    private String phoneNumber;
 
-//   @Version
+   @Version
    private long version;
 
    @JsonDeserialize(using = LocalDateDeserializer.class)
