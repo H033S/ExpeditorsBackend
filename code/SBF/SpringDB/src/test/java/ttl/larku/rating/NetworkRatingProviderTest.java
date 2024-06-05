@@ -28,9 +28,10 @@ public class NetworkRatingProviderTest {
 
    //The CourseRatingService *has* to be running
    //for this test to succeed.
-   @Test
+//   @Test
    public void testProviderRatingReturns401WithNoAuthorization() {
       assertThrows(HttpClientErrorException.Unauthorized.class, () -> {
+
          var result = provider.getRating(10);
 
          System.out.println("result: " + result);

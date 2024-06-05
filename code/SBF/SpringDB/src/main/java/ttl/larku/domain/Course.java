@@ -7,6 +7,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Transient;
+import java.math.BigDecimal;
 
 @Entity
 @NamedQuery(name = "Course.getAll", query = "select distinct c from Course c")
@@ -24,7 +25,7 @@ public class Course {
     //two different ways
     @Transient
 //    @JsonIgnore
-    private String rating;
+    private BigDecimal rating;
 
     @Transient
     @JsonIgnore
@@ -79,11 +80,11 @@ public class Course {
         this.creditList = creditList;
     }
 
-    public String getRating() {
+    public BigDecimal getRating() {
         return rating;
     }
 
-    public void setRating(String rating) {
+    public void setRating(BigDecimal rating) {
         this.rating = rating;
     }
 

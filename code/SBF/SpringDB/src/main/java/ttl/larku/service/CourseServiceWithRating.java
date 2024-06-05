@@ -66,7 +66,7 @@ public class CourseServiceWithRating implements CourseService {
         List<Course> courses = courseDAO.findBy(c -> c.getCode().contains(code));
         if(!courses.isEmpty()) { //take the first one
             var course = courses.get(0);
-            course.setRating(ratingProvider.getRating(course.getId()).toString());
+            course.setRating(ratingProvider.getRating(course.getId()));
         }
         return !courses.isEmpty() ? courses.get(0) : null;
     }
@@ -75,7 +75,7 @@ public class CourseServiceWithRating implements CourseService {
     public Course getCourse(int id) {
         var course = courseDAO.findById(id);
         if(course != null) {
-            course.setRating(ratingProvider.getRating(course.getId()).toString());
+            course.setRating(ratingProvider.getRating(course.getId()));
         }
 
         return course;
@@ -83,7 +83,7 @@ public class CourseServiceWithRating implements CourseService {
 
     public List<Course> getAllCourses() {
         var courses = courseDAO.findAll();
-        courses.forEach(c -> c.setRating(ratingProvider.getRating(c.getId()).toString()));
+        courses.forEach(c -> c.setRating(ratingProvider.getRating(c.getId())));
 
         return courses;
     }
