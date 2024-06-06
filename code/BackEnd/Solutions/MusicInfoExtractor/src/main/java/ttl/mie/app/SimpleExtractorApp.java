@@ -2,15 +2,13 @@ package ttl.mie.app;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.time.Duration;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import org.apache.logging.log4j.util.Strings;
 import org.jaudiotagger.tag.FieldKey;
 import org.jaudiotagger.tag.Tag;
-import ttl.mie.domain.track.Format;
 import ttl.mie.domain.track.dto.TrackDTO;
 import ttl.mie.extractor.AudioInfoExtractor;
 import ttl.mie.extractor.DiscogRestHandler;
@@ -33,10 +31,13 @@ public class SimpleExtractorApp {
 
    File input = new File("/sidecar/Music/Music");
 
-   //      File output = new File("/tmp/lotsOfTracks.json");
-   File output = new File("/tmp/testTracks.json");
+   //File output = new File("/tmp/testTracks.json");
+   File output = new File("/tmp/lotsOfTracks.json");
    AudioInfoExtractor atst = new AudioInfoExtractor();
-   int numTracksToExtract = 50;
+   int numTracksToExtract = 100;
+
+   public SimpleExtractorApp() throws FileNotFoundException {
+   }
 
    public void main(String[] args) throws IOException {
       ObjectMapper mapper = new ObjectMapper();
