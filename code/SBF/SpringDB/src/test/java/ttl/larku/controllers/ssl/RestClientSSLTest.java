@@ -77,11 +77,10 @@ public class RestClientSSLTest extends SqlScriptBase {
       String authHeader = "Basic " + Base64.getEncoder()
             .encodeToString("bobby:password".getBytes());
 
-      var builder = clientSSLConfig.sslRestClientBuilder("password");
+//      var builder = clientSSLConfig.sslRestClientBuilder("password");
 //        this.restClient = builder
 
         this.restClient = RestClient.builder()
-//      this.restClient = builder
             .baseUrl(baseUrl)
             .defaultHeader("Accept", "application/json")
             .defaultHeader("Content-Type", "application/json")
@@ -105,6 +104,7 @@ public class RestClientSSLTest extends SqlScriptBase {
 
    @Test
    public void testCallCourseRatingServiceRestClientAndStraighHttpsURL() {
+//      var myRatingClient = this.restClient;
         var myRatingClient= clientFactory.sslClientFromBundle("https://localhost:10043/rating", "bobby", password);
 //      var myRatingClient= clientFactory.sslClientFromRestClient("https://localhost:10043/rating", "bobby", password);
 //        var myRatingClient= clientFactory.sslFromRestTemplate("https://localhost:10043/rating", "bobby", password);

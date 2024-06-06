@@ -34,7 +34,7 @@ public class SimpleExtractorApp {
    //File output = new File("/tmp/testTracks.json");
    File output = new File("/tmp/lotsOfTracks.json");
    AudioInfoExtractor atst = new AudioInfoExtractor();
-   int numTracksToExtract = 100;
+   int numTracksToExtract = 20;
 
    public SimpleExtractorApp() throws FileNotFoundException {
    }
