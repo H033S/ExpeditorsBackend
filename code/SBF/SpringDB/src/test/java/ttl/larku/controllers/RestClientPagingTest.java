@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.type.CollectionType;
 import jakarta.annotation.PostConstruct;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.Base64;
 import java.util.List;
 import javax.xml.transform.Result;
 import org.junit.jupiter.api.BeforeEach;
@@ -53,10 +54,14 @@ public class RestClientPagingTest {
         rootUrl = "/adminrest/student";
         oneStudentUrl = rootUrl + "/{id}";
 
+        String authHeader = "Basic " + Base64.getEncoder()
+              .encodeToString("bobby:password".getBytes());
+
         this.restClient = RestClient.builder()
                 .baseUrl(baseUrl)
                 .defaultHeader("Accept", "application/json")
                 .defaultHeader("Content-Type", "application/json")
+                .defaultHeader("Authorization", authHeader)
                 .build();
     }
 

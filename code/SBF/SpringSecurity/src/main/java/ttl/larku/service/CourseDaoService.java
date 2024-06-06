@@ -1,10 +1,9 @@
 package ttl.larku.service;
 
+import java.util.List;
 import ttl.larku.dao.BaseDAO;
 import ttl.larku.dao.jpahibernate.JPACourseDAO;
 import ttl.larku.domain.Course;
-
-import java.util.List;
 
 public class CourseDaoService implements CourseService {
 

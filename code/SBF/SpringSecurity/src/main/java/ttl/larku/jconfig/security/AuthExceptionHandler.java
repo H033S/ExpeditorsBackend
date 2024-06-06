@@ -13,7 +13,7 @@ import org.springframework.web.servlet.HandlerExceptionResolver;
 import java.io.IOException;
 
 /**
- * To deal with 403 Forbidden Errors. 
+ * To deal with 401 Unauthorized Errors.
  * 
  * We do it in a slightly round about way, using a little trick 
  * picked up from SO.  We inject the standard

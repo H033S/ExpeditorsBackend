@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
@@ -27,6 +28,7 @@ import ttl.larku.service.ClassService;
 import ttl.larku.service.CourseDaoService;
 import ttl.larku.service.CourseRepoService;
 import ttl.larku.service.CourseService;
+import ttl.larku.service.CourseServiceWithRating;
 import ttl.larku.service.RegistrationService;
 import ttl.larku.service.StudentDaoService;
 import ttl.larku.service.StudentRepoService;
@@ -136,12 +138,14 @@ public class LarkUConfig {
 //    private StudentRepoService studentRepoService;
 
     @Bean
+    @Primary
     public RegistrationService registrationRepoService(StudentRepoService studentRepoService,
-                                                      CourseRepoService courseRepoService,
+                                                      CourseServiceWithRating courseService,
                                                        ClassRepoService classRepoService) {
         RegistrationService rs = new RegistrationService();
         rs.setStudentService(studentRepoService);
-        rs.setCourseService(courseRepoService);
+//        rs.setCourseService(courseRepoService);
+        rs.setCourseService(courseService);
         rs.setClassService(classRepoService);
 
         return rs;

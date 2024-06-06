@@ -19,7 +19,7 @@ import static java.lang.System.out;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
+@SpringBootTest
 //@Sql(scripts = {"/schema-h2.sql", "/data-h2.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 //@Sql(scripts = { "/ttl/larku/db/createVersionedDB-h2.sql",
 //		"/ttl/larku/db/populateVersionedDB-h2.sql" }, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)

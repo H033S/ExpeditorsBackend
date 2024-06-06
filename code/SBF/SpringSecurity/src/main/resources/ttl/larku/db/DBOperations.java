@@ -1,6 +1,5 @@
 package ttl.larku.db;
 
-import ttl.larku.domain.Course;
 import ttl.larku.domain.ScheduledClass;
 import ttl.larku.domain.Student;
 

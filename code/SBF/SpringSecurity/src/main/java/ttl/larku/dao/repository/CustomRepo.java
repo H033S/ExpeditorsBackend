@@ -1,11 +1,10 @@
 package ttl.larku.dao.repository;
 
+import java.util.List;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import ttl.larku.domain.Course;
-
-import java.util.List;
 
 /**
  * A custom repository that builds on the base interface

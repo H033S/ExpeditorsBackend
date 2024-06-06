@@ -11,6 +11,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
@@ -53,6 +54,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 //cheapest way to go back to the initial state.
 @Transactional
 @Tag("mvc")
+@WithMockUser(roles = "ADMIN")
 public class StudentRestControllerMvcTest extends SqlScriptBase {
 
     @Autowired
@@ -159,6 +161,75 @@ public class StudentRestControllerMvcTest extends SqlScriptBase {
         ResultActions postPutActions = mockMvc
                 .perform(get("/adminrest/student/{id}", goodStudentId)
                         .accept(MediaType.APPLICATION_JSON));
+        String postJson = postPutActions.andReturn().getResponse().getContentAsString();
+
+        Student postStudent = mapper.treeToValue(mapper.readTree(postJson).path("entity"), Student.class);
+        assertEquals("202 383-9393", postStudent.getPhoneNumber());
+    }
+
+    @Test
+    @WithMockUser(roles = "USER")
+    public void testUpdateStudentWithBadUserShouldGive403() throws Exception {
+
+        ResultActions actions = mockMvc
+              .perform(get("/adminrest/student/{id}", goodStudentId)
+                    .accept(MediaType.APPLICATION_JSON));
+        String jsonString = actions.andReturn().getResponse().getContentAsString();
+        ObjectMapper mapper = new ObjectMapper();
+
+        JsonNode node = mapper.readTree(jsonString).path("entity");
+
+        Student student = mapper.treeToValue(node, Student.class);
+
+        student.setPhoneNumber("202 383-9393");
+        String updatedJson = mapper.writeValueAsString(student);
+
+        ResultActions putActions = mockMvc.perform(put("/adminrest/student")
+              .accept(MediaType.APPLICATION_JSON)
+              .contentType(MediaType.APPLICATION_JSON)
+              .content(updatedJson));
+
+        putActions = putActions.andExpect(status().isForbidden());
+
+//        MvcResult result = actions.andReturn();
+//
+//        ResultActions postPutActions = mockMvc
+//              .perform(get("/adminrest/student/{id}", goodStudentId)
+//                    .accept(MediaType.APPLICATION_JSON));
+//        String postJson = postPutActions.andReturn().getResponse().getContentAsString();
+//
+//        Student postStudent = mapper.treeToValue(mapper.readTree(postJson).path("entity"), Student.class);
+//        assertEquals("202 383-9393", postStudent.getPhoneNumber());
+    }
+
+    @Test
+    public void testWithNonExistentROLE() throws Exception {
+
+        ResultActions actions = mockMvc
+              .perform(get("/adminrest/student/{id}", goodStudentId)
+                    .accept(MediaType.APPLICATION_JSON));
+        String jsonString = actions.andReturn().getResponse().getContentAsString();
+        ObjectMapper mapper = new ObjectMapper();
+
+        JsonNode node = mapper.readTree(jsonString).path("entity");
+
+        Student student = mapper.treeToValue(node, Student.class);
+
+        student.setPhoneNumber("202 383-9393");
+        String updatedJson = mapper.writeValueAsString(student);
+
+        ResultActions putActions = mockMvc.perform(put("/adminrest/student")
+              .accept(MediaType.APPLICATION_JSON)
+              .contentType(MediaType.APPLICATION_JSON)
+              .content(updatedJson));
+
+        putActions = putActions.andExpect(status().isNoContent());
+
+        MvcResult result = actions.andReturn();
+
+        ResultActions postPutActions = mockMvc
+              .perform(get("/adminrest/student/{id}", goodStudentId)
+                    .accept(MediaType.APPLICATION_JSON));
         String postJson = postPutActions.andReturn().getResponse().getContentAsString();
 
         Student postStudent = mapper.treeToValue(mapper.readTree(postJson).path("entity"), Student.class);

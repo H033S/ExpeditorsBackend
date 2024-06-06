@@ -17,7 +17,6 @@ import ttl.larku.dao.jpahibernate.JPACourseDAO;
 import ttl.larku.dao.jpahibernate.JPAStudentDAO;
 import ttl.larku.dao.repository.ClassRepo;
 import ttl.larku.dao.repository.CourseRepo;
-import ttl.larku.domain.Course;
 import ttl.larku.domain.DummyTimerConfigFromProps;
 import ttl.larku.domain.ScheduledClass;
 import ttl.larku.domain.Student;

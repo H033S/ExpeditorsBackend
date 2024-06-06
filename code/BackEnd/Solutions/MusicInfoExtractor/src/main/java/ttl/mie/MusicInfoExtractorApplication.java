@@ -1,10 +1,8 @@
 package ttl.mie;
 
 import java.io.File;
-import java.io.InputStream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.annotation.PropertySource;
@@ -19,16 +17,9 @@ public class MusicInfoExtractorApplication {
       new SpringApplicationBuilder(MusicInfoExtractorApplication.class)
             .run(args);
    }
-
-//   public static void main(String[] args) {
-//      //No Server
-//      new SpringApplicationBuilder(MusicInfoExtractorApplication.class)
-//            .web(WebApplicationType.NONE)
-//            .run(args);
-//   }
 }
 
-@Component
+//@Component
 class DBFromJsonFileInitializer implements CommandLineRunner {
 
    @Autowired

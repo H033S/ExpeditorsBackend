@@ -4,7 +4,6 @@ import ttl.larku.dao.BaseDAO;
 import ttl.larku.dao.inmemory.InMemoryClassDAO;
 import ttl.larku.dao.inmemory.InMemoryCourseDAO;
 import ttl.larku.dao.inmemory.InMemoryStudentDAO;
-import ttl.larku.domain.Course;
 import ttl.larku.domain.ScheduledClass;
 import ttl.larku.domain.Student;
 

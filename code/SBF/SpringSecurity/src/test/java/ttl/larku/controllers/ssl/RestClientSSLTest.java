@@ -64,15 +64,38 @@ public class RestClientSSLTest extends SqlScriptBase {
         rootUrl = "/adminrest/student";
         oneStudentUrl = rootUrl + "/{id}";
 
-//        this.restClient = clientFactory.sslFromRestTemplate(baseUrl, "bobby", password);
-        this.restClient = clientFactory.sslClientFromBundle(baseUrl, "bobby", password);
+        //We have to use the non "bundle" version of the clients if we don't
+        //put the self-signed certificates to our JDK (see README.SSL)
+        this.restClient = clientFactory.sslClientFromRestClient(baseUrl, "bobby", password);
 
+        //We can use the "...clientFromBundle" clients Only IF we have added the
+        //self-signed certificate of the client to the trustStore (e.g. 'cacerts' file) of the JDK
+        //running this code. (see README.SSL)
+//        this.restClient = clientFactory.sslClientFromBundle(baseUrl, "bobby", password);
         this.ratingClient = clientFactory.sslClientFromBundle("https://localhost:10043/rating", "bobby", password);
     }
 
 
     @BeforeEach
     public void setup() {
+    }
+
+    @Test
+    public void testCallCourseRatingServiceRestClientAndStraighHttpsURL() {
+//        var myRatingClient= clientFactory.sslClientFromBundle("https://localhost:10043/rating", "bobby", password);
+        var myRatingClient= clientFactory.sslClientFromRestClient("https://localhost:10043/rating", "bobby", password);
+//        var myRatingClient= clientFactory.sslFromRestTemplate("https://localhost:10043/rating", "bobby", password);
+        var response = myRatingClient.get()
+              .uri("/{id}", 2)
+              .retrieve()
+              .toEntity(BigDecimal.class);
+
+        var result = response.getBody();
+
+        System.out.println("Result: " + result);
+
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
     }
 
     @Test
@@ -89,7 +112,6 @@ public class RestClientSSLTest extends SqlScriptBase {
     public void testGetOneStudentUsingAutoUnmarshalling() throws IOException {
         Student s = getStudentWithId(2);
         assertTrue(s.getName().contains("Ana"));
-//        return s;
     }
 
     public Student getStudentWithId(int id) throws IOException {

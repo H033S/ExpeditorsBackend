@@ -1,13 +1,12 @@
 package ttl.larku.dao.inmemory;
 
-import ttl.larku.dao.BaseDAO;
-import ttl.larku.domain.Course;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
+import ttl.larku.dao.BaseDAO;
+import ttl.larku.domain.Course;
 
 public class InMemoryCourseDAO implements BaseDAO<Course> {
 

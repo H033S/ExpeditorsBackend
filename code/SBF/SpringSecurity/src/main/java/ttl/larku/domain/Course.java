@@ -1,13 +1,13 @@
 package ttl.larku.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Transient;
+import java.math.BigDecimal;
 
 @Entity
 @NamedQuery(name = "Course.getAll", query = "select distinct c from Course c")
@@ -22,10 +22,10 @@ public class Course {
     private float credits = 2.5f;
 
     //Example of ignoring a field in
-    //three different ways
+    //two different ways
     @Transient
-    @JsonIgnore
-    private String name;
+//    @JsonIgnore
+    private BigDecimal rating;
 
     @Transient
     @JsonIgnore
@@ -72,7 +72,6 @@ public class Course {
         this.credits = credits;
     }
 
-    @JsonIgnore
     public float[] getCreditList() {
         return creditList;
     }
@@ -81,13 +80,12 @@ public class Course {
         this.creditList = creditList;
     }
 
-    @JsonIgnore
-    public String getName() {
-        return name;
+    public BigDecimal getRating() {
+        return rating;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setRating(BigDecimal rating) {
+        this.rating = rating;
     }
 
     @Override
@@ -123,6 +121,12 @@ public class Course {
 
     @Override
     public String toString() {
-        return "Course [id=" + id + ", title=" + title + ", code=" + code + ", credits=" + credits + "]";
+        return "Course{" +
+              "id=" + id +
+              ", title='" + title + '\'' +
+              ", code='" + code + '\'' +
+              ", credits=" + credits +
+              ", rating='" + rating + '\'' +
+              '}';
     }
 }

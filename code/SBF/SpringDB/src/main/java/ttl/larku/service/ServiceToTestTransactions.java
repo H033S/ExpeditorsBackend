@@ -7,8 +7,6 @@ import jakarta.persistence.PersistenceUnit;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.concurrent.ThreadLocalRandom;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -19,8 +17,6 @@ import ttl.larku.domain.Student;
 
 @Service
 public class ServiceToTestTransactions {
-
-   private Logger logger = LoggerFactory.getLogger(getClass());
 
    @Autowired
    private BaseDAO<Student> studentDAO;
@@ -107,7 +103,7 @@ public class ServiceToTestTransactions {
    @PersistenceContext
    private EntityManager theirEntityManager;
 
-//   @Transactional
+   @Transactional
    public Student addStudentWithContainerEntityManager() throws MyApplicationExceptionIWantToRollBackFor {
 
       TransactionInterceptor.currentTransactionStatus().setRollbackOnly();

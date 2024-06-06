@@ -83,21 +83,28 @@ public class CourseRatingControllerMvcTest {
    }
 
    @Test
-   @WithMockUser(roles = {"ADMIN"})
-   public void testSetLimitsWithUserGives200() throws Exception {
-
-      var actions = mockMvc.perform(put("/admin/lowerLimit/{ll}", 5.0))
+   @WithMockUser(roles = "ADMIN")
+   public void testSetLimitsWithGoodInputGivesNoContent() throws Exception {
+      var actions = mockMvc.perform(put("/admin/bothLimits/{ll}/{ul}", 15.0, 60.0))
             .andExpect(status().isNoContent()).andReturn();
 
-      actions = mockMvc.perform(put("/admin/upperLimit/{ul}", 35.0))
-            .andExpect(status().isNoContent()).andReturn();
+      actions =  mockMvc.perform(get("/admin/bothLimits"))
+            .andExpect(status().isOk()).andReturn();
 
-      actions = mockMvc.perform(get("/admin/bothLimits"))
-                  .andExpect(status().isOk()).andReturn();
+      var bothLimits = actions.getResponse().getContentAsString();
 
-      var result = actions.getResponse().getContentAsString();
-      System.out.println("result: " + result);
+      System.out.println("bothLimits: " + bothLimits);
 
-      assertEquals("5.0:35.0", result);
+      assertEquals("15.0:60.0", bothLimits);
+   }
+
+   @Test
+   @WithMockUser(roles = "ADMIN")
+   public void testSetLimitsWithBadInputGivesBadRequest() throws Exception {
+      var actions = mockMvc.perform(put("/admin/bothLimits/{ll}/{ul}", 65.0, 60.0))
+            .andExpect(status().isBadRequest()).andReturn();
+
+      var resultString = actions.getResponse().getContentAsString();
+      System.out.println("resultString: " + resultString);
    }
 }

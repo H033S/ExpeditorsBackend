@@ -1,9 +1,8 @@
 package ttl.larku.service;
 
+import java.util.List;
 import org.springframework.transaction.annotation.Transactional;
 import ttl.larku.domain.Course;
-
-import java.util.List;
 
 @Transactional
 public interface CourseService {

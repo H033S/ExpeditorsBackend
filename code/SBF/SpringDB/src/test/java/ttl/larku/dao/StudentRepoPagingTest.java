@@ -9,6 +9,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.transaction.annotation.Transactional;
 import ttl.larku.dao.repository.SimpleStudentRepo;
 import ttl.larku.dao.repository.StudentRepo;
 import ttl.larku.domain.Student;
@@ -17,8 +18,9 @@ import ttl.larku.sql.SqlScriptBase;
 
 
 //@DataJpaTest
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
+@SpringBootTest
 @Tag("dao")
+@Transactional
 public class StudentRepoPagingTest extends SqlScriptBase {
 
    private String name1 = "Bloke";

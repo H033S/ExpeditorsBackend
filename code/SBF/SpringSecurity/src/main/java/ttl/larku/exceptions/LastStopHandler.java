@@ -1,7 +1,13 @@
 package ttl.larku.exceptions;
 
+import java.util.ArrayList;
+import java.util.List;
 import org.springframework.beans.TypeMismatchException;
-import org.springframework.http.*;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.validation.BindingResult;
@@ -9,14 +15,10 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.HttpMediaTypeNotAcceptableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import ttl.larku.controllers.rest.RestResultWrapper;
 import ttl.larku.domain.RestResult;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Some of these methods just declared here as @ExceptionHandlers.
@@ -28,7 +30,7 @@ import java.util.List;
  * @author whynot
  *
  */
-@RestControllerAdvice
+//@RestControllerAdvice
 public class LastStopHandler extends ResponseEntityExceptionHandler {
 
 
@@ -97,8 +99,9 @@ public class LastStopHandler extends ResponseEntityExceptionHandler {
         return ResponseEntity.status(HttpStatus.UNSUPPORTED_MEDIA_TYPE).body(rr);
     }
 
+    private WebExceptionHandler webExceptionHandler;
     //Catch all for anything not handled above
-//    @ExceptionHandler(value = {Exception.class})
+    @ExceptionHandler(value = {Exception.class})
     protected RestResultWrapper<?> lastPortOfCall(Exception ex, WebRequest request) {
         logger.error("UnExpected Exception in LastStopHandler");
         ex.printStackTrace();

@@ -1,5 +1,7 @@
 package ttl.larku.app;
 
+import java.time.LocalDate;
+import java.util.List;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import ttl.larku.domain.Course;
 import ttl.larku.domain.Student;
@@ -8,9 +10,6 @@ import ttl.larku.service.CourseDaoService;
 import ttl.larku.service.CourseService;
 import ttl.larku.service.StudentDaoService;
 import ttl.larku.service.StudentService;
-
-import java.time.LocalDate;
-import java.util.List;
 
 public class RegistrationApp {
 

@@ -3,6 +3,7 @@ package ttl.larku.dao.repository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -22,7 +23,8 @@ import java.util.List;
  */
 @Repository
 @Transactional
-public interface StudentRepo extends JpaRepository<Student, Integer> {
+public interface StudentRepo extends JpaRepository<Student, Integer>,
+      JpaSpecificationExecutor<Student> {
 
     //This is a more efficient way of fetching the student *and* all their classes
     //than the default N + 1 approach that Hibernate/Spring will use.

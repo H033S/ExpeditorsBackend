@@ -19,14 +19,8 @@ To configure RestClient to use SSL
   - Or, add your certificate the the official jdk certificates on your machine
     (the cacerts file).  Also more info below.
 
-- Configure the client to use a certificate:  Look in SSLConfig.java
-  - I still haven't found a clean way to set up just the RestClient to use SSL directly.
-    Doing it right now through the RestTemplate.
-    - Even with the RestTemplate, allegedly it should work through SSL bundles, but not
-      happening for me yet.
-    - So we are using pretty boiler plate code to set up the RestTemplate, and then
-      creating the RestClient from that.
-
+- Configure the client to use a certificate:  Look in ClientSSLConfig.java
+  - Can do this either with a RestTemplate, or a RestClientBuilder
 
 - The other way to use your self signed certificate is to
   add the public key from your certificate to the trusted certificates on
@@ -67,3 +61,4 @@ openssl pkcs12 -in larkUKeyfile.p12 -nocerts
 
 - To see the public keys of a .p12 file:
 openssl pkcs12 -in larkUKeyfile.p12 -nokeys
+

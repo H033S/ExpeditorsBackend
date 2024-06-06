@@ -32,12 +32,11 @@ public abstract class SqlScriptBase {
 
     /**
      *
-     * We are also using the that Spring auto wiring
-     * will inject a ScriptFileProperties
+     * We are also using the strange fact that Spring auto wiring
+     * works on this static method, to inject a ScriptFileProperties
      * bean, which gets properties set with @ConfigurationProperties.
      * This allows us to use properties to decide which scripts to
-     * run.  The properties are in our official config files.
-     * Look at ScriptFileProperties to see which properties it reads.
+     * run.  The properties are in larkUContext.properties.
      * @param dataSource
      * @throws SQLException
      */
